@@ -1,14 +1,12 @@
-'use client'
-import { QueryClient, QueryClientProvider } from 'react-query';
+'use client';
 
-const queryClient = new QueryClient();
+import { Button, Container, Heading } from "@chakra-ui/react";
 
 export default function Home() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <div className="text-red-500">
-        Find A Family Doctor
-      </div>
-    </QueryClientProvider>
+    <Container>
+      <Heading>Homepage!</Heading>
+      <Button colorScheme="blue">I'm a button</Button>
+    </Container>
   )
 }
