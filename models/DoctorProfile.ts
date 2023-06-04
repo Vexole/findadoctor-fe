@@ -1,17 +1,19 @@
 export type DoctorProfile = {
-  profilePicture: string;
+  name: string;
+  // profilePicture: string;
   title: string;
   firstName: string;
   middleName: string;
   lastName: string;
   age: number;
-  phoneNumber: string;
+  phone: string;
+  contactInformation: string;
   fees: number;
   userId: string;
   isAcceptingNewPatients: boolean;
   doctorEducationBackgrounds: {
     degree: string;
-    instituteName: string;
+    institutionName: string;
     fieldOfStudy: string;
     startDate: string;
     endDate: string;

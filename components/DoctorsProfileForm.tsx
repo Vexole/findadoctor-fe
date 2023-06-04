@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 const DoctorsProfileForm = () => {
     const [languageOptions, setLangugaeOptions] = useState<JSX.Element[]>([]);
-    const [citiesOptions, setCityptions] = useState<JSX.Element[]>([]);
+    const [citiesOptions, setCityOptions] = useState<JSX.Element[]>([]);
     const [specializationOptions, setSpeciliazationOptions] = useState<JSX.Element[]>([]);
 
     const saveDoctorProfileMutation = useMutation({
@@ -34,7 +34,7 @@ const DoctorsProfileForm = () => {
                 const cityOptions = cities.map((city: any) => {
                     return <option key={city.cityId} value={city.cityId}>{city.cityName}</option>;
                 });
-                setCityptions(cityOptions);
+                setCityOptions(cityOptions);
             } catch (error: any) {
                 console.error("Error occurred while fetching cities:", error.message);
             }
@@ -61,7 +61,7 @@ const DoctorsProfileForm = () => {
         defaultValues: {
             profilePicture: "default.png",
             doctorSpecialties: [{ specialtyId: "" }],
-            doctorEducationBackgrounds: [{ startDate: "", endDate: "", fieldOfStudy: "", degree: "", instituteName: "" }],
+            doctorEducationBackgrounds: [{ startDate: "", endDate: "", fieldOfStudy: "", degree: "", institutionName: "" }],
             experiences: [{ startDate: "", endDate: "", companyName: "", description: "" }],
             doctorLanguages: [{ languageId: "" }]
         }
@@ -268,7 +268,7 @@ const DoctorsProfileForm = () => {
                                         { required: 'Degree is required' })}
                                         id={`doctorEducationBackgrounds.${index}.degree`} type="text" placeholder="Degree" />
                                     <input
-                                        {...register(`doctorEducationBackgrounds.${index}.instituteName` as const, {
+                                        {...register(`doctorEducationBackgrounds.${index}.institutionName` as const, {
                                             required: "Please enter the institute name"
                                         })}
                                         type="text"
@@ -308,8 +308,8 @@ const DoctorsProfileForm = () => {
                                         {errors.doctorEducationBackgrounds?.[index]?.degree && (
                                             <div className="error">{errors.doctorEducationBackgrounds?.[index]?.degree.message}</div>
                                         )}
-                                        {errors.doctorEducationBackgrounds?.[index]?.instituteName && (
-                                            <div className="error">{errors.doctorEducationBackgrounds?.[index]?.instituteName.message}</div>
+                                        {errors.doctorEducationBackgrounds?.[index]?.institutionName && (
+                                            <div className="error">{errors.doctorEducationBackgrounds?.[index]?.institutionName.message}</div>
                                         )}
                                         {errors.doctorEducationBackgrounds?.[index]?.fieldOfStudy && (
                                             <div className="error">{errors.doctorEducationBackgrounds?.[index]?.fieldOfStudy.message}</div>
@@ -325,7 +325,7 @@ const DoctorsProfileForm = () => {
                         })
                         }
                         <div className="btn_add_more">
-                            <button type="button" onClick={() => qualificationAppend({ startDate: "", endDate: "", fieldOfStudy: "", degree: "", instituteName: "" })}>Add More</button>
+                            <button type="button" onClick={() => qualificationAppend({ startDate: "", endDate: "", fieldOfStudy: "", degree: "", institutionName: "" })}>Add More</button>
                         </div>
                     </div>
                 </div>

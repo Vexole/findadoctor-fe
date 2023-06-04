@@ -2,14 +2,16 @@ import { DoctorProfile } from "@/models/DoctorProfile";
 import axiosInstance from "@/http/axiosInstance";
 
 export function saveDoctorProfile(doctor: DoctorProfile) {
-    doctor.userId = "a6c305b7-d11f-46b5-938b-0545ebf99778";
-    localStorage.setItem("userId", "a6c305b7-d11f-46b5-938b-0545ebf99778");
+    doctor.userId = "25e08fcc-05dd-478d-a2d4-8e395785f3e6";
+    doctor.name = `${doctor.firstName} ${doctor.middleName} ${doctor.lastName}`;
+    doctor.contactInformation = doctor.phone;
+    localStorage.setItem("userId", "25e08fcc-05dd-478d-a2d4-8e395785f3e6");
     if (localStorage.token == null)
-        localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJhNmMzMDViNy1kMTFmLTQ2YjUtOTM4Yi0wNTQ1ZWJmOTk3NzgiLCJlbWFpbCI6ImJodXBlc2guc3RoYUBnbWFpbC5jb20iLCJyb2xlIjoiRG9jdG9yIiwibmJmIjoxNjg1ODUwMzk5LCJleHAiOjE2ODU4NTA0NTksImlhdCI6MTY4NTg1MDM5OX0.yGQdKY0H2YzpHZ9_6oqfCl9b4r_u0x48XTqSSb1DkvE");
-    localStorage.setItem("refreshToken", "491e1dcc-30d0-4512-ad0f-1205036d6157");
+        localStorage.setItem("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyNWUwOGZjYy0wNWRkLTQ3OGQtYTJkNC04ZTM5NTc4NWYzZTYiLCJlbWFpbCI6Im1vcmFnODgyOTZAb25sY29vbC5jb20iLCJyb2xlIjoiRG9jdG9yVW5kZXJSZXZpZXciLCJuYmYiOjE2ODU4OTQ3NDksImV4cCI6MTY4NTg5NDgwOSwiaWF0IjoxNjg1ODk0NzQ5fQ.pHyLwlYl6HP_5FpwXEaASKLR9D32YcJOJ31amujE_L0");
+    localStorage.setItem("refreshToken", "b5b2b473-582b-4ac6-9719-f4d8cbb5c937");
 
     return axiosInstance
-        .post("/doctor/create-doctor", { doctor })
+        .post("/doctor/create-doctor", { ...doctor })
         .then((res) => res.data)
         .catch((e) => {
             throw new Error(e.message);
