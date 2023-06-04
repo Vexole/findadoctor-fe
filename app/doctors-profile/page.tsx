@@ -1,15 +1,15 @@
 "use client"
-import { AddressForm } from "@/components/AddressForm";
-import { EducationForm } from "@/components/EducationForm";
-import { UserForm } from "@/components/UserForm";
+import { AddressForm } from "./AddressForm";
+import { EducationForm } from "./EducationForm";
+import { UserForm } from "./UserForm";
 import { useMultiStepForm } from "@/utils/useMultiStepForm";
 import { useMutation } from "@tanstack/react-query";
 import { DoctorProfile as FormValues } from "@/models/DoctorProfile";
 import { getCities, getLanguages, getSpecializations, saveDoctorProfile } from "@/api/doctors";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import ExperienceForm from "@/components/ExperienceForm";
-import MiscellaneousInformationForm from "@/components/MiscellaneousInformationForm";
+import ExperienceForm from "./ExperienceForm";
+import MiscellaneousInformationForm from "./MiscellaneousInformationForm";
 
 const DoctorsProfile = () => {
     const [languageOptions, setLangugaeOptions] = useState<JSX.Element[]>([]);
@@ -116,7 +116,7 @@ const DoctorsProfile = () => {
                         {isLastStep ? "Submit" : "Next"}
                     </button>
                 </div>
-                {error && <span className="error">error.message</span>}
+                {error && <span className="error">{error.message}</span>}
             </form>
         </div>
     );

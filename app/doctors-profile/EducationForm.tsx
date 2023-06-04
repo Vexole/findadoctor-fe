@@ -1,12 +1,9 @@
 import { useFieldArray } from "react-hook-form";
 import React from "react";
-import { DoctorProfile as FormValues } from "../models/DoctorProfile";
-import { FormWrapper } from "./FormWrapper";
-import { UseFormProps } from "../models/UseFormProps";
+import { FormWrapper } from "../../components/FormWrapper";
 
-
-export function EducationForm({ register, control, errors }: UseFormProps) {
-
+export function EducationForm(props) {
+    const { register, control, errors } = props;
     const { fields: qualificationFields, append: qualificationAppend, remove: qualificationRemove } = useFieldArray({
         name: 'doctorEducationBackgrounds',
         control
@@ -45,7 +42,7 @@ export function EducationForm({ register, control, errors }: UseFormProps) {
                                 <input {...register(`doctorEducationBackgrounds.${index}.endDate` as const, {
                                     required: "Please select end date",
                                     validate: {
-                                        endDateGreaterThanStartDate: (value) => {
+                                        endDateGreaterThanStartDate: (value: string) => {
                                             const startDate: string = document.getElementById(`doctorEducationBackgrounds.${index}.startDate`)?.value;
                                             if (!startDate || startDate === '') {
                                                 return true;

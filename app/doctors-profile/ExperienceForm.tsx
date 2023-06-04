@@ -1,5 +1,4 @@
-import { UseFormProps } from "@/models/UseFormProps";
-import { FormWrapper } from "./FormWrapper";
+import { FormWrapper } from "../../components/FormWrapper";
 import { useFieldArray } from "react-hook-form";
 
 const ExperienceForm = (props) => {
@@ -40,7 +39,7 @@ const ExperienceForm = (props) => {
                                 <input {...register(`experiences.${index}.endDate` as const, {
                                     required: "Please select end date",
                                     validate: {
-                                        endDateGreaterThanStartDate: (value) => {
+                                        endDateGreaterThanStartDate: (value: string) => {
                                             let startDate: string = document.getElementById(`experiences.${index}.startDate`)?.value;
                                             if (!startDate || startDate === '') {
                                                 return true;

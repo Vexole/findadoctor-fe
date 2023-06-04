@@ -1,5 +1,5 @@
 import React from "react";
-import { FormWrapper } from "./FormWrapper";
+import { FormWrapper } from "../../components/FormWrapper";
 
 export function AddressForm(props) {
     const { register, errors } = props;
@@ -16,7 +16,7 @@ export function AddressForm(props) {
             <div className="form-fields">
                 <label htmlFor="cityId">City</label>
                 <select {...register("cityId", {
-                    validate: (fieldValue) => {
+                    validate: (fieldValue: string) => {
                         return fieldValue !== "" || "Please select a city";
                     }
                 })} id="city">

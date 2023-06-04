@@ -1,5 +1,4 @@
-import { UseFormProps } from "@/models/UseFormProps";
-import { FormWrapper } from "./FormWrapper";
+import { FormWrapper } from "../../components/FormWrapper";
 import { useFieldArray } from "react-hook-form";
 
 

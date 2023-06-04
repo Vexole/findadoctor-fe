@@ -1,5 +1,5 @@
 import { useFieldArray } from "react-hook-form";
-import { FormWrapper } from "./FormWrapper";
+import { FormWrapper } from "../../components/FormWrapper";
 
 export function UserForm(props) {
     const { register, control, errors } = props;
