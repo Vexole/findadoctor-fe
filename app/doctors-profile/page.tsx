@@ -5,7 +5,7 @@ import { UserForm } from "./UserForm";
 import { useMultiStepForm } from "@/utils/useMultiStepForm";
 import { useMutation } from "@tanstack/react-query";
 import { DoctorProfile as FormValues } from "@/models/DoctorProfile";
-import { getCities, getLanguages, getSpecializations, saveDoctorProfile } from "@/api/doctors";
+import { getCities, getDoctorProfile, getLanguages, getSpecializations, saveDoctorProfile } from "@/api/doctors";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import ExperienceForm from "./ExperienceForm";
@@ -21,7 +21,7 @@ const DoctorsProfile = () => {
         mutationFn: saveDoctorProfile,
     })
 
-    const { register, handleSubmit, control, formState: { errors } } = useForm<FormValues>({
+    const { register, handleSubmit, control, formState: { errors }, reset } = useForm<FormValues>({
         defaultValues: {
             // profilePicture: "default.png",
             doctorSpecialties: [{ specialtyId: "" }],
@@ -68,9 +68,36 @@ const DoctorsProfile = () => {
             }
         }
 
+        const fetchDoctorProfile = async () => {
+            try {
+                const doctorProfile = await getDoctorProfile();
+                const doctorProfileData = doctorProfile.data;
+                if (doctorProfileData) {
+                    const formattedData = {
+                        ...doctorProfileData,
+                        doctorEducationBackgrounds: doctorProfileData.doctorEducationBackgrounds.map((education) => ({
+                            ...education,
+                            startDate: education.startDate.split('T')[0],
+                            endDate: education.endDate.split('T')[0],
+                        })),
+                        experiences: doctorProfileData.experiences.map((experience) => ({
+                            ...experience,
+                            startDate: experience.startDate.split('T')[0],
+                            endDate: experience.endDate.split('T')[0],
+                        })),
+                    };
+console.log(formattedData)
+                    reset(formattedData);
+                }
+            } catch (error) {
+                console.error("Error occurred while fetching doctor profile:", error);
+            }
+        };
+
         fetchLanguages();
         fetchCities();
         fetchSpecializations();
+        fetchDoctorProfile();
     }, []);
 
     const { steps, currentStepIndex, step, isFirstStep, isLastStep, back, next } = useMultiStepForm([
