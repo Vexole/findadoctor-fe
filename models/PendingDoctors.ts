@@ -1,5 +1,6 @@
 export type PendingDoctors = {
   doctorId: string;
+  doctorUserId: string;
   doctorName: string;
   isAcceptingNewPatients: string;
   phone: string;

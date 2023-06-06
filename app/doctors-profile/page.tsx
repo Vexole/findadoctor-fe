@@ -68,36 +68,36 @@ const DoctorsProfile = () => {
             }
         }
 
-        const fetchDoctorProfile = async () => {
-            try {
-                const doctorProfile = await getDoctorProfile();
-                const doctorProfileData = doctorProfile.data;
-                if (doctorProfileData) {
-                    const formattedData = {
-                        ...doctorProfileData,
-                        doctorEducationBackgrounds: doctorProfileData.doctorEducationBackgrounds.map((education) => ({
-                            ...education,
-                            startDate: education.startDate.split('T')[0],
-                            endDate: education.endDate.split('T')[0],
-                        })),
-                        experiences: doctorProfileData.experiences.map((experience) => ({
-                            ...experience,
-                            startDate: experience.startDate.split('T')[0],
-                            endDate: experience.endDate.split('T')[0],
-                        })),
-                    };
-console.log(formattedData)
-                    reset(formattedData);
-                }
-            } catch (error) {
-                console.error("Error occurred while fetching doctor profile:", error);
-            }
-        };
+        // const fetchDoctorProfile = async () => {
+        //     try {
+        //         const doctorProfile = await getDoctorProfile();
+        //         const doctorProfileData = doctorProfile.data;
+        //         if (doctorProfileData) {
+        //             const formattedData = {
+        //                 ...doctorProfileData,
+        //                 doctorEducationBackgrounds: doctorProfileData.doctorEducationBackgrounds.map((education) => ({
+        //                     ...education,
+        //                     startDate: education.startDate.split('T')[0],
+        //                     endDate: education.endDate.split('T')[0],
+        //                 })),
+        //                 experiences: doctorProfileData.experiences.map((experience) => ({
+        //                     ...experience,
+        //                     startDate: experience.startDate.split('T')[0],
+        //                     endDate: experience.endDate.split('T')[0],
+        //                 })),
+        //             };
+        //             console.log(formattedData)
+        //             reset(formattedData);
+        //         }
+        //     } catch (error) {
+        //         console.error("Error occurred while fetching doctor profile:", error);
+        //     }
+        // };
 
         fetchLanguages();
         fetchCities();
         fetchSpecializations();
-        fetchDoctorProfile();
+        // fetchDoctorProfile();
     }, []);
 
     const { steps, currentStepIndex, step, isFirstStep, isLastStep, back, next } = useMultiStepForm([
@@ -113,7 +113,8 @@ console.log(formattedData)
         if (isLastStep) {
             try {
                 const result = await saveDoctorProfileMutation.mutateAsync(data);
-                console.log(result);
+                alert("Profile submitted for review!");
+                window.location('/');
             } catch (e) {
                 setError(e);
             }

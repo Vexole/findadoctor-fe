@@ -4,7 +4,7 @@ import { approveDoctor, getPendingDoctorsList } from '@/api/doctors';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { DoctorRow } from './DoctorRow';
 
-const DoctorsList = () => {
+const DoctorsList = (props) => {
     const pendingDoctorsQuery = useQuery({
         queryKey: ["pendingDoctors"],
         queryFn: getPendingDoctorsList
@@ -33,7 +33,7 @@ const DoctorsList = () => {
     const pendingDoctorsList = pendingDoctorsQuery.data.map((doctor, index: number) => (
         <DoctorRow
             pendingDoctors={doctor}
-            key={doctor.doctorId}
+            key={doctor.doctorUserId}
             index={index}
             approveDoctorByAdmin={approveDoctorByAdmin} />))
 
