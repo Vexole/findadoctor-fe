@@ -91,3 +91,12 @@ a {
     align-self: end !important;
     justify-self: end !important;
   }
+
+  table {
+    width: 100%;
+  }
+
+  .doctors-list-row > td, th{
+    text-align: center;
+    min-width: 80px;
+  }

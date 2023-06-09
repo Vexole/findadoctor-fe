@@ -3,7 +3,7 @@ import React from "react";
 import { FormWrapper } from "../../components/FormWrapper";
 
 export function EducationForm(props) {
-    const { register, control, errors } = props;
+    const { register, control, errors, isDisabled } = props;
     const { fields: qualificationFields, append: qualificationAppend, remove: qualificationRemove } = useFieldArray({
         name: 'doctorEducationBackgrounds',
         control
@@ -19,13 +19,14 @@ export function EducationForm(props) {
                             <div className="form-control" key={field.id}>
                                 <input {...register(`doctorEducationBackgrounds.${index}.degree` as const,
                                     { required: 'Degree is required' })}
-                                    id={`doctorEducationBackgrounds.${index}.degree`} type="text" placeholder="Degree" />
+                                    id={`doctorEducationBackgrounds.${index}.degree`} type="text" placeholder="Degree" disabled={isDisabled} />
                                 <input
                                     {...register(`doctorEducationBackgrounds.${index}.institutionName` as const, {
                                         required: "Please enter the institute name"
                                     })}
                                     type="text"
                                     placeholder="Institute Name"
+                                    disabled={isDisabled}
                                 />
                                 <input
                                     {...register(`doctorEducationBackgrounds.${index}.fieldOfStudy` as const, {
@@ -33,11 +34,12 @@ export function EducationForm(props) {
                                     })}
                                     type="text"
                                     placeholder="Field of Study"
+                                    disabled={isDisabled}
                                 />
                                 <label htmlFor="startDate">Start Date</label>
                                 <input {...register(`doctorEducationBackgrounds.${index}.startDate` as const, {
                                     required: "Please select start date"
-                                })} type="date" id={`doctorEducationBackgrounds.${index}.startDate`} />
+                                })} type="date" id={`doctorEducationBackgrounds.${index}.startDate`} disabled={isDisabled} />
                                 <label htmlFor="endDate">End Date</label>
                                 <input {...register(`doctorEducationBackgrounds.${index}.endDate` as const, {
                                     required: "Please select end date",
@@ -50,9 +52,9 @@ export function EducationForm(props) {
                                             return new Date(value) >= new Date(startDate) || "End date cannot be before start date";
                                         }
                                     }
-                                })} type="date" />
+                                })} type="date" disabled={isDisabled} />
                                 {
-                                    index > 0 &&
+                                    !isDisabled && index > 0 &&
                                     <div className="btn_remove">
                                         <button type="button" onClick={() => qualificationRemove(index)}>Remove</button>
                                     </div>
@@ -77,9 +79,9 @@ export function EducationForm(props) {
                             </div>);
                     })
                     }
-                    <div className="btn_add_more">
+                    {!isDisabled && <div className="btn_add_more">
                         <button type="button" onClick={() => qualificationAppend({ startDate: "", endDate: "", fieldOfStudy: "", degree: "", institutionName: "" })}>Add More</button>
-                    </div>
+                    </div>}
                 </div>
             </div>
         </FormWrapper>);
