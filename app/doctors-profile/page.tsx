@@ -4,7 +4,7 @@ import { EducationForm } from "./EducationForm";
 import { UserForm } from "./UserForm";
 import { useMultiStepForm } from "@/utils/useMultiStepForm";
 import { useMutation } from "@tanstack/react-query";
-import { DoctorProfile as FormValues } from "@/models/DoctorProfile";
+import { Education, Experience, DoctorProfile as FormValues } from "@/models/DoctorProfile";
 import { getCities, getDoctorProfile, getLanguages, getSpecializations, saveDoctorProfile } from "@/api/doctors";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
@@ -77,12 +77,12 @@ const DoctorsProfile = () => {
                 if (doctorProfileData) {
                     const formattedData = {
                         ...doctorProfileData,
-                        doctorEducationBackgrounds: doctorProfileData.doctorEducationBackgrounds.map((education) => ({
+                        doctorEducationBackgrounds: doctorProfileData.doctorEducationBackgrounds.map((education: Education) => ({
                             ...education,
                             startDate: education.startDate.split('T')[0],
                             endDate: education.endDate.split('T')[0],
                         })),
-                        experiences: doctorProfileData.experiences.map((experience) => ({
+                        experiences: doctorProfileData.experiences.map((experience: Experience) => ({
                             ...experience,
                             startDate: experience.startDate.split('T')[0],
                             endDate: experience.endDate.split('T')[0],
