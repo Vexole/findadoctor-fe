@@ -13,6 +13,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
       return setUser(JSON.parse(user));
     };
 
+    parseUser();
     window.addEventListener('storage', parseUser);
     return () => window.removeEventListener('storage', parseUser);
   }, []);

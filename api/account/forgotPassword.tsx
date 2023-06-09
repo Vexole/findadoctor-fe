@@ -1,6 +1,6 @@
 import axiosInstance from '@/http/axiosInstance';
 
-type ForgotPasswordParams = { email: string };
+type ForgotPasswordParams = { password: string };
 
 export async function forgotPassword(params: ForgotPasswordParams) {
   const { data } = await axiosInstance.post('/Account/forgot-password', params);

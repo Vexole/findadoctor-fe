@@ -1,5 +1,6 @@
 'use client';
 
+import { NavBar } from '@/components';
 import { UserContextProvider } from '@/context';
 import { CacheProvider } from '@chakra-ui/next-js';
 import { ChakraProvider, Container } from '@chakra-ui/react';
@@ -22,7 +23,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={client}>
         <CacheProvider>
           <ChakraProvider>
-            <Container pt={4}>{children}</Container>
+            <Container pt={4}><NavBar/>{children}</Container>
           </ChakraProvider>
         </CacheProvider>
         <ReactQueryDevtools initialIsOpen={false} />

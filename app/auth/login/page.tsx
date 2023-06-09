@@ -1,12 +1,12 @@
 'use client';
 import { FormInput, FormWrapper } from '@/components';
 import { useLoginMutation } from '@/hooks';
-import { Button, Link } from '@chakra-ui/react';
+import { Button, Link, Stack } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useRouter } from 'next/navigation';
-import NextLink from 'next/link'
+import NextLink from 'next/link';
 
 const schema = yup
   .object({
@@ -45,14 +45,22 @@ export default function Login() {
         isInvalid={Boolean(errors.password)}
         helperText={errors.password ? String(errors.password?.message) : ''}
       />
-
       <Link as={NextLink} href="/auth/forgot-password" color="blue.500">
         Forgot Password
       </Link>
-
-      <Button isLoading={login.isLoading} type="submit" colorScheme="blue">
-        Login
-      </Button>
+      <Stack direction="row">
+        <Button isLoading={login.isLoading} type="submit" colorScheme="blue" flex={1}>
+          Login
+        </Button>
+        <Button
+          colorScheme="blue"
+          variant="outline"
+          flex={1}
+          onClick={() => router.push('/auth/register')}
+        >
+          Register
+        </Button>
+      </Stack>
     </FormWrapper>
   );
 }
