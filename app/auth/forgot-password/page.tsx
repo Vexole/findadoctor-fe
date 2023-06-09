@@ -1,24 +1,22 @@
 'use client';
 import { FormInput, FormWrapper } from '@/components';
-import { useLoginMutation } from '@/hooks';
-import { Button, Link } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useRouter } from 'next/navigation';
-import NextLink from 'next/link'
+import { useForgotPasswordMutation } from '@/hooks';
 
 const schema = yup
   .object({
     email: yup.string().email('Invalid Email.').required('Email is required.'),
-    password: yup.string().required('Password is required.'),
   })
   .required();
 
 type FormTypes = yup.InferType<typeof schema>;
 
-export default function Login() {
-  const login = useLoginMutation();
+export default function ForgotPassword() {
+  const forgotPassword = useForgotPasswordMutation();
   const router = useRouter();
 
   const {
@@ -28,30 +26,19 @@ export default function Login() {
   } = useForm<FormTypes>({ resolver: yupResolver(schema) });
 
   const onSubmit: SubmitHandler<FormTypes> = (formValues: yup.InferType<typeof schema>) =>
-    login.mutate(formValues, { onSuccess: () => router.push('/') });
+    forgotPassword.mutate(formValues, { onSuccess: () => router.push('/auth/login') });
 
   return (
-    <FormWrapper title="Login" onSubmit={handleSubmit(onSubmit)}>
+    <FormWrapper title="Forgot Password" onSubmit={handleSubmit(onSubmit)}>
       <FormInput
         label="Email"
         register={register('email')}
         isInvalid={Boolean(errors.email)}
         helperText={errors.email ? String(errors.email?.message) : ''}
       />
-      <FormInput
-        type="password"
-        label="Password"
-        register={register('password')}
-        isInvalid={Boolean(errors.password)}
-        helperText={errors.password ? String(errors.password?.message) : ''}
-      />
-
-      <Link as={NextLink} href="/auth/forgot-password" color="blue.500">
-        Forgot Password
-      </Link>
-
-      <Button isLoading={login.isLoading} type="submit" colorScheme="blue">
-        Login
+      
+      <Button isLoading={forgotPassword.isLoading} type="submit" colorScheme="blue">
+        Reset Password
       </Button>
     </FormWrapper>
   );

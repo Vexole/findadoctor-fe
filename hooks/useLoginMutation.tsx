@@ -5,13 +5,14 @@ import { useMutation } from '@tanstack/react-query';
 export const useLoginMutation = () => {
   const toast = useToast();
   return useMutation((params: Parameters<typeof login>[0]) => login(params), {
-    onSuccess: (data) => {
+    onSuccess: data => {
       localStorage.setItem('user', JSON.stringify(data));
+      window.dispatchEvent(new Event('storage'));
       toast({
         title: 'Login Successfully.',
         status: 'success',
         isClosable: true,
-      })
+      });
     },
     onError: () =>
       toast({

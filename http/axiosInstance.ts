@@ -49,7 +49,11 @@ axiosInstance.interceptors.response.use(
             .post('/account/refreshJwtToken', { refreshToken, expiredJwtToken, userId })
             .then(response => {
               const newToken = response.data;
-              localStorage.setItem('token', newToken.data);
+              localStorage.setItem(
+                'user',
+                JSON.stringify({ ...authenticatedUser, token: newToken.data })
+              );
+              window.dispatchEvent(new Event('storage'));
               isRefreshing = false;
               refreshSubscribers.forEach(subscriber => subscriber(newToken));
               refreshSubscribers = [];

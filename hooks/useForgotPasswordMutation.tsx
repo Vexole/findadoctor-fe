@@ -1,21 +1,16 @@
-import { logout } from '@/api';
-import { useAuthenticatedUserContext } from '@/context';
+import { forgotPassword } from '@/api';
 import { useToast } from '@chakra-ui/react';
 import { useMutation } from '@tanstack/react-query';
 
-export const useLogoutMutation = () => {
+export const useForgotPasswordMutation = () => {
   const toast = useToast();
-  const user = useAuthenticatedUserContext();
-
-  return useMutation(() => logout({ userId: user?.userId || '' }), {
+  return useMutation((params: Parameters<typeof forgotPassword>[0]) => forgotPassword(params), {
     onSuccess: () => {
-      localStorage.removeItem('user');
-      window.dispatchEvent(new Event('storage'));
       toast({
-        title: 'Logout Successfully.',
+        title: 'Check your email to reset your password.',
         status: 'success',
         isClosable: true,
-      });
+      })
     },
     onError: () =>
       toast({
