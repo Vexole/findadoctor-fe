@@ -1,4 +1,3 @@
-import { ChangeEvent } from 'react';
 import {
   FormControl,
   FormControlProps,
@@ -7,30 +6,28 @@ import {
   FormLabel,
   Select,
 } from '@chakra-ui/react';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface FormSelectProps extends FormControlProps {
   helperText?: string;
   label: string;
   placeholder?: string;
-  setValue: (value: string) => void;
-  value: string;
   options: string[];
+  register: UseFormRegisterReturn;
 }
 
 export function FormSelect({
   helperText,
   label,
-  setValue,
-  value,
+  register,
   placeholder = 'Select an option',
   options = [],
   ...props
 }: FormSelectProps) {
-  const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => setValue(e.target.value);
   return (
     <FormControl {...props}>
       <FormLabel>{label}</FormLabel>
-      <Select placeholder={placeholder} value={value} onChange={handleSelectChange}>
+      <Select placeholder={placeholder} {...register}>
         {options.map(item => (
           <option key={item}>{item}</option>
         ))}

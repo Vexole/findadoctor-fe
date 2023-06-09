@@ -1,27 +1,32 @@
 import { ChangeEvent, HTMLInputTypeAttribute } from 'react';
-import { FormControl, FormControlProps, FormErrorMessage, FormHelperText, FormLabel, Input } from '@chakra-ui/react';
+import {
+  FormControl,
+  FormControlProps,
+  FormErrorMessage,
+  FormHelperText,
+  FormLabel,
+  Input,
+} from '@chakra-ui/react';
+import {  UseFormRegisterReturn } from 'react-hook-form';
 
 interface FormInputProps extends FormControlProps {
   helperText?: string;
   label: string;
-  setValue: (value: string) => void;
   type?: HTMLInputTypeAttribute | undefined;
-  value: string;
-};
+  register: UseFormRegisterReturn;
+}
 
 export function FormInput({
   helperText,
   label,
-  setValue,
   type = 'text',
-  value,
+  register,
   ...props
 }: FormInputProps) {
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => setValue(e.target.value);
   return (
     <FormControl {...props}>
       <FormLabel>{label}</FormLabel>
-      <Input type={type} name={label.toLowerCase()} value={value} onChange={handleInputChange} />
+      <Input type={type} {...register} />
       {props.isInvalid ? (
         <FormErrorMessage>{helperText}</FormErrorMessage>
       ) : (

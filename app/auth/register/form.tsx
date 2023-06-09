@@ -1,71 +1,81 @@
 import { FormInput, FormSelect, FormWrapper } from '@/components';
 import { useRegisterMutation, useRolesQuery } from '@/hooks';
 import { Button } from '@chakra-ui/react';
-import { isAxiosError } from 'axios';
-import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
-const initialFormValues = { email: '', password: '', confirmPassword: '', role: '' };
+const schema = yup
+  .object({
+    email: yup.string().email('Invalid Email.').required('Email is required.'),
+    password: yup
+      .string()
+      .required('Password is required.')
+      .min(8, 'Must be at least 8 characters')
+      .matches(/[0-9]/, 'Password must have at least one number.')
+      .matches(/[a-z]/, 'Password must have at least one lowercase character.')
+      .matches(/[A-Z]/, 'Password must have at least one uppercase character.')
+      .matches(/[^a-zA-Z0-9]/, 'Password must have at least one non-alphanumeric character.'),
+    confirmPassword: yup
+      .string()
+      .required('Confirm Password is required.')
+      .oneOf([yup.ref('password')], 'Passwords must match.'),
+    role: yup.string().required('Role is required.'),
+  })
+  .required();
+
+type FormTypes = yup.InferType<typeof schema>;
 
 export function RegisterForm() {
   const rolesQuery = useRolesQuery();
-  const register = useRegisterMutation();
+  const registerApi = useRegisterMutation();
 
-  const [formValues, setFormValues] = useState(initialFormValues);
-  const [errors, setErrors] = useState(initialFormValues);
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm<FormTypes>({ resolver: yupResolver(schema) });
 
-  const handleSetFormValues = (key: keyof typeof initialFormValues, value: string) =>
-    setFormValues(prevFormValues => ({ ...prevFormValues, [key]: value }));
-
-  const handleSubmit = () => {
-    setErrors(initialFormValues);
-    register.mutate(formValues, {
-      onError(error) {
-        if (isAxiosError(error) && Boolean(error.response?.data?.errors))
-          Object.entries<[string, string[]]>(error.response?.data?.errors).forEach(([key, value]) =>
-            setErrors(prevErrors => ({ ...prevErrors, [key.toLowerCase()]: value?.[0] }))
-          );
-      },
-    });
-  };
+  const onSubmit: SubmitHandler<FormTypes> = (formValues: yup.InferType<typeof schema>) =>
+    registerApi.mutate(formValues);
 
   return (
-    <FormWrapper title="Register">
+    <FormWrapper title="Register" onSubmit={handleSubmit(onSubmit)}>
       <FormInput
-        type="email"
         label="Email"
-        value={formValues.email}
-        setValue={(value: string) => handleSetFormValues('email', value)}
-        isRequired
+        register={register('email')}
         isInvalid={Boolean(errors.email)}
-        helperText={errors.email}
+        helperText={errors.email ? String(errors.email?.message) : ''}
       />
       <FormInput
         type="password"
         label="Password"
-        value={formValues.password}
-        setValue={(value: string) => handleSetFormValues('password', value)}
-        isRequired
+        register={register('password')}
         isInvalid={Boolean(errors.password)}
-        helperText={errors.password}
+        helperText={
+          errors.password
+            ? String(errors.password?.message)
+            : 'The password must have at least 8 character, one lowercase, one uppercase, one number, and one non-alphanumeric character.'
+        }
       />
       <FormInput
         type="password"
         label="Confirm Password"
-        value={formValues.confirmPassword}
-        setValue={(value: string) => handleSetFormValues('confirmPassword', value)}
-        isRequired
+        register={register('confirmPassword')}
+        isInvalid={Boolean(errors.confirmPassword)}
+        helperText={errors.confirmPassword ? String(errors.confirmPassword?.message) : ''}
       />
       <FormSelect
         label="Role"
-        value={formValues.role}
-        setValue={(value: string) => handleSetFormValues('role', value)}
         options={rolesQuery.data || []}
-        isRequired
+        register={register('role')}
         isDisabled={rolesQuery.data?.length === 0}
         isInvalid={Boolean(errors.role)}
-        helperText={errors.role}
+        helperText={errors.role ? String(errors.role?.message) : ''}
       />
-      <Button onClick={handleSubmit}>Register</Button>
+      <Button isLoading={isSubmitting} type="submit">
+        Register
+      </Button>
     </FormWrapper>
   );
 }
