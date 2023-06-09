@@ -1,5 +1,6 @@
 'use client';
 
+import { UserContextProvider } from '@/context';
 import { CacheProvider } from '@chakra-ui/next-js';
 import { ChakraProvider, Container } from '@chakra-ui/react';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
@@ -17,13 +18,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
   if (!domLoaded) return null;
 
   return (
-    <QueryClientProvider client={client}>
-      <CacheProvider>
-        <ChakraProvider>
-          <Container pt={4}>{children}</Container>
-        </ChakraProvider>
-      </CacheProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <UserContextProvider>
+      <QueryClientProvider client={client}>
+        <CacheProvider>
+          <ChakraProvider>
+            <Container pt={4}>{children}</Container>
+          </ChakraProvider>
+        </CacheProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+    </UserContextProvider>
   );
 }

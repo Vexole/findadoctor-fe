@@ -9,11 +9,12 @@ let refreshSubscribers: ((token: string) => void)[] = [];
 
 axiosInstance.interceptors.request.use(
   config => {
-    const token = localStorage.getItem('token');
+    const authenticatedUser = localStorage.user ? JSON.parse(localStorage.user) : {};
+    const token = authenticatedUser?.token;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    config.headers['x-api-key'] = '8AB1DC35C98047558ECA734A702F014E'; 
+    config.headers['x-api-key'] = '8AB1DC35C98047558ECA734A702F014E';
     return config;
   },
   error => {
@@ -27,9 +28,10 @@ axiosInstance.interceptors.response.use(
   },
   error => {
     const originalRequest = error.config;
-    const refreshToken = localStorage.getItem('refreshToken');
-    const expiredJwtToken = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId');
+    const authenticatedUser = localStorage.user ? JSON.parse(localStorage.user) : {};
+    const expiredJwtToken = authenticatedUser?.token;
+    const refreshToken = authenticatedUser?.refreshToken;
+    const userId = authenticatedUser?.userId;
 
     if (error.response.status === 401 && refreshToken && !originalRequest._retry && !isRefreshing) {
       originalRequest._retry = true;
@@ -43,10 +45,11 @@ axiosInstance.interceptors.response.use(
         if (!isRefreshing) {
           isRefreshing = true;
 
-          axiosInstance.post('/account/refreshJwtToken', { refreshToken, expiredJwtToken, userId })
+          axiosInstance
+            .post('/account/refreshJwtToken', { refreshToken, expiredJwtToken, userId })
             .then(response => {
               const newToken = response.data;
-              localStorage.setItem('token', newToken.data); 
+              localStorage.setItem('token', newToken.data);
               isRefreshing = false;
               refreshSubscribers.forEach(subscriber => subscriber(newToken));
               refreshSubscribers = [];
