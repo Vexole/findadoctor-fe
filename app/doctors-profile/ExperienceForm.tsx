@@ -2,7 +2,7 @@ import { FormWrapper } from "../../components/FormWrapper";
 import { useFieldArray } from "react-hook-form";
 
 const ExperienceForm = (props) => {
-    const { register, control, errors } = props;
+    const { register, control, errors, isDisabled } = props;
     const { fields: experienceFields, append: experienceAppend, remove: experienceRemove } = useFieldArray({
         name: 'experiences',
         control
@@ -22,6 +22,7 @@ const ExperienceForm = (props) => {
                                     })}
                                     type="text"
                                     placeholder="Company Name"
+                                    disabled={isDisabled}
                                 />
                                 <label htmlFor={`experiences.${index}.description`}>Description</label>
                                 <input
@@ -30,11 +31,12 @@ const ExperienceForm = (props) => {
                                     })}
                                     type="text"
                                     placeholder="Description"
+                                    disabled={isDisabled}
                                 />
                                 <label htmlFor="startDate">Start Date</label>
                                 <input {...register(`experiences.${index}.startDate` as const, {
                                     required: "Please select start date"
-                                })} type="date" id={`experiences.${index}.startDate`} />
+                                })} type="date" id={`experiences.${index}.startDate`} disabled={isDisabled} />
                                 <label htmlFor="endDate">End Date</label>
                                 <input {...register(`experiences.${index}.endDate` as const, {
                                     required: "Please select end date",
@@ -47,9 +49,9 @@ const ExperienceForm = (props) => {
                                             return new Date(value) >= new Date(startDate) || "End date must be after start date";
                                         }
                                     }
-                                })} type="date" />
+                                })} type="date" disabled={isDisabled} />
                                 {
-                                    index > 0 &&
+                                    !isDisabled && index > 0 &&
                                     <div className="btn_remove">
                                         <button type="button" onClick={() => experienceRemove(index)}>Remove</button>
                                     </div>
@@ -71,9 +73,9 @@ const ExperienceForm = (props) => {
                             </div>);
                     })
                     }
-                    <div className="btn_add_more">
+                    {!isDisabled && <div className="btn_add_more">
                         <button type="button" onClick={() => experienceAppend({ startDate: "", endDate: "", companyName: "", description: "" })}>Add More</button>
-                    </div>
+                    </div>}
                 </div>
             </div>
         </FormWrapper>

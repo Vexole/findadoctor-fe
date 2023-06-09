@@ -1,10 +1,10 @@
 "use client";
 
-import { approveDoctor, getPendingDoctorsList } from '@/api/doctors';
+import { approveDoctor, getPendingDoctorsList, rejectDoctor } from '@/api/doctors';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { DoctorRow } from './DoctorRow';
 
-const DoctorsList = (props) => {
+const DoctorsList = () => {
     const pendingDoctorsQuery = useQuery({
         queryKey: ["pendingDoctors"],
         queryFn: getPendingDoctorsList
@@ -12,6 +12,10 @@ const DoctorsList = (props) => {
 
     const approveDoctorMutation = useMutation({
         mutationFn: approveDoctor,
+    })
+
+    const rejectDoctorMutation = useMutation({
+        mutationFn: rejectDoctor,
     })
 
     if (pendingDoctorsQuery.isLoading) return <h1>Loading...</h1>;
@@ -27,6 +31,15 @@ const DoctorsList = (props) => {
         }
     }
 
+    const rejectDoctorByAdmin = async (doctorId: string) => {
+        try {
+            const result = await rejectDoctorMutation.mutateAsync(doctorId);
+            console.log(result);
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     if (pendingDoctorsQuery.data.length <= 0)
         return <h2>No Records Found!</h2>
 
@@ -35,7 +48,8 @@ const DoctorsList = (props) => {
             pendingDoctors={doctor}
             key={doctor.doctorUserId}
             index={index}
-            approveDoctorByAdmin={approveDoctorByAdmin} />))
+            approveDoctorByAdmin={approveDoctorByAdmin}
+            rejectDoctorByAdmin={rejectDoctorByAdmin} />))
 
 
     return (

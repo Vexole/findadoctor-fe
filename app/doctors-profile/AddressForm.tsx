@@ -3,14 +3,14 @@ import { FormWrapper } from "../../components/FormWrapper";
 
 export function AddressForm(props) {
     const { register, errors } = props;
-    const { cityOptions } = props;
+    const { cityOptions, isDisabled } = props;
 
     return (
         <FormWrapper title="Address Details">
             <div className="form-fields">
                 <label htmlFor="street">Street Address</label>
                 <input {...register("street", { required: 'Street Address is required' })}
-                    id="street" type="text" />
+                    id="street" type="text" disabled={isDisabled} />
                 {errors.street && <span className="error">{errors.street.message}</span>}
             </div>
             <div className="form-fields">
@@ -19,7 +19,7 @@ export function AddressForm(props) {
                     validate: (fieldValue: string) => {
                         return fieldValue !== "" || "Please select a city";
                     }
-                })} id="city">
+                })} id="city" disabled={isDisabled}>
                     <option value="">Select an option</option>
                     {cityOptions}
                 </select>
@@ -28,7 +28,7 @@ export function AddressForm(props) {
             <div className="form-fields">
                 <label htmlFor="postalCode">Postal Code</label>
                 <input {...register("postalCode", { required: 'Postal Code is required' })}
-                    id="postalCode" type="text" />
+                    id="postalCode" type="text" disabled={isDisabled} />
                 {errors.postalCode && <span className="error">{errors.postalCode.message}</span>}
             </div>
         </FormWrapper>);

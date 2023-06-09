@@ -34,6 +34,7 @@ export function DoctorRow(props) {
                 <span>View Details</span>
             </Link></td>
             <td><button type="button" onClick={() => props.approveDoctorByAdmin(doctorId)}>Approve</button></td>
+            <td><button type="button" onClick={() => props.rejectDoctorByAdmin(doctorId)}>Reject</button></td>
         </tr>
     );
 }

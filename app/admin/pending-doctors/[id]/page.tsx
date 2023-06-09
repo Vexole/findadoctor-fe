@@ -1,22 +1,17 @@
 "use client"
-import { AddressForm } from "../../../doctors-profile/AddressForm";
-import { EducationForm } from "../../../doctors-profile/EducationForm";
-import { UserForm } from "../../../doctors-profile/UserForm";
-import { useMultiStepForm } from "@/utils/useMultiStepForm";
-import { useMutation } from "@tanstack/react-query";
-import { DoctorProfile as FormValues } from "@/models/DoctorProfile";
-import { approveDoctor, getCities, getLanguages, getSpecializations, saveDoctorProfile } from "@/api/doctors";
+import { Education, Experience, DoctorProfile as FormValues } from "@/models/DoctorProfile";
+import { getCities, getLanguages, getSpecializations } from "@/api/doctors";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import ExperienceForm from "../../../doctors-profile/ExperienceForm";
-import MiscellaneousInformationForm from "../../../doctors-profile/MiscellaneousInformationForm";
 import { getPendingDoctorDetailById } from "@/api/doctors";
+import DoctorsProfileForm from "@/app/doctors-profile/DoctorsProfileForm";
 
 const DoctorDetails = ({ params }: { params: { id: string } }) => {
   const [languageOptions, setLangugaeOptions] = useState<JSX.Element[]>([]);
   const [cityOptions, setCityOptions] = useState<JSX.Element[]>([]);
   const [specializationOptions, setSpeciliazationOptions] = useState<JSX.Element[]>([]);
   const [userId, setUserId] = useState(params.id);
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const { register, handleSubmit, control, formState: { errors }, reset } = useForm<FormValues>({
     defaultValues: {
@@ -71,12 +66,12 @@ const DoctorDetails = ({ params }: { params: { id: string } }) => {
         if (doctorProfileData) {
           const formattedData = {
             ...doctorProfileData,
-            doctorEducationBackgrounds: doctorProfileData.doctorEducationBackgrounds.map((education) => ({
+            doctorEducationBackgrounds: doctorProfileData.doctorEducationBackgrounds.map((education: Education) => ({
               ...education,
               startDate: education.startDate.split('T')[0],
               endDate: education.endDate.split('T')[0],
             })),
-            experiences: doctorProfileData.experiences.map((experience) => ({
+            experiences: doctorProfileData.experiences.map((experience: Experience) => ({
               ...experience,
               startDate: experience.startDate.split('T')[0],
               endDate: experience.endDate.split('T')[0],
@@ -95,57 +90,40 @@ const DoctorDetails = ({ params }: { params: { id: string } }) => {
     fetchDoctorProfile();
   }, []);
 
-  const { steps, currentStepIndex, step, isFirstStep, isLastStep, back, next } = useMultiStepForm([
-    <UserForm register={register} control={control} errors={errors} languageOptions={languageOptions} />,
-    <AddressForm register={register} control={control} errors={errors} cityOptions={cityOptions} />,
-    <EducationForm register={register} control={control} errors={errors} />,
-    <ExperienceForm register={register} control={control} errors={errors} />,
-    <MiscellaneousInformationForm register={register} control={control} errors={errors} specializationOptions={specializationOptions} />
-  ]);
-
-  const approveDoctorMutation = useMutation({
-    mutationFn: approveDoctor,
-  })
-
-  const approveDoctorByAdmin = async () => {
-    try {
-      const result = await approveDoctorMutation.mutateAsync(userId);
-      console.log(result);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  const submitProfile = async (data: FormValues) => {
-    if (isLastStep) {
-      approveDoctorByAdmin();
-    } else {
-      next();
-    }
-  }
+  // const { steps, currentStepIndex, step, isFirstStep, isLastStep, back, next } = useMultiStepForm([
+  //   <UserForm register={register} control={control} errors={errors} languageOptions={languageOptions} />,
+  //   <AddressForm register={register} control={control} errors={errors} cityOptions={cityOptions} />,
+  //   <EducationForm register={register} control={control} errors={errors} />,
+  //   <ExperienceForm register={register} control={control} errors={errors} />,
+  //   <MiscellaneousInformationForm register={register} control={control} errors={errors} specializationOptions={specializationOptions} />
+  // ]);
 
   return (
-    <div style={{
-      position: "relative",
-      background: "white",
-      border: "1px solid black",
-      padding: "2rem",
-      margin: "1rem auto",
-      borderRadius: ".5rem"
-    }}>
-      <form onSubmit={handleSubmit(submitProfile)} noValidate>
-        <div style={{ position: "absolute", top: ".5rem", right: ".5rem" }}>
-          {currentStepIndex + 1} / {steps.length}
-        </div>
-        {step}
-        <div style={{ marginTop: "1rem", display: "flex", gap: ".5rem", justifyContent: "flex-end" }}>
-          {!isFirstStep && <button type="button" onClick={back}>Back</button>}
-          <button type="submit">
-            {isLastStep ? "Submit" : "Next"}
-          </button>
-        </div>
-      </form>
-    </div>
+    // <div style={{
+    //   position: "relative",
+    //   background: "white",
+    //   border: "1px solid black",
+    //   padding: "2rem",
+    //   margin: "1rem auto",
+    //   borderRadius: ".5rem"
+    // }}>
+    //   <form onSubmit={handleSubmit(submitProfile)} noValidate>
+    //     <div style={{ position: "absolute", top: ".5rem", right: ".5rem" }}>
+    //       {currentStepIndex + 1} / {steps.length}
+    //     </div>
+    //     {step}
+    //     <div style={{ marginTop: "1rem", display: "flex", gap: ".5rem", justifyContent: "flex-end" }}>
+    //       {!isFirstStep && <button type="button" onClick={back}>Back</button>}
+    //       <button type="submit">
+    //         {isLastStep ? "Submit" : "Next"}
+    //       </button>
+    //     </div>
+    //   </form>
+    // </div>
+    <>
+      <DoctorsProfileForm params={params} isAdmin={true} />
+      {/* <button>Approve</button> */}
+    </>
   );
 }
 
