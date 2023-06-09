@@ -20,7 +20,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={client}>
       <CacheProvider>
         <ChakraProvider>
-          <Container>{children}</Container>
+          <Container pt={4}>{children}</Container>
         </ChakraProvider>
       </CacheProvider>
       <ReactQueryDevtools initialIsOpen={false} />

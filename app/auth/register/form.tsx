@@ -73,7 +73,7 @@ export function RegisterForm() {
         isInvalid={Boolean(errors.role)}
         helperText={errors.role ? String(errors.role?.message) : ''}
       />
-      <Button isLoading={isSubmitting} type="submit">
+      <Button isLoading={isSubmitting} type="submit" colorScheme='blue'>
         Register
       </Button>
     </FormWrapper>
