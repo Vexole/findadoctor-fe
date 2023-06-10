@@ -30,7 +30,7 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     const authenticatedUser = localStorage.user ? JSON.parse(localStorage.user) : {};
     const expiredJwtToken = authenticatedUser?.token;
-    const refreshToken = authenticatedUser?.refreshToken;
+    const refreshToken = authenticatedUser?.userRefreshToken;
     const userId = authenticatedUser?.userId;
 
     if (error.response.status === 401 && refreshToken && !originalRequest._retry && !isRefreshing) {

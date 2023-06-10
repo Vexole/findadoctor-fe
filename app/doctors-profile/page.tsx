@@ -3,25 +3,22 @@ import { AddressForm } from "./AddressForm";
 import { EducationForm } from "./EducationForm";
 import { UserForm } from "./UserForm";
 import { useMultiStepForm } from "@/utils/useMultiStepForm";
-import { useMutation } from "@tanstack/react-query";
 import { Education, Experience, DoctorProfile as FormValues } from "@/models/DoctorProfile";
-import { getCities, getDoctorProfile, getLanguages, getSpecializations, saveDoctorProfile } from "@/api/doctors";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import ExperienceForm from "./ExperienceForm";
 import MiscellaneousInformationForm from "./MiscellaneousInformationForm";
+import { useCitiesQuery, useDoctorProfileQuery, useLanguagesQuery, usePendingDoctorsQuery, useSaveDoctorProfileMutation, useSpecializationsQuery } from "@/hooks";
 
 const DoctorsProfile = () => {
-    const [languageOptions, setLangugaeOptions] = useState<JSX.Element[]>([]);
+    const [languageOptions, setLanguageOptions] = useState<JSX.Element[]>([]);
     const [cityOptions, setCityOptions] = useState<JSX.Element[]>([]);
-    const [specializationOptions, setSpeciliazationOptions] = useState<JSX.Element[]>([]);
+    const [specializationOptions, setSpecializationOptions] = useState<JSX.Element[]>([]);
     const [error, setError] = useState();
     const [isDisabled, setIsDisabled] = useState(false);
     const [isUnderReview, setIsUnderReview] = useState(false);
 
-    const saveDoctorProfileMutation = useMutation({
-        mutationFn: saveDoctorProfile,
-    })
+    const saveDoctorProfileMutation = useSaveDoctorProfileMutation();
 
     const { register, handleSubmit, control, formState: { errors }, reset } = useForm<FormValues>({
         defaultValues: {
@@ -33,78 +30,59 @@ const DoctorsProfile = () => {
         }
     });
 
+    const languages = useLanguagesQuery();
+    const cities = useCitiesQuery();
+    const specializations = useSpecializationsQuery();
+    const doctorProfile = useDoctorProfileQuery();
+
     useEffect(() => {
-        const fetchLanguages = async () => {
-            try {
-                const languages: any[] = await getLanguages();
-                const languageOptions = languages.map((language: any) => {
-                    return <option key={language.languageId} value={language.languageId}>{language.languageName}</option>;
-                });
-                setLangugaeOptions(languageOptions);
-            } catch (error: any) {
-                console.error("Error occurred while fetching languages:", error.message);
-            }
+        if (languages.data) {
+            const tempLanguageOptions = languages.data.map((language: any) => (
+                <option key={language.languageId} value={language.languageId}>{language.languageName}</option>
+            ));
+            setLanguageOptions(tempLanguageOptions);
         }
+    }, [languages.data]);
 
-        const fetchCities = async () => {
-            try {
-                const cities: any[] = await getCities();
-                const cityOptions = cities.map((city: any) => {
-                    return <option key={city.cityId} value={city.cityId}>{city.cityName}</option>;
-                });
-                setCityOptions(cityOptions);
-            } catch (error: any) {
-                console.error("Error occurred while fetching cities:", error.message);
-            }
+    useEffect(() => {
+        if (cities.data) {
+            const tempCityOptions = cities.data.map((city: any) => (
+                <option key={city.cityId} value={city.cityId}>{city.cityName}</option>
+            ));
+            setCityOptions(tempCityOptions);
         }
+    }, [cities.data]);
 
-        async function fetchSpecializations() {
-            try {
-                const specializations: any[] = await getSpecializations();
-                const specializationOptions = specializations.map((specialization: any) => {
-                    return <option key={specialization.specialtyId} value={specialization.specialtyId}>{specialization.specialtyName}</option>;
-                });
-                setSpeciliazationOptions(specializationOptions);
-            } catch (error: any) {
-                console.error("Error occurred while fetching specializations:", error.message);
-            }
+    useEffect(() => {
+        if (specializations.data) {
+            const tempSpecializationOptions = specializations.data.map((specialization: any) => (
+                <option key={specialization.specialtyId} value={specialization.specialtyId}>{specialization.specialtyName}</option>
+            ));
+            setSpecializationOptions(tempSpecializationOptions);
         }
+    }, [specializations.data]);
 
-        const fetchDoctorProfile = async () => {
-            try {
-                const doctorProfile = await getDoctorProfile();
-                const doctorProfileData = doctorProfile.data;
-                if (doctorProfileData) {
-                    const formattedData = {
-                        ...doctorProfileData,
-                        doctorEducationBackgrounds: doctorProfileData.doctorEducationBackgrounds.map((education: Education) => ({
-                            ...education,
-                            startDate: education.startDate.split('T')[0],
-                            endDate: education.endDate.split('T')[0],
-                        })),
-                        experiences: doctorProfileData.experiences.map((experience: Experience) => ({
-                            ...experience,
-                            startDate: experience.startDate.split('T')[0],
-                            endDate: experience.endDate.split('T')[0],
-                        })),
-                    };
-                    console.log(formattedData)
-                    reset(formattedData);
-                }
-            } catch (error) {
-                if (error.message.includes(403)) {
-                    setIsDisabled(true);
-                    setIsUnderReview(true);
-                }
-                console.error("Error occurred while fetching doctor profile:", error);
-            }
-        };
+    useEffect(() => {
+        if (doctorProfile.data) {
+            const doctorProfileData = doctorProfile.data;
 
-        fetchLanguages();
-        fetchCities();
-        fetchSpecializations();
-        fetchDoctorProfile();
-    }, []);
+            const formattedData = {
+                ...doctorProfileData,
+                doctorEducationBackgrounds: doctorProfileData.doctorEducationBackgrounds.map((education: Education) => ({
+                    ...education,
+                    startDate: education.startDate.split('T')[0],
+                    endDate: education.endDate.split('T')[0],
+                })),
+                experiences: doctorProfileData.experiences.map((experience: Experience) => ({
+                    ...experience,
+                    startDate: experience.startDate.split('T')[0],
+                    endDate: experience.endDate.split('T')[0],
+                })),
+            };
+            reset(formattedData);
+            setIsDisabled(true);
+        }
+    }, [doctorProfile.data]);
 
     const { steps, currentStepIndex, step, isFirstStep, isLastStep, back, next } = useMultiStepForm([
         <UserForm register={register} control={control} errors={errors} languageOptions={languageOptions} isDisabled={isDisabled} />,
@@ -119,7 +97,6 @@ const DoctorsProfile = () => {
         if (isLastStep) {
             try {
                 const result = await saveDoctorProfileMutation.mutateAsync(data);
-                alert("Profile submitted for review!");
             } catch (e) {
                 setError(e);
             }
@@ -149,7 +126,8 @@ const DoctorsProfile = () => {
                             <div style={{ marginTop: "1rem", display: "flex", gap: ".5rem", justifyContent: "flex-end" }}>
                                 {!isFirstStep && <button type="button" onClick={back}>Back</button>}
                                 <button type="submit">
-                                    {isLastStep ? "Submit" : "Next"}
+                                    {(isDisabled && isLastStep) ? "Edit" :
+                                        !isDisabled && isLastStep ? "Submit" : "Next"}
                                 </button>
                             </div>
                             {error && <span className="error">{error.message}</span>}

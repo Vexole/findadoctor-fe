@@ -1,42 +1,36 @@
 "use client";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useForm, useFieldArray } from "react-hook-form";
 import { DevTool } from '@hookform/devtools';
 import { Education, Experience, DoctorProfile as FormValues } from "@/models/DoctorProfile";
-import { approveDoctor, getCities, getLanguages, getPendingDoctorDetailById, getSpecializations, rejectDoctor, saveDoctorProfile } from "@/api/doctors";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useApproveDoctorMutation, useSaveDoctorProfileMutation } from "@/hooks";
+import { getCities, getLanguages, getPendingDoctorDetailById, getSpecializations } from "@/api";
+import { useForm, useFieldArray } from "react-hook-form";
 
 type PropTypes = {
     params: { id: string },
-    isAdmin: boolean
+    isAdmin: boolean,
+    isDisabled: boolean,
+    cityOptions: JSX.Element[]
+    specializationOptions: JSX.Element[]
+    languageOptions: JSX.Element[]
 }
 
-const DoctorsProfileForm = ({ params, isAdmin }: PropTypes) => {
-    const [languageOptions, setLangugaeOptions] = useState<JSX.Element[]>([]);
-    const [cityOptions, setCityOptions] = useState<JSX.Element[]>([]);
-    const [specializationOptions, setSpeciliazationOptions] = useState<JSX.Element[]>([]);
+const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
+    cityOptions, specializationOptions, languageOptions }: PropTypes) => {
     const [userId, setUserId] = useState(params.id);
-    const [isDisabled, setIsDisabled] = useState(true);
 
-    const saveDoctorProfileMutation = useMutation({
-        mutationFn: saveDoctorProfile,
-    })
-
-    const approveDoctorProfileMutation = useMutation({
-        mutationFn: approveDoctor,
-    })
-
-    const rejectDoctorProfileMutation = useMutation({
-        mutationFn: rejectDoctor,
-    })
+    const saveDoctorProfileApi = useSaveDoctorProfileMutation();
+    const approveDoctorApi = useApproveDoctorMutation();
+    const rejectDoctorApi = useApproveDoctorMutation();
 
     const approveByAdmin = async () => {
-        await approveDoctorProfileMutation.mutateAsync(userId);
+        await approveDoctorApi.mutateAsync(userId);
     }
 
     const rejectByAdmin = async () => {
-        await rejectDoctorProfileMutation.mutateAsync(userId);
+        await rejectDoctorApi.mutateAsync(userId);
     }
 
     const { register, handleSubmit, control, formState: { errors }, reset } = useForm<FormValues>({
@@ -49,42 +43,6 @@ const DoctorsProfileForm = ({ params, isAdmin }: PropTypes) => {
     });
 
     useEffect(() => {
-        const fetchLanguages = async () => {
-            try {
-                const languages: any[] = await getLanguages();
-                const languageOptions = languages.map((language: any) => {
-                    return <option key={language.languageId} value={language.languageId}>{language.languageName}</option>;
-                });
-                setLangugaeOptions(languageOptions);
-            } catch (error: any) {
-                console.error("Error occurred while fetching languages:", error.message);
-            }
-        }
-
-        const fetchCities = async () => {
-            try {
-                const cities: any[] = await getCities();
-                const cityOptions = cities.map((city: any) => {
-                    return <option key={city.cityId} value={city.cityId}>{city.cityName}</option>;
-                });
-                setCityOptions(cityOptions);
-            } catch (error: any) {
-                console.error("Error occurred while fetching cities:", error.message);
-            }
-        }
-
-        async function fetchSpecializations() {
-            try {
-                const specializations: any[] = await getSpecializations();
-                const specializationOptions = specializations.map((specialization: any) => {
-                    return <option key={specialization.specialtyId} value={specialization.specialtyId}>{specialization.specialtyName}</option>;
-                });
-                setSpeciliazationOptions(specializationOptions);
-            } catch (error: any) {
-                console.error("Error occurred while fetching specializations:", error.message);
-            }
-        }
-
         const fetchDoctorProfile = async () => {
             try {
                 const doctorProfile = await getPendingDoctorDetailById(params.id);
@@ -111,9 +69,6 @@ const DoctorsProfileForm = ({ params, isAdmin }: PropTypes) => {
             }
         };
 
-        fetchLanguages();
-        fetchCities();
-        fetchSpecializations();
         fetchDoctorProfile();
     }, []);
 
@@ -138,7 +93,7 @@ const DoctorsProfileForm = ({ params, isAdmin }: PropTypes) => {
     })
 
     const submitProfile = async (data: FormValues) => {
-        const result = await saveDoctorProfileMutation.mutateAsync(data);
+        const result = await saveDoctorProfileApi.mutateAsync(data);
         console.log(result);
     }
 
