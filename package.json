@@ -30,9 +30,9 @@
     "postcss-preset-env": "^8.4.1",
     "react": "^18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.44.2",
+    "react-hook-form": "^7.44.3",
     "typescript": "5.0.4",
-    "zod": "^3.21.4"
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "@hookform/devtools": "^4.3.1"
