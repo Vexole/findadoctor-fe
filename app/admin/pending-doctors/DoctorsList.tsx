@@ -1,22 +1,13 @@
 "use client";
-
-import { approveDoctor, getPendingDoctorsList, rejectDoctor } from '@/api/doctors';
-import { useQuery, useMutation } from '@tanstack/react-query';
 import { DoctorRow } from './DoctorRow';
+import { usePendingDoctorsQuery, useApproveDoctorMutation, useRejectDoctorMutation } from '@/hooks';
+import { useRouter } from 'next/navigation';
 
 const DoctorsList = () => {
-    const pendingDoctorsQuery = useQuery({
-        queryKey: ["pendingDoctors"],
-        queryFn: getPendingDoctorsList
-    })
-
-    const approveDoctorMutation = useMutation({
-        mutationFn: approveDoctor,
-    })
-
-    const rejectDoctorMutation = useMutation({
-        mutationFn: rejectDoctor,
-    })
+    const router = useRouter();
+    const pendingDoctorsQuery = usePendingDoctorsQuery();
+    const approveDoctorMutation = useApproveDoctorMutation();
+    const rejectDoctorMutation = useRejectDoctorMutation();
 
     if (pendingDoctorsQuery.isLoading) return <h1>Loading...</h1>;
     if (pendingDoctorsQuery.isError)
@@ -24,8 +15,8 @@ const DoctorsList = () => {
 
     const approveDoctorByAdmin = async (doctorId: string) => {
         try {
-            const result = await approveDoctorMutation.mutateAsync(doctorId);
-            console.log(result);
+            const result = await approveDoctorMutation.mutateAsync(doctorId,
+                { onSuccess: () => router.push('/admin/pending-doctors') });
         } catch (e) {
             console.log(e);
         }
@@ -33,8 +24,8 @@ const DoctorsList = () => {
 
     const rejectDoctorByAdmin = async (doctorId: string) => {
         try {
-            const result = await rejectDoctorMutation.mutateAsync(doctorId);
-            console.log(result);
+            const result = await rejectDoctorMutation.mutateAsync(doctorId,
+                { onSuccess: () => router.push('/admin/pending-doctors') });
         } catch (e) {
             console.log(e);
         }
@@ -50,7 +41,6 @@ const DoctorsList = () => {
             index={index}
             approveDoctorByAdmin={approveDoctorByAdmin}
             rejectDoctorByAdmin={rejectDoctorByAdmin} />))
-
 
     return (
         <div>

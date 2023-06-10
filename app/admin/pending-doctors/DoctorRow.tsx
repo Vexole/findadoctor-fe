@@ -5,7 +5,6 @@ import React from "react";
 
 export function DoctorRow(props) {
     const {
-        doctorId,
         doctorUserId,
         doctorName,
         isAcceptingNewPatients,
@@ -33,8 +32,8 @@ export function DoctorRow(props) {
             <td><Link href={`/admin/pending-doctors/${doctorUserId}`}>
                 <span>View Details</span>
             </Link></td>
-            <td><button type="button" onClick={() => props.approveDoctorByAdmin(doctorId)}>Approve</button></td>
-            <td><button type="button" onClick={() => props.rejectDoctorByAdmin(doctorId)}>Reject</button></td>
+            <td><button type="button" onClick={() => props.approveDoctorByAdmin(doctorUserId)}>Approve</button></td>
+            <td><button type="button" onClick={() => props.rejectDoctorByAdmin(doctorUserId)}>Reject</button></td>
         </tr>
     );
 }
