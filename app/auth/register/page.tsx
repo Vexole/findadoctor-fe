@@ -5,6 +5,8 @@ import { Button } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useAuthenticatedUserContext } from '@/context';
+import { useRouter } from 'next/navigation';
 
 const schema = yup
   .object({
@@ -30,6 +32,8 @@ type FormTypes = yup.InferType<typeof schema>;
 export default function Register() {
   const rolesQuery = useRolesQuery();
   const registerApi = useRegisterMutation();
+  const authenticatedUser = useAuthenticatedUserContext();
+  const router = useRouter();
 
   const {
     handleSubmit,
@@ -39,6 +43,8 @@ export default function Register() {
 
   const onSubmit: SubmitHandler<FormTypes> = (formValues: yup.InferType<typeof schema>) =>
     registerApi.mutate(formValues);
+
+  if (authenticatedUser) router.push('/');
 
   return (
     <FormWrapper title="Register" onSubmit={handleSubmit(onSubmit)}>
