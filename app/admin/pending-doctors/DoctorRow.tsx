@@ -1,10 +1,18 @@
 'use client';
 
+import { PendingDoctors } from '@/models/PendingDoctors';
 import { Button, Td, Tr } from '@chakra-ui/react';
 import Link from 'next/link';
 import React from 'react';
 
-export function DoctorRow(props) {
+type PropTypes = {
+  pendingDoctors: PendingDoctors;
+  index: number;
+  approveDoctorByAdmin: any;
+  rejectDoctorByAdmin: any;
+};
+
+export function DoctorRow(props: PropTypes) {
   const {
     doctorUserId,
     doctorName,
@@ -43,7 +51,7 @@ export function DoctorRow(props) {
         </Button>
       </Td>
       <Td>
-        <Button colorScheme="red" onClick={() => props.rejecTDoctorByAdmin(doctorUserId)}>
+        <Button colorScheme="red" onClick={() => props.rejectDoctorByAdmin(doctorUserId)}>
           Reject
         </Button>
       </Td>
