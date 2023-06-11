@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useRouter } from 'next/navigation';
 import NextLink from 'next/link';
+import { useAuthenticatedUserContext } from '@/context';
 
 const schema = yup
   .object({
@@ -18,6 +19,7 @@ const schema = yup
 type FormTypes = yup.InferType<typeof schema>;
 
 export default function Login() {
+  const authenticatedUser = useAuthenticatedUserContext();
   const login = useLoginMutation();
   const router = useRouter();
 
@@ -29,6 +31,8 @@ export default function Login() {
 
   const onSubmit: SubmitHandler<FormTypes> = (formValues: yup.InferType<typeof schema>) =>
     login.mutate(formValues, { onSuccess: () => router.push('/') });
+
+  if (authenticatedUser) router.push('/');
 
   return (
     <FormWrapper title="Login" onSubmit={handleSubmit(onSubmit)}>
