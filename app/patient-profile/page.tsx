@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { getCities } from '@/api/doctors';
 import { useCitiesQuery } from '@/hooks';
+import { Button } from '@chakra-ui/react';
 
 const patientProfileSchema = z.object({
   firstName: z.string().nonempty({
@@ -80,7 +81,7 @@ const PatientProfile: NextPage = () => {
         <h2 style={{ marginTop: '30px' }}>Create Your Account</h2>
         <div>
           <h3 style={{ marginBottom: '30px' }}>Personal Information</h3>
-          <div style={{ display: 'flex', marginBottom: '10px' }}>
+          <div style={{ marginBottom: '10px' }}>
             <section style={{ marginRight: '10px' }}>
               <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="firstName">
                 First Name:
@@ -109,7 +110,7 @@ const PatientProfile: NextPage = () => {
               )}
             </section>
           </div>
-          <div style={{ marginBottom: '10px', display: 'flex' }}>
+          <div style={{ marginBottom: '10px' }}>
             <section>
               <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="dateOfBirth">
                 Date of Birth:
@@ -120,17 +121,17 @@ const PatientProfile: NextPage = () => {
                 {...register('dateOfBirth', {
                   valueAsDate: true,
                 })}
-                style={{ width: '220px' }}
+                style={{ width: '400px' }}
               />
               {errors.dateOfBirth && (
                 <span style={{ display: 'block', color: 'red' }}>{errors.dateOfBirth.message}</span>
               )}
             </section>
-            <section style={{ marginLeft: '10px' }}>
+            <section>
               <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="gender">
                 Gender:
               </label>
-              <select id="gender" {...register('gender')} style={{ width: '220px' }}>
+              <select id="gender" {...register('gender')} style={{ width: '400px' }}>
                 <option value="">Please Select</option>
                 <option value="M">Male</option>
                 <option value="F">Female</option>
@@ -139,7 +140,7 @@ const PatientProfile: NextPage = () => {
                 <span style={{ display: 'block', color: 'red' }}>{errors.gender.message}</span>
               )}
             </section>
-            <section style={{ flex: 1, marginLeft: '15px' }}>
+            <section>
               <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="email">
                 Email:
               </label>
@@ -147,7 +148,7 @@ const PatientProfile: NextPage = () => {
                 type="email"
                 id="email"
                 {...register('email')}
-                style={{ width: '100%', maxWidth: '220px' }}
+                style={{ width: '100%', maxWidth: '400px' }}
               />
               {errors.email && (
                 <span style={{ display: 'block', color: 'red' }}>{errors.email.message}</span>
@@ -158,27 +159,27 @@ const PatientProfile: NextPage = () => {
         <div style={{ marginBottom: '30px' }}>
           <h3 style={{ marginBottom: '30px' }}>Address Information</h3>
           <section style={{ marginBottom: '10px' }}>
-            <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="streetAddress">
+            <label style={{ fontWeight: 'bold' }} htmlFor="streetAddress">
               Street Address:
             </label>
             <input
-              style={{ width: '680px' }}
+              style={{ width: '400px' }}
               type="text"
               id="streetAddress"
               {...register('streetAddress')}
             />
             {errors.streetAddress && (
-              <span style={{ display: 'block', color: 'red' }}>{errors.streetAddress.message}</span>
+              <span style={{ color: 'red' }}>{errors.streetAddress.message}</span>
             )}
           </section>
           <div>
-            <section style={{ marginBottom: '10px', display: 'flex' }}>
+            <section style={{ marginBottom: '10px' }}>
               <div style={{ flex: 1, marginRight: '10px' }}>
                 <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="streetName">
                   Street Name:
                 </label>
                 <input
-                  style={{ width: '330px' }}
+                  style={{ width: '400px' }}
                   type="text"
                   id="streetName"
                   {...register('streetName')}
@@ -193,7 +194,7 @@ const PatientProfile: NextPage = () => {
                 <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="city">
                   City:
                 </label>
-                <select style={{ width: '330px' }} id="city" {...register('city')}>
+                <select style={{ width: '400px' }} id="city" {...register('city')}>
                   <option value="">Please Select</option>
                   {cityOptions.length > 0 &&
                     cityOptions.map(city => (
@@ -209,30 +210,30 @@ const PatientProfile: NextPage = () => {
             </section>
           </div>
 
-          <div style={{ display: 'flex', marginBottom: '10px' }}>
+          <div style={{ marginBottom: '10px' }}>
             <section style={{ marginRight: '10px' }}>
               <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="state">
                 State / Province:
               </label>
-              <input style={{ width: '330px' }} type="text" id="state" {...register('state')} />
+              <input style={{ width: '400px' }} type="text" id="state" {...register('state')} />
               {errors.state && (
                 <span style={{ display: 'block', color: 'red' }}>{errors.state.message}</span>
               )}
             </section>
-            <section style={{ marginLeft: '10px' }}>
+            <section>
               <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="zipCode">
                 Zip Code:
               </label>
-              <input style={{ width: '320px' }} type="text" id="zipCode" {...register('zipCode')} />
+              <input style={{ width: '400px' }} type="text" id="zipCode" {...register('zipCode')} />
               {errors.zipCode && (
                 <span style={{ display: 'block', color: 'red' }}>{errors.zipCode.message}</span>
               )}
             </section>
           </div>
         </div>
-        <button type="submit" style={{ display: 'block', marginLeft: '300px', width: '20%' }}>
+        <Button type="submit" colorScheme="blue" flex={1}>
           Register
-        </button>
+        </Button>
       </form>
     </div>
   );
