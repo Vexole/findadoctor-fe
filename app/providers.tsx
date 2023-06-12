@@ -23,7 +23,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={client}>
         <CacheProvider>
           <ChakraProvider>
-            <Container pt={4}><NavBar/>{children}</Container>
+            <Container py={4} maxW={{base:'container.md', lg: 'container.xl'}}><NavBar/>{children}</Container>
           </ChakraProvider>
         </CacheProvider>
         <ReactQueryDevtools initialIsOpen={false} />

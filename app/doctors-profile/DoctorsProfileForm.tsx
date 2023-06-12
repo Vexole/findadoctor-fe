@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useApproveDoctorMutation, useSaveDoctorProfileMutation } from "@/hooks";
 import { getCities, getLanguages, getPendingDoctorDetailById, getSpecializations } from "@/api";
 import { useForm, useFieldArray } from "react-hook-form";
+import { Button, Stack } from "@chakra-ui/react";
 
 type PropTypes = {
     params: { id: string },
@@ -430,13 +431,13 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
                 </div>
 
 
-                {isAdmin && (<div>
+                {isAdmin && (<Stack direction={'row'} spacing={3} alignItems={'center'}>
                     <Link href={`/admin/pending-doctors`}>
                         <span>Back</span>
                     </Link>
-                    <button type="button" onClick={approveByAdmin}>Approve</button>
-                    <button type="button" onClick={rejectByAdmin}>Reject</button>
-                </div>)}
+                    <Button type="button" colorScheme="blue" onClick={approveByAdmin}>Approve</Button>
+                    <Button type="button" colorScheme="red" onClick={rejectByAdmin}>Reject</Button>
+                </Stack>)}
             </form>
             {/* <DevTool control={control} /> */}
         </>
