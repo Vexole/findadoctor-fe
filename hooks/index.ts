@@ -5,6 +5,7 @@ export * from './useLoginMutation';
 export * from './useLogoutMutation';
 export * from './useForgotPasswordMutation';
 export * from './useResetPasswordMutation';
+export * from './useChangePasswordMutation';
 export * from './useApproveDoctorMutation';
 export * from './usePendingDoctorsQuery';
 export * from './useRejectDoctorMutation';

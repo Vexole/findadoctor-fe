@@ -23,6 +23,8 @@ export default function Login() {
   const login = useLoginMutation();
   const router = useRouter();
 
+  if (authenticatedUser) router.push('/');
+
   const {
     handleSubmit,
     register,
@@ -30,9 +32,17 @@ export default function Login() {
   } = useForm<FormTypes>({ resolver: yupResolver(schema) });
 
   const onSubmit: SubmitHandler<FormTypes> = (formValues: yup.InferType<typeof schema>) =>
-    login.mutate(formValues, { onSuccess: () => router.push('/') });
+    login.mutate(formValues, {
+      onSuccess: (e) => {
+        if (e.isPasswordChangeRequired) {
+          router.push(`/auth/change-password`);
+          return;
+        } else {
+          router.push('/');
+        }
+      }
+    });
 
-  if (authenticatedUser) router.push('/');
 
   return (
     <FormWrapper title="Login" onSubmit={handleSubmit(onSubmit)}>
