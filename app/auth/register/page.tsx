@@ -1,7 +1,7 @@
 'use client';
 import { FormInput, FormSelect, FormWrapper } from '@/components';
 import { useRegisterMutation, useRolesQuery } from '@/hooks';
-import { Button } from '@chakra-ui/react';
+import { Button, Text } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -46,10 +46,26 @@ export default function Register() {
 
   if (authenticatedUser) router.push('/');
 
+  console.log(rolesQuery.data);
+
   return (
-    <FormWrapper title="Register" onSubmit={handleSubmit(onSubmit)}>
+    <FormWrapper
+      onSubmit={handleSubmit(onSubmit)}
+      title="Create your account"
+      titleProps={{ color: '#1A365D', mt: 6 }}
+      alignItems="center"
+      formProps={{
+        w: '100%',
+        maxW: 'lg',
+        p: '6',
+        borderWidth: '1px',
+        borderRadius: 'lg',
+        borderColor: '#1A365D',
+      }}
+    >
       <FormInput
         label="Email"
+        placeholder="Enter your email address"
         register={register('email')}
         isInvalid={Boolean(errors.email)}
         helperText={errors.email ? String(errors.email?.message) : ''}
@@ -57,6 +73,7 @@ export default function Register() {
       <FormInput
         type="password"
         label="Password"
+        placeholder="Enter your password"
         register={register('password')}
         isInvalid={Boolean(errors.password)}
         helperText={
@@ -68,6 +85,7 @@ export default function Register() {
       <FormInput
         type="password"
         label="Confirm Password"
+        placeholder="Confirm your password"
         register={register('confirmPassword')}
         isInvalid={Boolean(errors.confirmPassword)}
         helperText={errors.confirmPassword ? String(errors.confirmPassword?.message) : ''}
@@ -80,9 +98,20 @@ export default function Register() {
         isInvalid={Boolean(errors.role)}
         helperText={errors.role ? String(errors.role?.message) : ''}
       />
-      <Button isLoading={registerApi.isLoading} type="submit" colorScheme='blue'>
+      <Button isLoading={registerApi.isLoading} type="submit" colorScheme="blue">
         Register
       </Button>
+      <Text textAlign={'center'} fontWeight={500} color="#1A365D">
+        Already have an account?
+        <Button
+          colorScheme="green"
+          variant="link"
+          fontWeight={'bold'}
+          onClick={() => router.push('/auth/login')}
+        >
+          Log in
+        </Button>
+      </Text>
     </FormWrapper>
   );
 }

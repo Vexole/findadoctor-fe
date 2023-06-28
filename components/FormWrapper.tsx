@@ -1,18 +1,20 @@
-import { FormEventHandler, ReactNode } from 'react';
-import { Heading, Stack } from '@chakra-ui/react';
+import { FormEventHandler } from 'react';
+import { Heading, HeadingProps, Stack, StackProps } from '@chakra-ui/react';
 
-type FormWrapperProps = {
-  children: ReactNode;
+type FormWrapperProps = StackProps & {
   onSubmit: FormEventHandler<HTMLDivElement>;
-  title: string;
+  title?: string;
+  titleProps?: HeadingProps;
+  formProps?: StackProps;
 };
-export function FormWrapper({ title, onSubmit, children }: FormWrapperProps) {
+
+export function FormWrapper({ title, onSubmit, children, titleProps, formProps, ...props }: FormWrapperProps) {
   return (
-    <Stack spacing={4}>
-      <Heading as="h2" size="xl">
+    <Stack spacing={2} {...props}>
+      <Heading as="h4" size="md" {...titleProps}>
         {title}
       </Heading>
-      <Stack as="form" spacing={2} onSubmit={onSubmit}>
+      <Stack as="form" spacing={2} justifyContent="center" {...formProps} onSubmit={onSubmit}>
         {children}
       </Stack>
     </Stack>
