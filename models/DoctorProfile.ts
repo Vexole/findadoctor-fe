@@ -20,8 +20,8 @@ export type DoctorProfile = {
   firstName: string;
   middleName: string;
   lastName: string;
-  // age: number;
-  // gender: string;
+  age: number;
+  gender: string;
   phone: string;
   contactInformation: string;
   fees: number;
