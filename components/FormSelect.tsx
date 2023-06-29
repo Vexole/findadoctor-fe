@@ -8,11 +8,13 @@ import {
 } from '@chakra-ui/react';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
+type LabelValuePair = { value: string; label: string };
+
 interface FormSelectProps extends FormControlProps {
   helperText?: string;
   label: string;
   placeholder?: string;
-  options: string[];
+  options: string[] | LabelValuePair[];
   register: UseFormRegisterReturn;
 }
 
@@ -28,9 +30,10 @@ export function FormSelect({
     <FormControl {...props}>
       <FormLabel>{label}</FormLabel>
       <Select placeholder={placeholder} {...register}>
-        {options.map(item => (
-          <option key={item}>{item}</option>
-        ))}
+        {options.map(item => {
+          if (typeof item === 'string') return <option key={item}>{item}</option>;
+          return <option key={item.value} value={item.value}>{item.label}</option>;
+        })}
       </Select>
       {props.isInvalid ? (
         <FormErrorMessage>{helperText}</FormErrorMessage>

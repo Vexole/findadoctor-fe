@@ -92,13 +92,13 @@ export default function Register() {
       />
       <FormSelect
         label="Role"
-        options={rolesQuery.data || []}
+        options={rolesQuery.data?.map((role) => ({label: role.roleDescription, value: role.roleName})) || []}
         register={register('role')}
         isDisabled={rolesQuery.data?.length === 0}
         isInvalid={Boolean(errors.role)}
         helperText={errors.role ? String(errors.role?.message) : ''}
       />
-      <Button isLoading={registerApi.isLoading} type="submit" colorScheme="blue">
+      <Button isLoading={registerApi.isLoading} type="submit" colorScheme="facebook">
         Register
       </Button>
       <Text textAlign={'center'} fontWeight={500} color="#1A365D">
