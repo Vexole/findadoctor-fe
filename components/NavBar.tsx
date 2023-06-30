@@ -8,6 +8,7 @@ const links = [
   { href: '/auth/login', title: 'Login', role: '', accessLevel: 'unauthenticated' },
   { href: '/auth/register', title: 'Register', role: '', accessLevel: 'unauthenticated' },
   { href: '/doctors-profile', title: 'Doctor Profile', role: 'doctor', accessLevel: 'authenticated' },
+  { href: '/doctors-profile/availability', title: 'Doctor Availability', role: 'doctor' },
   { href: '/admin/pending-doctors', title: 'Pending Doctors', role: 'admin', accessLevel: 'authenticated' },
   { href: '/auth/logout', title: 'Logout', role: '', accessLevel: 'authenticated' },
 ];
