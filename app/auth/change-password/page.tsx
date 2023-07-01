@@ -41,20 +41,34 @@ export default function Register() {
 
     const [userId, setUserId] = useState('');
 
-    useEffect(() => {
-        const loggedInUserId = getUserId();
-        if (!loggedInUserId) router.push('/auth/login');
-        setUserId(loggedInUserId);
-    }, []);
+    // useEffect(() => {
+    //     const loggedInUserId = getUserId();
+    //     if (!loggedInUserId) router.push('/auth/login');
+    //     setUserId(loggedInUserId);
+    // }, []);
 
     const onSubmit: SubmitHandler<FormTypes> = (formValues: yup.InferType<typeof schema>) =>
         changePassword.mutate({ ...formValues, userId }, { onSuccess: () => router.push('/') });
 
     return (
-        <FormWrapper title="Change Password" onSubmit={handleSubmit(onSubmit)}>
+        <FormWrapper
+            onSubmit={handleSubmit(onSubmit)}
+            alignItems="center"
+            title="Change Password"
+            titleProps={{ color: '#1A365D', mt: 6 }}
+            formProps={{
+                w: '100%',
+                maxW: 'lg',
+                p: '6',
+                borderWidth: '1px',
+                borderRadius: 'lg',
+                borderColor: '#1A365D',
+            }}>
+
             <FormInput
                 type="password"
                 label="Current Password"
+                placeholder='Enter your current password'
                 register={register('oldPassword')}
                 isInvalid={Boolean(errors.oldPassword)}
                 helperText={errors.oldPassword ? String(errors.oldPassword?.message) : ''}
@@ -63,6 +77,7 @@ export default function Register() {
             <FormInput
                 type="password"
                 label="New Password"
+                placeholder='Enter your new password'
                 register={register('newPassword')}
                 isInvalid={Boolean(errors.newPassword)}
                 helperText={
@@ -74,6 +89,7 @@ export default function Register() {
             <FormInput
                 type="password"
                 label="Confirm Password"
+                placeholder='Enter your new password'
                 register={register('confirmPassword')}
                 isInvalid={Boolean(errors.confirmPassword)}
                 helperText={errors.confirmPassword ? String(errors.confirmPassword?.message) : ''}
