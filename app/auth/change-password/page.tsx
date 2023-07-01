@@ -41,11 +41,11 @@ export default function Register() {
 
     const [userId, setUserId] = useState('');
 
-    // useEffect(() => {
-    //     const loggedInUserId = getUserId();
-    //     if (!loggedInUserId) router.push('/auth/login');
-    //     setUserId(loggedInUserId);
-    // }, []);
+    useEffect(() => {
+        const loggedInUserId = getUserId();
+        if (!loggedInUserId) router.push('/auth/login');
+        setUserId(loggedInUserId);
+    }, []);
 
     const onSubmit: SubmitHandler<FormTypes> = (formValues: yup.InferType<typeof schema>) =>
         changePassword.mutate({ ...formValues, userId }, { onSuccess: () => router.push('/') });
