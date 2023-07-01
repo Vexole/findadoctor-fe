@@ -6,19 +6,23 @@ import { useMultiStepForm } from "@/utils/useMultiStepForm";
 import { Education, Experience, DoctorProfile as FormValues } from "@/models/DoctorProfile";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
 import ExperienceForm from "./ExperienceForm";
 import MiscellaneousInformationForm from "./MiscellaneousInformationForm";
-import { useCitiesQuery, useDoctorProfileQuery, useLanguagesQuery, usePendingDoctorsQuery, useSaveDoctorProfileMutation, useSpecializationsQuery } from "@/hooks";
+import { useCitiesQuery, useDoctorProfileQuery, useGendersQuery, useLanguagesQuery, usePendingDoctorsQuery, useSaveDoctorProfileMutation, useSpecializationsQuery } from "@/hooks";
+import { getUser } from "@/utils/userUtils";
 
 const DoctorsProfile = () => {
     const [languageOptions, setLanguageOptions] = useState<JSX.Element[]>([]);
     const [cityOptions, setCityOptions] = useState<JSX.Element[]>([]);
+    const [genderOptions, setGenderOptions] = useState<JSX.Element[]>([]);
     const [specializationOptions, setSpecializationOptions] = useState<JSX.Element[]>([]);
     const [error, setError] = useState();
     const [isDisabled, setIsDisabled] = useState(false);
     const [isUnderReview, setIsUnderReview] = useState(false);
 
     const saveDoctorProfileMutation = useSaveDoctorProfileMutation();
+    const router = useRouter();
 
     const { register, handleSubmit, control, formState: { errors }, reset } = useForm<FormValues>({
         defaultValues: {
@@ -32,8 +36,13 @@ const DoctorsProfile = () => {
 
     const languages = useLanguagesQuery();
     const cities = useCitiesQuery();
+    const genders = useGendersQuery();
     const specializations = useSpecializationsQuery();
     const doctorProfile = useDoctorProfileQuery();
+
+    if (getUser()['role'] !== 'Doctor') {
+        router.push('/doctors-profile/under-review/')
+    }
 
     useEffect(() => {
         if (languages.data) {
@@ -52,6 +61,15 @@ const DoctorsProfile = () => {
             setCityOptions(tempCityOptions);
         }
     }, [cities.data]);
+
+    useEffect(() => {
+        if (genders.data) {
+            const tempGenderOptions = genders.data.map((gender: any) => (
+                <option key={gender.value} value={gender.value}>{gender.description}</option>
+            ));
+            setGenderOptions(tempGenderOptions);
+        }
+    }, [genders.data]);
 
     useEffect(() => {
         if (specializations.data) {
@@ -85,7 +103,7 @@ const DoctorsProfile = () => {
     }, [doctorProfile.data]);
 
     const { steps, currentStepIndex, step, isFirstStep, isLastStep, back, next } = useMultiStepForm([
-        <UserForm register={register} control={control} errors={errors} languageOptions={languageOptions} isDisabled={isDisabled} />,
+        <UserForm register={register} control={control} errors={errors} languageOptions={languageOptions} genderOptions={genderOptions} isDisabled={isDisabled} />,
         <AddressForm register={register} control={control} errors={errors} cityOptions={cityOptions} isDisabled={isDisabled} />,
         <EducationForm register={register} control={control} errors={errors} isDisabled={isDisabled} />,
         <ExperienceForm register={register} control={control} errors={errors} isDisabled={isDisabled} />,
@@ -96,8 +114,9 @@ const DoctorsProfile = () => {
     const submitProfile = async (data: FormValues) => {
         if (isLastStep) {
             try {
-                const result = await saveDoctorProfileMutation.mutateAsync(data);
-            } catch (e) {
+                await saveDoctorProfileMutation.mutateAsync(data);
+                router.push('/doctors-profile/confirmation');
+            } catch (e: any) {
                 setError(e);
             }
         } else {
@@ -130,7 +149,7 @@ const DoctorsProfile = () => {
                                         !isDisabled && isLastStep ? "Submit" : "Next"}
                                 </button>
                             </div>
-                            {error && <span className="error">{error.message}</span>}
+                            {/* {error && <span className="error">{error}</span>} */}
                         </form>
                     </div>
                     )

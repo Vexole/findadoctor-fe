@@ -6,7 +6,17 @@ export function AddressForm(props) {
     const { cityOptions, isDisabled } = props;
 
     return (
-        <FormWrapper title="Address Details">
+        <FormWrapper title="Address Details"
+            titleProps={{ color: '#1A365D', mt: 6 }}
+            alignItems="center"
+            formProps={{
+                w: '100%',
+                maxW: 'lg',
+                p: '6',
+                borderWidth: '1px',
+                borderRadius: 'lg',
+                borderColor: '#1A365D',
+            }}>
             <div className="form-fields">
                 <label htmlFor="street">Street Address</label>
                 <input {...register("street", { required: 'Street Address is required' })}

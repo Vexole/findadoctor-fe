@@ -10,6 +10,6 @@ export function saveDoctorProfile(doctor: DoctorProfile) {
         .post("/doctor/create-doctor", { ...doctor })
         .then((res) => res.data)
         .catch((e) => {
-            throw new Error(e.message);
+            throw e;
         });
 }

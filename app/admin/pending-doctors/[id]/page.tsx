@@ -1,15 +1,17 @@
 "use client"
 import { useEffect, useState } from "react";
 import DoctorsProfileForm from "@/app/doctors-profile/DoctorsProfileForm";
-import { useCitiesQuery, useLanguagesQuery, useSpecializationsQuery } from "@/hooks";
+import { useCitiesQuery, useGendersQuery, useLanguagesQuery, useSpecializationsQuery } from "@/hooks";
 
 const DoctorDetails = ({ params }: { params: { id: string } }) => {
   const [languageOptions, setLanguageOptions] = useState<JSX.Element[]>([]);
   const [cityOptions, setCityOptions] = useState<JSX.Element[]>([]);
+  const [genderOptions, setGenderOptions] = useState<JSX.Element[]>([]);
   const [specializationOptions, setSpecializationOptions] = useState<JSX.Element[]>([]);
   const [isDisabled, setIsDisabled] = useState(true);
 
   const languages = useLanguagesQuery();
+  const genders = useGendersQuery();
   const cities = useCitiesQuery();
   const specializations = useSpecializationsQuery();
 
@@ -21,6 +23,15 @@ const DoctorDetails = ({ params }: { params: { id: string } }) => {
       setLanguageOptions(tempLanguageOptions);
     }
   }, [languages.data]);
+
+  useEffect(() => {
+    if (genders.data) {
+      const tempGendersOptions = genders.data.map((gender: any) => (
+        <option key={gender.value} value={gender.value}>{gender.description}</option>
+      ));
+      setGenderOptions(tempGendersOptions);
+    }
+  }, [genders.data]);
 
   useEffect(() => {
     if (cities.data) {
@@ -49,6 +60,7 @@ const DoctorDetails = ({ params }: { params: { id: string } }) => {
         isDisabled={isDisabled}
         languageOptions={languageOptions}
         specializationOptions={specializationOptions}
+        genderOptions={genderOptions}
       />
     </>
   );

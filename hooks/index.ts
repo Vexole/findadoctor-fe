@@ -10,6 +10,7 @@ export * from './useApproveDoctorMutation';
 export * from './usePendingDoctorsQuery';
 export * from './useRejectDoctorMutation';
 export * from './useCitiesQuery';
+export * from './useGendersQuery';
 export * from './useSpecializationsQuery';
 export * from './useLanguagesQuery';
 export * from './useSaveDoctorProfileMutation';

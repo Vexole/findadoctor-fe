@@ -11,7 +11,17 @@ const MiscellaneousInformationForm = (props) => {
         control
     })
     return (
-        <FormWrapper title="Experience Details">
+        <FormWrapper title="Additional Details"
+            titleProps={{ color: '#1A365D', mt: 6 }}
+            alignItems="center"
+            formProps={{
+                w: '100%',
+                maxW: 'lg',
+                p: '6',
+                borderWidth: '1px',
+                borderRadius: 'lg',
+                borderColor: '#1A365D',
+            }}>
             <div className="form-fields">
                 <label htmlFor="doctorSpecialties">Specializations</label>
                 <div className="dynamic-lists">
@@ -50,18 +60,18 @@ const MiscellaneousInformationForm = (props) => {
                         value: /^\d+(,\d{1,2})?$/,
                         message: 'Invalid fees'
                     }
-                })} id="fees" type="text" disabled={isDisabled}/>
+                })} id="fees" type="text" disabled={isDisabled} />
                 {errors.fees && <span className="error">{errors.fees.message}</span>}
             </div>
             <div className="form-fields">
                 <label htmlFor="waitingTime">Waiting Time</label>
-                <input {...register("waitingTime")} id="waitingTime" type="text" disabled={isDisabled}/>
+                <input {...register("waitingTime", {required: "Waiting Time is Required."})} id="waitingTime" type="text" disabled={isDisabled} />
                 {errors.waitingTime && <span className="error">{errors.waitingTime.message}</span>}
             </div>
             <div className="form-fields">
                 <label htmlFor="isAcceptingNewPatients">IsAcceptingNewPatients</label>
-                <input {...register("isAcceptingNewPatients")} id="isAcceptingNewPatients" 
-                type="checkbox" disabled={isDisabled}/>
+                <input {...register("isAcceptingNewPatients")} id="isAcceptingNewPatients"
+                    type="checkbox" disabled={isDisabled} />
             </div>
         </FormWrapper>);
 }

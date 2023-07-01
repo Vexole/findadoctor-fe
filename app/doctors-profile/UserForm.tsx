@@ -3,7 +3,7 @@ import { FormWrapper } from "../../components/FormWrapper";
 
 export function UserForm(props) {
     const { register, control, errors } = props;
-    const { languageOptions, isDisabled } = props;
+    const { languageOptions, genderOptions, isDisabled } = props;
 
     const { fields: languageFields, append: languageAppend, remove: languageRemove } = useFieldArray({
         name: 'doctorLanguages',
@@ -11,7 +11,17 @@ export function UserForm(props) {
     })
 
     return (
-        <FormWrapper title="Doctor Details">
+        <FormWrapper title="Doctor Details"
+            titleProps={{ color: '#1A365D', mt: 6 }}
+            alignItems="center"
+            formProps={{
+                w: '100%',
+                maxW: 'lg',
+                p: '6',
+                borderWidth: '1px',
+                borderRadius: 'lg',
+                borderColor: '#1A365D',
+            }}>
             {/* <div className="form-fields">
                 <label htmlFor="profilePicture">Profile Picture</label>
                 <input type="file" {...register("profilePicture")} />
@@ -59,26 +69,7 @@ export function UserForm(props) {
                     id="age" type="text" />
                     {errors.age && <span className="error">{errors.age.message}</span>}</div>
             </div> */}
-            {/* <div className="form-fields">
-                <label htmlFor="gender">Gender</label>
-                <div>
-                    <select {...register(`gender`,
-                        {
-                            validate: (fieldValue) => {
-                                return (fieldValue != "" || "Please select a gender")
-                            }
-                        })}
-                    >
-                        <option value="" disabled>Select an Option</option>
-                        <option value="M" disabled>Male</option>
-                        <option value="F" disabled>Female</option>
-                        <option value="O" disabled>Others</option>
-                    </select>
 
-                    {errors.doctorLanguages && <span className="error">Please select a gender.</span>}
-                </div>
-            </div> */}
-            
             <div className="form-fields">
                 <label htmlFor="phone">Phone Number</label>
 
@@ -91,6 +82,23 @@ export function UserForm(props) {
                 })} id="phone" type="text" disabled={isDisabled} />
                     {errors.phone && <span className="error">{errors.phone.message}</span>}</div>
             </div>
+
+            <div className="form-fields">
+                <label htmlFor="gender">Gender</label>
+                <div>
+                    <select {...register("gender", {
+                        validate: (fieldValue: string) => {
+                            return fieldValue !== "" || "Please select a gender";
+                        }
+                    })} id="gender" disabled={isDisabled}>
+                        <option value="">Select an Option</option>
+                        {genderOptions}
+                    </select>
+
+                    {errors.gender && <span className="error">Please select a gender.</span>}
+                </div>
+            </div>
+
             <div className="form-fields">
                 <label htmlFor="doctorLanguages">Languages</label>
                 <div className="dynamic-lists">
@@ -99,7 +107,7 @@ export function UserForm(props) {
                             <div className="form-control" key={field.id}>
                                 <select {...register(`doctorLanguages.${index}.languageId` as const,
                                     {
-                                        validate: (fieldValue) => {
+                                        validate: (fieldValue: any) => {
                                             return (fieldValue != "" || "Please select a language")
                                         }
                                     })}
