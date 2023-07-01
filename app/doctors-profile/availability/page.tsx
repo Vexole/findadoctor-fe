@@ -1,43 +1,35 @@
 'use client';
 import { FormInput, FormSelect, FormWrapper } from '@/components';
-import { useDoctorAvailabilityMutation, useDoctorAvailabilityQuery, useLoginMutation } from '@/hooks';
+import {
+  useDoctorAvailabilityMutation,
+  useDoctorAvailabilityQuery,
+  useUpdateDoctorAvailabilityMutation,
+} from '@/hooks';
 import { Button, IconButton, Stack, Text } from '@chakra-ui/react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { useRouter } from 'next/navigation';
-import NextLink from 'next/link';
-import { useAuthenticatedUserContext } from '@/context';
 import { useWeekDaysQuery } from '@/hooks/useWeekDaysQuery';
 import { CloseIcon } from '@chakra-ui/icons';
 import { useEffect } from 'react';
 
 type FormTypes = {
   weekDays: {
+    availabilityId?: number;
     dayOfWeek: string;
     fromTime: string;
     toTime: string;
     appointmentLength: string;
     doctorId: string;
+    isActive?: boolean;
   }[];
 };
 
 export default function DoctorAvailability() {
   const weekDaysQuery = useWeekDaysQuery();
-  const {data: doctorAvailability} = useDoctorAvailabilityQuery();
+  const { data: doctorAvailability } = useDoctorAvailabilityQuery();
+  const updateAvailabilityApi = useUpdateDoctorAvailabilityMutation();
   const addAvailabilityApi = useDoctorAvailabilityMutation();
   const authenticatedUser = localStorage.user ? JSON.parse(localStorage.user) : {};
   const doctorId = authenticatedUser?.userId;
-
-  console.log("hellooo2");
-
-  console.log(doctorAvailability);
-
-  useEffect(()=>{
-    if(!doctorAvailability) return;
-    doctorAvailability.forEach(item => {
-      append({ dayOfWeek: item.dayOfWeek, fromTime: item.fromTime, toTime: item.toTime, appointmentLength: item.appointmentLength })
-    });  },[doctorAvailability])
 
   const {
     control,
@@ -46,14 +38,22 @@ export default function DoctorAvailability() {
     formState: { errors },
     getValues,
   } = useForm<FormTypes>();
-  const { fields, append, remove } = useFieldArray({ control, name: 'weekDays' });
+  const { fields, append, remove, update } = useFieldArray({ control, name: 'weekDays' });
 
-  // if(getDoctorAvailability?.data) fields = getDoctorAvailability?.data;
+  useEffect(() => {
+    if (!doctorAvailability) return;
+    doctorAvailability.forEach(item => {
+      const fieldIndex = fields.findIndex(field => field.availabilityId === item.availabilityId);
+      if (fieldIndex < 0) return append(item);
+      return update(fieldIndex, item);
+    });
+  }, [doctorAvailability]);
 
   const onSubmit: SubmitHandler<FormTypes> = (formValues: FormTypes) => {
-    // console.log(formValues);
-    console.log({ ...formValues.weekDays});
-    addAvailabilityApi.mutate(formValues.weekDays);
+    const createAvailability = formValues.weekDays.filter(weekday => !weekday?.availabilityId);
+    const updateAvailability = formValues.weekDays.filter(weekday => weekday?.availabilityId);
+    if (createAvailability.length > 0) addAvailabilityApi.mutate(createAvailability);
+    if (updateAvailability.length > 0) updateAvailabilityApi.mutate(updateAvailability);
   };
 
   const validateUniqueDay = (index: number) => (value: string) => {

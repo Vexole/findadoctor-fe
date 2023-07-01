@@ -6,3 +6,4 @@ export * from './rejectDoctor';
 export * from './saveDoctorProfile';
 export * from "./addDoctorAvailability";
 export * from "./getDoctorAvailability";
+export * from "./updateDoctorAvailability";

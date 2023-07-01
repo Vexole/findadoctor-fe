@@ -1,14 +1,14 @@
-import { addDoctorAvailability } from '@/api';
+import { updateDoctorAvailability } from '@/api';
 import { useToast } from '@chakra-ui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export const useDoctorAvailabilityMutation = () => {
+export const useUpdateDoctorAvailabilityMutation = () => {
   const toast = useToast();
   const queryClient = useQueryClient();
-  return useMutation((params: Parameters<typeof addDoctorAvailability>[0]) => addDoctorAvailability(params), {
+  return useMutation((params: Parameters<typeof updateDoctorAvailability>[0]) => updateDoctorAvailability(params), {
     onSuccess: () => {
       toast({
-        title: 'Doctor Availability Saved.',
+        title: 'Doctor Availability Updated.',
         status: 'success',
         isClosable: true,
       });
@@ -16,7 +16,7 @@ export const useDoctorAvailabilityMutation = () => {
     },
     onError: () =>
       toast({
-        title: 'Doctor Availability Not Saved. Try Again Later.',
+        title: 'Doctor Availability Not Updated. Try Again Later.',
         status: 'error',
         isClosable: true,
       }),

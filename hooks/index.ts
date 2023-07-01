@@ -17,3 +17,4 @@ export * from './useSaveDoctorProfileMutation';
 export * from './useDoctorProfileQuery';
 export * from './useDoctorAvailabilityMutation';
 export * from './useDoctorAvailabilityQuery';
+export * from './useUpdateDoctorAvailabilityMutation';
