@@ -1,11 +1,11 @@
 'use client';
 import { FormInput, FormWrapper } from '@/components';
 import { useChangePasswordMutation } from '@/hooks';
-import { Button, Heading, Spinner, Stack } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getUserId } from '@/utils/userUtils';
 
