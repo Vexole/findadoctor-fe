@@ -3,12 +3,18 @@ import { DoctorRow } from './DoctorRow';
 import { usePendingDoctorsQuery, useApproveDoctorMutation, useRejectDoctorMutation } from '@/hooks';
 import { Center, Spinner, Stack, Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
+import { useAuthenticatedUserContext } from '@/context';
 
 const DoctorsList = () => {
+  const authenticatedUser = useAuthenticatedUserContext();
   const router = useRouter();
   const pendingDoctorsQuery = usePendingDoctorsQuery();
   const approveDoctorMutation = useApproveDoctorMutation();
   const rejectDoctorMutation = useRejectDoctorMutation();
+
+  if (!authenticatedUser) {
+    router.push("/auth/login");
+  }
 
   if (pendingDoctorsQuery.isLoading) return <Spinner />;
   if (pendingDoctorsQuery.isError) return <pre>{JSON.stringify(pendingDoctorsQuery.error)}</pre>;
@@ -16,7 +22,10 @@ const DoctorsList = () => {
   const approveDoctorByAdmin = async (doctorId: string) => {
     try {
       const result = await approveDoctorMutation.mutateAsync(doctorId, {
-        onSuccess: () => router.push('/admin/pending-doctors'),
+        onSuccess: () => {
+          debugger
+          router.push('/admin/pending-doctors')
+        },
       });
     } catch (e) {
       console.log(e);
@@ -48,26 +57,26 @@ const DoctorsList = () => {
   return (
     <Stack>
       <h2>Pending Doctors List</h2>
-        <TableContainer>
-          <Table variant='striped' colorScheme='gray' size='sm'>
-            <Thead>
-              <Tr className="doctors-list-row">
-                <Th>S.N.</Th>
-                <Th>Title</Th>
-                <Th>Doctor's Name</Th>
-                <Th>Phone</Th>
-                <Th>Street Address</Th>
-                <Th>City</Th>
-                <Th>State</Th>
-                <Th>Postal Code</Th>
-                <Th>Fees</Th>
-                <Th>Is Accepting New Patients</Th>
-                <Th colSpan={3}><Center>Actions</Center></Th>
-              </Tr>
-            </Thead>
-            <Tbody>{pendingDoctorsList}</Tbody>
-          </Table>
-        </TableContainer>
+      <TableContainer>
+        <Table variant='striped' colorScheme='gray' size='sm'>
+          <Thead>
+            <Tr className="doctors-list-row">
+              <Th>S.N.</Th>
+              <Th>Title</Th>
+              <Th>Doctor's Name</Th>
+              <Th>Phone</Th>
+              <Th>Street Address</Th>
+              <Th>City</Th>
+              <Th>State</Th>
+              <Th>Postal Code</Th>
+              <Th>Fees</Th>
+              <Th>Is Accepting New Patients</Th>
+              <Th colSpan={3}><Center>Actions</Center></Th>
+            </Tr>
+          </Thead>
+          <Tbody>{pendingDoctorsList}</Tbody>
+        </Table>
+      </TableContainer>
     </Stack>
   );
 };

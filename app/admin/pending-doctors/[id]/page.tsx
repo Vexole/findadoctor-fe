@@ -2,13 +2,22 @@
 import { useEffect, useState } from "react";
 import DoctorsProfileForm from "@/app/doctors-profile/DoctorsProfileForm";
 import { useCitiesQuery, useGendersQuery, useLanguagesQuery, useSpecializationsQuery } from "@/hooks";
+import { useAuthenticatedUserContext } from "@/context";
+import { useRouter } from "next/navigation";
 
 const DoctorDetails = ({ params }: { params: { id: string } }) => {
+  const authenticatedUser = useAuthenticatedUserContext();
+  const router = useRouter();
+
   const [languageOptions, setLanguageOptions] = useState<JSX.Element[]>([]);
   const [cityOptions, setCityOptions] = useState<JSX.Element[]>([]);
   const [genderOptions, setGenderOptions] = useState<JSX.Element[]>([]);
   const [specializationOptions, setSpecializationOptions] = useState<JSX.Element[]>([]);
   const [isDisabled, setIsDisabled] = useState(true);
+
+  if (!authenticatedUser) {
+    router.push("/auth/login");
+  }
 
   const languages = useLanguagesQuery();
   const genders = useGendersQuery();

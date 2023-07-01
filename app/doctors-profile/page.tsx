@@ -11,6 +11,7 @@ import ExperienceForm from "./ExperienceForm";
 import MiscellaneousInformationForm from "./MiscellaneousInformationForm";
 import { useCitiesQuery, useDoctorProfileQuery, useGendersQuery, useLanguagesQuery, usePendingDoctorsQuery, useSaveDoctorProfileMutation, useSpecializationsQuery } from "@/hooks";
 import { getUser } from "@/utils/userUtils";
+import { useAuthenticatedUserContext } from "@/context";
 
 const DoctorsProfile = () => {
     const [languageOptions, setLanguageOptions] = useState<JSX.Element[]>([]);
@@ -19,10 +20,10 @@ const DoctorsProfile = () => {
     const [specializationOptions, setSpecializationOptions] = useState<JSX.Element[]>([]);
     const [error, setError] = useState();
     const [isDisabled, setIsDisabled] = useState(false);
-    const [isUnderReview, setIsUnderReview] = useState(false);
 
     const saveDoctorProfileMutation = useSaveDoctorProfileMutation();
     const router = useRouter();
+    const authenticatedUser = useAuthenticatedUserContext();
 
     const { register, handleSubmit, control, formState: { errors }, reset } = useForm<FormValues>({
         defaultValues: {
@@ -39,6 +40,10 @@ const DoctorsProfile = () => {
     const genders = useGendersQuery();
     const specializations = useSpecializationsQuery();
     const doctorProfile = useDoctorProfileQuery();
+
+    if (!authenticatedUser) {
+        router.push("/auth/login");
+    }
 
     if (getUser()['role'] !== 'Doctor') {
         router.push('/doctors-profile/under-review/')
@@ -127,32 +132,30 @@ const DoctorsProfile = () => {
     return (
         <>
             {
-                isUnderReview ? ("Your application is under review") :
-                    // <DoctorsProfileForm />
-                    (<div style={{
-                        position: "relative",
-                        background: "white",
-                        border: "1px solid black",
-                        padding: "2rem",
-                        margin: "1rem auto",
-                        borderRadius: ".5rem"
-                    }}>
-                        <form onSubmit={handleSubmit(submitProfile)} noValidate>
-                            <div style={{ position: "absolute", top: ".5rem", right: ".5rem" }}>
-                                {currentStepIndex + 1} / {steps.length}
-                            </div>
-                            {step}
-                            <div style={{ marginTop: "1rem", display: "flex", gap: ".5rem", justifyContent: "flex-end" }}>
-                                {!isFirstStep && <button type="button" onClick={back}>Back</button>}
-                                <button type="submit">
-                                    {(isDisabled && isLastStep) ? "Edit" :
-                                        !isDisabled && isLastStep ? "Submit" : "Next"}
-                                </button>
-                            </div>
-                            {/* {error && <span className="error">{error}</span>} */}
-                        </form>
-                    </div>
-                    )
+                (<div style={{
+                    position: "relative",
+                    background: "white",
+                    border: "1px solid black",
+                    padding: "2rem",
+                    margin: "1rem auto",
+                    borderRadius: ".5rem"
+                }}>
+                    <form onSubmit={handleSubmit(submitProfile)} noValidate>
+                        <div style={{ position: "absolute", top: ".5rem", right: ".5rem" }}>
+                            {currentStepIndex + 1} / {steps.length}
+                        </div>
+                        {step}
+                        <div style={{ marginTop: "1rem", display: "flex", gap: ".5rem", justifyContent: "flex-end" }}>
+                            {!isFirstStep && <button type="button" onClick={back}>Back</button>}
+                            <button type="submit">
+                                {(isDisabled && isLastStep) ? "Edit" :
+                                    !isDisabled && isLastStep ? "Submit" : "Next"}
+                            </button>
+                        </div>
+                        {/* {error && <span className="error">{error}</span>} */}
+                    </form>
+                </div>
+                )
             }
         </>
     );
