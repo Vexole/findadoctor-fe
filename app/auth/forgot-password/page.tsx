@@ -29,14 +29,25 @@ export default function ForgotPassword() {
     forgotPassword.mutate(formValues, { onSuccess: () => router.push('/auth/login') });
 
   return (
-    <FormWrapper title="Forgot Password" onSubmit={handleSubmit(onSubmit)}>
+    <FormWrapper title="Forgot Password" onSubmit={handleSubmit(onSubmit)}
+      titleProps={{ color: '#1A365D', mt: 6 }}
+      alignItems="center"
+      formProps={{
+        w: '100%',
+        maxW: 'lg',
+        p: '6',
+        borderWidth: '1px',
+        borderRadius: 'lg',
+        borderColor: '#1A365D',
+      }}>
       <FormInput
         label="Email"
+        placeholder='Enter your email address'
         register={register('email')}
         isInvalid={Boolean(errors.email)}
         helperText={errors.email ? String(errors.email?.message) : ''}
       />
-      
+
       <Button isLoading={forgotPassword.isLoading} type="submit" colorScheme="blue">
         Reset Password
       </Button>

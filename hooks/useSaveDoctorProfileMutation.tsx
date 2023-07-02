@@ -12,11 +12,11 @@ export const useSaveDoctorProfileMutation = () => {
                 isClosable: true,
             });
         },
-        onError: () =>
+        onError: (error) => {
             toast({
-                title: 'Something went wrong. Try Again Later.',
+                title: error.response.data.errors.error[0],
                 status: 'error',
                 isClosable: true,
-            }),
+            })},
     });
 };

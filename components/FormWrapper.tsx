@@ -2,7 +2,7 @@ import { FormEventHandler } from 'react';
 import { Heading, HeadingProps, Stack, StackProps } from '@chakra-ui/react';
 
 type FormWrapperProps = StackProps & {
-  onSubmit: FormEventHandler<HTMLDivElement>;
+  onSubmit?: FormEventHandler<HTMLDivElement>;
   title?: string;
   titleProps?: HeadingProps;
   formProps?: StackProps;

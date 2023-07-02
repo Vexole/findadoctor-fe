@@ -1,11 +1,11 @@
 'use client';
 import { FormInput, FormWrapper } from '@/components';
 import { useChangePasswordMutation } from '@/hooks';
-import { Button, Heading, Spinner, Stack } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getUserId } from '@/utils/userUtils';
 
@@ -51,10 +51,24 @@ export default function Register() {
         changePassword.mutate({ ...formValues, userId }, { onSuccess: () => router.push('/') });
 
     return (
-        <FormWrapper title="Change Password" onSubmit={handleSubmit(onSubmit)}>
+        <FormWrapper
+            onSubmit={handleSubmit(onSubmit)}
+            alignItems="center"
+            title="Change Password"
+            titleProps={{ color: '#1A365D', mt: 6 }}
+            formProps={{
+                w: '100%',
+                maxW: 'lg',
+                p: '6',
+                borderWidth: '1px',
+                borderRadius: 'lg',
+                borderColor: '#1A365D',
+            }}>
+
             <FormInput
                 type="password"
                 label="Current Password"
+                placeholder='Enter your current password'
                 register={register('oldPassword')}
                 isInvalid={Boolean(errors.oldPassword)}
                 helperText={errors.oldPassword ? String(errors.oldPassword?.message) : ''}
@@ -63,6 +77,7 @@ export default function Register() {
             <FormInput
                 type="password"
                 label="New Password"
+                placeholder='Enter your new password'
                 register={register('newPassword')}
                 isInvalid={Boolean(errors.newPassword)}
                 helperText={
@@ -74,6 +89,7 @@ export default function Register() {
             <FormInput
                 type="password"
                 label="Confirm Password"
+                placeholder='Enter your new password'
                 register={register('confirmPassword')}
                 isInvalid={Boolean(errors.confirmPassword)}
                 helperText={errors.confirmPassword ? String(errors.confirmPassword?.message) : ''}

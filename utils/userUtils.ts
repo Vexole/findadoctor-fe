@@ -6,3 +6,7 @@ export const getUserId = () => {
   const authenticatedUser = getUser();
   return authenticatedUser ? authenticatedUser.userId : '';
 };
+
+export const logOut = () => {
+  localStorage.clear();
+};
