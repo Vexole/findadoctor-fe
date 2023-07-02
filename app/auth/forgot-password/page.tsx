@@ -48,7 +48,7 @@ export default function ForgotPassword() {
         helperText={errors.email ? String(errors.email?.message) : ''}
       />
 
-      <Button isLoading={forgotPassword.isLoading} type="submit" colorScheme="blue">
+      <Button isLoading={forgotPassword.isLoading} type="submit" colorScheme="facebook">
         Reset Password
       </Button>
     </FormWrapper>
