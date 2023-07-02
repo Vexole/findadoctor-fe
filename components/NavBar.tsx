@@ -1,7 +1,6 @@
 import { useAuthenticatedUserContext } from '@/context';
 import { Link, Stack, StackDivider } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { useEffect, useState } from 'react';
 
 const links = [
   { href: '/', title: 'Home', role: '', accessLevel: '' },
@@ -13,7 +12,6 @@ const links = [
 ];
 
 export function NavBar() {
-
   const authenticatedUser = useAuthenticatedUserContext();
   const userRole = authenticatedUser?.role ?? "";
   const accessLevel = authenticatedUser ? "authenticated" : "unauthenticated";

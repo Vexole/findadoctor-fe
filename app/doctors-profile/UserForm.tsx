@@ -1,5 +1,6 @@
 import { useFieldArray } from "react-hook-form";
 import { FormWrapper } from "../../components/FormWrapper";
+import { FormInput } from "@/components";
 
 export function UserForm(props) {
     const { register, control, errors } = props;
@@ -48,6 +49,34 @@ export function UserForm(props) {
                     {errors.firstName && <span className="error">{errors.firstName.message}</span>}
                 </div>
             </div>
+
+            {/* <FormInput
+                type="firstName"
+                label="First Name"
+                placeholder='Enter your first name'
+                register={register('firstName')}
+                isInvalid={Boolean(errors.firstName)}
+                helperText={errors.firstName ? String(errors.firstName?.message) : ''}
+            />
+
+            <FormInput
+                type="middleName"
+                label="Middle Name"
+                placeholder='Enter your middle name'
+                register={register('middleName')}
+                isInvalid={Boolean(errors.middleName)}
+                helperText={errors.middleName ? String(errors.middleName?.message) : ''}
+            />
+
+            <FormInput
+                type="lastName"
+                label="Last Name"
+                placeholder='Enter your last name'
+                register={register('lastName')}
+                isInvalid={Boolean(errors.lastName)}
+                helperText={errors.lastName ? String(errors.lastName?.message) : ''}
+            /> */}
+
             <div className="form-fields">
                 <label htmlFor="middleName">Middle Name</label>
 

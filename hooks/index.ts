@@ -15,3 +15,4 @@ export * from './useSpecializationsQuery';
 export * from './useLanguagesQuery';
 export * from './useSaveDoctorProfileMutation';
 export * from './useDoctorProfileQuery';
+export * from './useBookAppointmentMutation';
