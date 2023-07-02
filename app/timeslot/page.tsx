@@ -2,14 +2,14 @@
 const moment = require('moment');
 import { useAuthenticatedUserContext } from "@/context";
 import { useBookAppointmentMutation } from "@/hooks";
-import { Button } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ScheduleMeeting, timeSlotDifference } from "react-schedule-meeting";
 
 export default function Timeslot() {
     const [selectedTimeslot, setSelectedTimeslot] = useState(
-        new Date(new Date(new Date().setDate(new Date().getDate())).setHours(9, 0, 0, 0))
+        // new Date(new Date(new Date().setDate(new Date().getDate()+1)).setHours(9, 0, 0, 0))
     );
 
     const router = useRouter();
@@ -66,18 +66,13 @@ export default function Timeslot() {
             doctorId: ''
         }, {
             onSuccess: (e) => {
-                if (e.isPasswordChangeRequired) {
-                    router.push(`/auth/change-password`);
-                    return;
-                } else {
-                    router.push('/');
-                }
+
             }
         });
     }
 
     return (
-        <>
+        <div>
             <ScheduleMeeting
                 borderRadius={10}
                 primaryColor="#3f5b85"
@@ -87,9 +82,16 @@ export default function Timeslot() {
                 availableTimeslots={availableTimeSlotsLessUnavailableTimeSlots}
                 onStartTimeSelect={timeslot => setSelectedTimeslot(timeslot.startTime)}
             />
-            <Button isLoading={bookAppointment.isLoading} onClick={handleBookAppointment} type="submit" colorScheme="facebook" flex={1}>
-                Book Appointment
-            </Button>
-        </>
+            <Flex justify="center" marginTop={4}>
+                <Button
+                    isLoading={bookAppointment.isLoading}
+                    onClick={handleBookAppointment}
+                    type="submit"
+                    colorScheme="facebook"
+                >
+                    Book Appointment
+                </Button>
+            </Flex>
+        </div>
     );
 }
