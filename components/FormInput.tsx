@@ -7,11 +7,12 @@ import {
   FormLabel,
   Input,
 } from '@chakra-ui/react';
-import {  UseFormRegisterReturn } from 'react-hook-form';
+import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface FormInputProps extends FormControlProps {
   helperText?: string;
   label: string;
+  placeholder: string;
   type?: HTMLInputTypeAttribute | undefined;
   register: UseFormRegisterReturn;
 }
@@ -19,14 +20,17 @@ interface FormInputProps extends FormControlProps {
 export function FormInput({
   helperText,
   label,
+  placeholder,
   type = 'text',
   register,
   ...props
 }: FormInputProps) {
   return (
     <FormControl {...props}>
-      <FormLabel>{label}</FormLabel>
-      <Input type={type} {...register} />
+      <FormLabel fontWeight="bold" color="#1A365D">
+        {label}
+      </FormLabel>
+      <Input type={type} placeholder={placeholder} {...register} />
       {props.isInvalid ? (
         <FormErrorMessage>{helperText}</FormErrorMessage>
       ) : (

@@ -15,11 +15,12 @@ type PropTypes = {
     isDisabled: boolean,
     cityOptions: JSX.Element[]
     specializationOptions: JSX.Element[]
-    languageOptions: JSX.Element[]
+    languageOptions: JSX.Element[],
+    genderOptions: JSX.Element[]
 }
 
 const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
-    cityOptions, specializationOptions, languageOptions }: PropTypes) => {
+    cityOptions, specializationOptions, languageOptions, genderOptions }: PropTypes) => {
     const [userId, setUserId] = useState(params.id);
 
     const saveDoctorProfileApi = useSaveDoctorProfileMutation();
@@ -142,23 +143,6 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
                     <input {...register("age", { valueAsNumber: true, required: "Age must be between 18 and 74", min: 18, max: 75 })}
                         id="age" type="text" disabled={isDisabled} />
                 </div> */}
-                {/* <div className="form-fields">
-                    <label htmlFor="gender">Gender</label>
-                    <div>
-                        <select {...register(`gender`,
-                            {
-                                validate: (fieldValue) => {
-                                    return (fieldValue != "" || "Please select a gender")
-                                }
-                            })}
-                            disabled={isDisabled} >
-                            <option value="" disabled>Select an Option</option>
-                            <option value="M" disabled>Male</option>
-                            <option value="F" disabled>Female</option>
-                            <option value="O" disabled>Others</option>
-                        </select>
-                    </div>
-                </div> */}
                 <div className="form-fields">
                     <label htmlFor="phoneNumber">Phone Number</label>
                     <input {...register("phone", {
@@ -169,6 +153,21 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
                         }
                     })} id="phone" type="text" disabled={isDisabled} />
                     {/* {errors.phone && <span className="error">{errors.phone.message}</span>} */}
+                </div>
+                <div className="form-fields">
+                    <label htmlFor="gender">Gender</label>
+                    <div>
+                        <select {...register("gender", {
+                            validate: (fieldValue: string) => {
+                                return fieldValue !== "" || "Please select a gender";
+                            }
+                        })} id="gender" disabled={isDisabled}>
+                            <option value="">Select an Option</option>
+                            {genderOptions}
+                        </select>
+
+                        {errors.gender && <span className="error">Please select a gender.</span>}
+                    </div>
                 </div>
                 <div className="form-fields">
                     <label htmlFor="doctorLanguages">Languages</label>
