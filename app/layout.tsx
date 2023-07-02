@@ -1,8 +1,10 @@
-"use client";
+'use client';
 import { Inter } from 'next/font/google';
 import { Providers } from './providers';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import '/public/styles.css';
+import { Container } from '@chakra-ui/react';
+import Link from 'next/link';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -16,9 +18,55 @@ const queryClient = new QueryClient();
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body
+        className={inter.className}
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+        }}
+      >
         <QueryClientProvider client={queryClient}>
-          <Providers>{children}</Providers>
+          <Providers>
+            <header
+              style={{
+                paddingTop: '1rem',
+                paddingBottom: '1rem',
+                paddingLeft: '2rem',
+                paddingRight: '2rem',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+              }}
+            >
+              <Link href="/">Find A Family Doctor</Link>
+              <ul
+                style={{
+                  display: 'flex',
+                  listStyle: 'none',
+                  gap: '1rem',
+                  alignItems: 'center',
+                }}
+              >
+                <li>Find A Family Doctor</li>
+                <li>
+                  <Link href="/about">About Us</Link>
+                </li>
+                <li>
+                  <Link href="/auth/login">Login</Link>
+                </li>
+                <li>
+                  <Link href="/auth/register">Register</Link>
+                </li>
+              </ul>
+            </header>
+            <main>{children}</main>
+          </Providers>
         </QueryClientProvider>
       </body>
     </html>

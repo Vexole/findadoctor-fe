@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Heading, Stack } from '@chakra-ui/react';
+import { Button, Container, Heading, Stack } from '@chakra-ui/react';
 import { useLogoutMutation } from '@/hooks';
 import { useRouter } from 'next/navigation';
 import { useAuthenticatedUserContext } from '@/context';
@@ -29,11 +29,42 @@ export default function Home() {
     );
 
   return (
-    <Stack spacing={3}>
-      <Heading>Homepage</Heading>
-      <Button colorScheme="blue" onClick={handleAuth}>
-        Login
-      </Button>
-    </Stack>
+    <div
+      style={{
+        display: 'flex',
+      }}
+    >
+      <div
+        style={{
+          width: '50%',
+          backgroundColor: '#ebf8ff',
+          paddingTop: '4rem',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <h3
+          style={{
+            fontSize: '3rem',
+            fontWeight: 700,
+            lineHeight: '1.2',
+            color: '#2d3748',
+          }}
+        >
+          Find Highly Rated <br /> Family Doctors <br />
+          Easily
+        </h3>
+        <p>Select you doctor and preferred slot to book your appointment</p>
+      </div>
+      <div
+        style={{
+          width: '50%',
+          backgroundColor: '#4299e1',
+          paddingTop: '4rem',
+        }}
+      ></div>
+    </div>
   );
 }
