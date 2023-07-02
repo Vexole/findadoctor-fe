@@ -35,10 +35,11 @@ export default function Login() {
     login.mutate(formValues, {
       onSuccess: (e) => {
         if (e.isPasswordChangeRequired) {
-          router.push(`/auth/change-password`);
-          return;
+          return router.push(`/auth/change-password`);
         } else {
-          router.push('/');
+          return router.push(`/auth/change-password`);
+
+          // return router.push('/');
         }
       }
     });

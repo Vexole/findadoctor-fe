@@ -41,76 +41,49 @@ export function UserForm(props) {
                     {errors.title && <span className="error">{errors.title.message}</span>}
                 </div>
             </div>
-            <div className="form-fields">
-                <label htmlFor="firstName">Fist Name</label>
-                <div>
-                    <input {...register("firstName", { required: 'First Name is required' })}
-                        id="firstName" type="text" disabled={isDisabled} />
-                    {errors.firstName && <span className="error">{errors.firstName.message}</span>}
-                </div>
-            </div>
 
-            {/* <FormInput
-                type="firstName"
+            <FormInput
                 label="First Name"
                 placeholder='Enter your first name'
                 register={register('firstName')}
+                disabled={isDisabled}
                 isInvalid={Boolean(errors.firstName)}
                 helperText={errors.firstName ? String(errors.firstName?.message) : ''}
             />
 
             <FormInput
-                type="middleName"
                 label="Middle Name"
                 placeholder='Enter your middle name'
                 register={register('middleName')}
+                disabled={isDisabled}
                 isInvalid={Boolean(errors.middleName)}
                 helperText={errors.middleName ? String(errors.middleName?.message) : ''}
             />
 
             <FormInput
-                type="lastName"
+                type="text"
                 label="Last Name"
                 placeholder='Enter your last name'
+                disabled={isDisabled}
                 register={register('lastName')}
                 isInvalid={Boolean(errors.lastName)}
                 helperText={errors.lastName ? String(errors.lastName?.message) : ''}
-            /> */}
+            />
 
-            <div className="form-fields">
-                <label htmlFor="middleName">Middle Name</label>
-
-                <div><input {...register("middleName")}
-                    id="middleName" type="text" disabled={isDisabled} />
-                    {errors.middleName && <span className="error">{errors.middleName.message}</span>}</div>
-            </div>
-            <div className="form-fields">
-                <label htmlFor="lastName">Last Name</label>
-
-                <div><input {...register("lastName", { required: 'Last Name is required' })}
-                    id="lastName" type="text" disabled={isDisabled} />
-                    {errors.lastName && <span className="error">{errors.lastName.message}</span>}</div>
-            </div>
-            {/* <div className="form-fields">
-                <label htmlFor="age">Age</label>
-
-                <div><input {...register("age", { valueAsNumber: true, required: "Age must be between 18 and 74", min: 18, max: 75 })}
-                    id="age" type="text" />
-                    {errors.age && <span className="error">{errors.age.message}</span>}</div>
-            </div> */}
-
-            <div className="form-fields">
-                <label htmlFor="phone">Phone Number</label>
-
-                <div><input {...register("phone", {
+            <FormInput
+                label="Phone Number"
+                placeholder='Enter your phone number'
+                disabled={isDisabled}
+                register={register("phone", {
                     required: "Phone Number is requred",
                     pattern: {
                         value: /^\d{10}$/,
                         message: 'Invalid phone number format'
                     }
-                })} id="phone" type="text" disabled={isDisabled} />
-                    {errors.phone && <span className="error">{errors.phone.message}</span>}</div>
-            </div>
+                })}
+                isInvalid={Boolean(errors.phone)}
+                helperText={errors.phone ? String(errors.phone?.message) : ''}
+            />
 
             <div className="form-fields">
                 <label htmlFor="gender">Gender</label>

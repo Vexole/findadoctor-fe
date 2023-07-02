@@ -10,7 +10,17 @@ export function EducationForm(props) {
     })
 
     return (
-        <FormWrapper title="Education Details">
+        <FormWrapper title="Education Details"
+            titleProps={{ color: '#1A365D', mt: 6 }}
+            alignItems="center"
+            formProps={{
+                w: '100%',
+                maxW: 'lg',
+                p: '6',
+                borderWidth: '1px',
+                borderRadius: 'lg',
+                borderColor: '#1A365D',
+            }}>
             <div className="form-fields">
                 <label htmlFor="doctorEducationBackgrounds">Qualifications</label>
                 <div className="dynamic-lists">

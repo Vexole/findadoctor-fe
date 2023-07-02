@@ -20,6 +20,7 @@ const DoctorsProfile = () => {
     const [specializationOptions, setSpecializationOptions] = useState<JSX.Element[]>([]);
     const [error, setError] = useState();
     const [isDisabled, setIsDisabled] = useState(false);
+    const [isEditMode, setIsEditMode] = useState(false);
 
     const saveDoctorProfileMutation = useSaveDoctorProfileMutation();
     const router = useRouter();
@@ -117,7 +118,11 @@ const DoctorsProfile = () => {
 
 
     const submitProfile = async (data: FormValues) => {
-        if (isLastStep) {
+        if (isDisabled && isLastStep) {
+            setIsDisabled(false);
+            setIsEditMode(true);
+        }
+        else if (isLastStep) {
             try {
                 await saveDoctorProfileMutation.mutateAsync(data);
                 router.push('/doctors-profile/confirmation');
@@ -148,7 +153,7 @@ const DoctorsProfile = () => {
                         <div style={{ marginTop: "1rem", display: "flex", gap: ".5rem", justifyContent: "flex-end" }}>
                             {!isFirstStep && <button type="button" onClick={back}>Back</button>}
                             <button type="submit">
-                                {(isDisabled && isLastStep) ? "Edit" :
+                                {(isEditMode && isLastStep) ? "Update" : (isDisabled && isLastStep) ? "Edit" :
                                     !isDisabled && isLastStep ? "Submit" : "Next"}
                             </button>
                         </div>
