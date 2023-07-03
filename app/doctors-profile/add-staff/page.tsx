@@ -24,9 +24,10 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, useToast } from '@chakra-ui/react';
+import { Button, useToast, Stack } from '@chakra-ui/react';
 import { createDoctorStaff } from '@/api/doctor/addDoctorStaff';
 import { useEffect, useState } from 'react';
+import { FormInput, FormWrapper, FormSelect } from '@/components';
 
 const doctorStaffProfileSchema = z.object({
   firstName: z.string().nonempty({
@@ -47,6 +48,7 @@ const doctorStaffProfileSchema = z.object({
   }),
   dateOfBirth: z.date({
     required_error: 'Date of birth is required',
+    invalid_type_error: 'Date of birth is required',
   }),
   cityId: z.number({
     required_error: 'City is required',
@@ -127,7 +129,6 @@ export default function AddDoctorStaffProfile() {
 
   const onSubmit = (data: DoctorStaffProfileType) => {
     createStaffProfile.mutateAsync(data);
-    console.log(data);
   };
 
   if (loading) {
@@ -135,215 +136,165 @@ export default function AddDoctorStaffProfile() {
   }
 
   return (
-    <div
-      className="form-container"
-      style={{ maxWidth: '800px', margin: '0 auto', padding: '20px', border: '1px solid black' }}
-    >
-      <h1 style={{ textAlign: 'center' }}>Staff Profile</h1>
-      <form style={{ marginTop: '20px' }} onSubmit={handleSubmit(onSubmit)}>
-        <h2 style={{ marginTop: '30px' }}>Create Staff Account</h2>
-        <div>
-          <h3 style={{ marginBottom: '30px' }}>Staff Information</h3>
-          <div style={{ marginBottom: '10px' }}>
-            <section style={{ marginRight: '10px' }}>
-              <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="firstName">
-                First Name:
-              </label>
-              <input type="text" id="firstName" {...register('firstName')} />
-              {errors.firstName && (
-                <span style={{ display: 'block', color: 'red' }}>{errors.firstName.message}</span>
-              )}
-            </section>
-            <section style={{ marginRight: '10px' }}>
-              <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="middleName">
-                Middle Name:
-              </label>
-              <input type="text" id="middleName" {...register('middleName')} />
-              {errors.middleName && (
-                <span style={{ display: 'block', color: 'red' }}>{errors.middleName.message}</span>
-              )}
-            </section>
-            <section>
-              <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="lastName">
-                Last Name:
-              </label>
-              <input type="text" id="lastName" {...register('lastName')} />
-              {errors.lastName && (
-                <span style={{ display: 'block', color: 'red' }}>{errors.lastName.message}</span>
-              )}
-            </section>
-            <section>
-              <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="phone">
-                Phone:
-              </label>
-              <input type="text" id="phone" {...register('phone')} />
-              {errors.phone && (
-                <span style={{ display: 'block', color: 'red' }}>{errors.phone.message}</span>
-              )}
-            </section>
-            <section>
-              <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="emergencyContact">
-                Emergency Contact:
-              </label>
-              <input type="text" id="emergencyContact" {...register('emergencyContact')} />
-              {errors.emergencyContact && (
-                <span style={{ display: 'block', color: 'red' }}>
-                  {errors.emergencyContact.message}
-                </span>
-              )}
-            </section>
-            <section>
-              <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="contactInformation">
-                Contact Informationm:
-              </label>
-              <input type="email" id="contactInformation" {...register('contactInformation')} />
-              {errors.contactInformation && (
-                <span style={{ display: 'block', color: 'red' }}>
-                  {errors.contactInformation.message}
-                </span>
-              )}
-            </section>
-            <section>
-              <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="email">
-                Email:
-              </label>
-              <input type="email" id="email" {...register('email')} />
-              {errors.email && (
-                <span style={{ display: 'block', color: 'red' }}>{errors.email.message}</span>
-              )}
-            </section>
-            <section>
-              <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="password">
-                Password:
-              </label>
-              <input type="password" id="password" {...register('password')} />
-              {errors.password && (
-                <span style={{ display: 'block', color: 'red' }}>{errors.password.message}</span>
-              )}
-            </section>
-          </div>
-          <div style={{ marginBottom: '10px' }}>
-            <section>
-              <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="dateOfBirth">
-                Date of Birth:
-              </label>
-              <input
-                type="date"
-                id="dateOfBirth"
-                {...register('dateOfBirth', {
-                  valueAsDate: true,
-                })}
-                style={{ width: '400px' }}
-              />
-              {errors.dateOfBirth && (
-                <span style={{ display: 'block', color: 'red' }}>{errors.dateOfBirth.message}</span>
-              )}
-            </section>
-            <section>
-              <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="dateOfHire">
-                Date of Hire:
-              </label>
-              <input
-                type="date"
-                id="dateOfHire"
-                {...register('dateOfHire', {
-                  valueAsDate: true,
-                })}
-                style={{ width: '400px' }}
-              />
-              {errors.dateOfHire && (
-                <span style={{ display: 'block', color: 'red' }}>{errors.dateOfHire.message}</span>
-              )}
-            </section>
-            <section>
-              <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="gender">
-                Gender:
-              </label>
-              {genderOptions.isLoading && !genderOptions.isError ? (
-                <p>Loading...</p>
-              ) : (
-                <select style={{ width: '400px' }} id="city" {...register('gender')}>
-                  <option value={undefined}>Please Select</option>
-                  {genderOptions.data?.map(gen => (
-                    <option value={gen.value}>{gen.description}</option>
-                  ))}
-                </select>
-              )}
-              {errors.gender && (
-                <span style={{ display: 'block', color: 'red' }}>{errors.gender.message}</span>
-              )}
-            </section>
-          </div>
-        </div>
-        <div style={{ marginBottom: '30px' }}>
-          <h3 style={{ marginBottom: '30px' }}>Address Information</h3>
-          <section style={{ marginBottom: '10px' }}>
-            <label style={{ fontWeight: 'bold' }} htmlFor="street">
-              Street Address:
-            </label>
-            <input
-              style={{ width: '400px' }}
-              type="text"
-              id="streetAddress"
-              {...register('street')}
-            />
-            {errors.street && <span style={{ color: 'red' }}>{errors.street.message}</span>}
-          </section>
-          <div>
-            <section style={{ marginBottom: '10px' }}>
-              <div style={{ marginRight: '95px', flex: 1 }}>
-                <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="cityId">
-                  City:
-                </label>
-                {cityOptions.isLoading && !cityOptions.isError ? (
-                  <p>Loading...</p>
-                ) : (
-                  <select
-                    style={{ width: '400px' }}
-                    id="city"
-                    {...register('cityId', {
-                      valueAsNumber: true,
-                    })}
-                  >
-                    <option value={undefined}>Please Select</option>
-                    {cityOptions.data &&
-                      cityOptions.data.map(
-                        (city: { cityId: number; cityName: string; stateId: number }) => (
-                          <option key={city.cityId} value={city.cityId}>
-                            {city.cityName}
-                          </option>
-                        )
-                      )}
-                  </select>
-                )}
-                {errors.cityId && (
-                  <span style={{ display: 'block', color: 'red' }}>{errors.cityId.message}</span>
-                )}
-              </div>
-            </section>
-          </div>
+    <>
+      <FormWrapper
+        onSubmit={handleSubmit(onSubmit)}
+        title="Staff Profile"
+        titleProps={{ color: '#1A365D', mt: 6 }}
+        alignItems="center"
+        formProps={{
+          w: '100%',
+          maxW: 'lg',
+          p: '6',
+          borderWidth: '1px',
+          borderRadius: 'lg',
+          borderColor: '#1A365D',
+        }}
+      >
+        <FormInput
+          label="First Name"
+          placeholder="Enter your first name"
+          register={register('firstName')}
+          isInvalid={Boolean(errors.firstName)}
+          helperText={errors.firstName ? String(errors.firstName?.message) : ''}
+        />
 
-          <div style={{ marginBottom: '10px' }}>
-            <section>
-              <label style={{ display: 'block', fontWeight: 'bold' }} htmlFor="postalCode">
-                Zip Code:
-              </label>
-              <input
-                style={{ width: '400px' }}
-                type="text"
-                id="zipCode"
-                {...register('postalCode')}
-              />
-              {errors.postalCode && (
-                <span style={{ display: 'block', color: 'red' }}>{errors.postalCode.message}</span>
-              )}
-            </section>
-          </div>
-        </div>
-        <Button type="submit" colorScheme="blue" flex={1}>
-          Create
-        </Button>
-      </form>
-    </div>
+        <FormInput
+          label="Middle Name"
+          placeholder="Enter your middle name"
+          register={register('middleName')}
+          isInvalid={Boolean(errors.middleName)}
+          helperText={errors.middleName ? String(errors.middleName?.message) : ''}
+        />
+
+        <FormInput
+          label="Last Name"
+          placeholder="Enter your last name"
+          register={register('lastName')}
+          isInvalid={Boolean(errors.lastName)}
+          helperText={errors.lastName ? String(errors.lastName?.message) : ''}
+        />
+
+        <FormInput
+          label="Phone Number"
+          placeholder="Enter your phone number"
+          register={register('phone')}
+          isInvalid={Boolean(errors.phone)}
+          helperText={errors.phone ? String(errors.phone?.message) : ''}
+        />
+
+        <FormInput
+          label="Emergency Contact Number"
+          placeholder="Enter emergency number"
+          register={register('emergencyContact')}
+          isInvalid={Boolean(errors.emergencyContact)}
+          helperText={errors.emergencyContact ? String(errors.emergencyContact?.message) : ''}
+        />
+
+        <FormInput
+          type="text"
+          label="Contact Information"
+          placeholder="Contact Information"
+          register={register('contactInformation')}
+          isInvalid={Boolean(errors.contactInformation)}
+          helperText={errors.contactInformation ? String(errors.contactInformation?.message) : ''}
+        />
+
+        <FormInput
+          type="email"
+          label="Email"
+          placeholder="Enter your email"
+          register={register('email')}
+          isInvalid={Boolean(errors.email)}
+          helperText={errors.email ? String(errors.email?.message) : ''}
+        />
+
+        <FormInput
+          type="password"
+          label="Password"
+          placeholder="Enter your password"
+          register={register('password')}
+          isInvalid={Boolean(errors.password)}
+          helperText={errors.password ? String(errors.password?.message) : ''}
+        />
+
+        <FormInput
+          type="date"
+          label="Date Of Birth"
+          placeholder="Enter date of birth"
+          register={register('dateOfBirth', {
+            valueAsDate: true,
+          })}
+          isInvalid={Boolean(errors.dateOfBirth)}
+          helperText={errors.dateOfBirth ? String(errors.dateOfBirth?.message) : ''}
+        />
+
+        <FormInput
+          type="date"
+          label="Date Of Hire"
+          placeholder="Enter date of hire"
+          register={register('dateOfHire', {
+            valueAsDate: true,
+          })}
+          isInvalid={Boolean(errors.dateOfHire)}
+          helperText={errors.dateOfHire ? String(errors.dateOfHire?.message) : ''}
+        />
+
+        <FormSelect
+          label="Gender"
+          options={
+            genderOptions.data?.map(gender => ({
+              label: gender.description,
+              value: gender.value,
+            })) || []
+          }
+          register={register('gender')}
+          isInvalid={Boolean(errors.gender)}
+          helperText={errors.gender ? String(errors.gender?.message) : ''}
+        />
+
+        <FormInput
+          label="Street Address"
+          placeholder="Enter your street address"
+          register={register('street')}
+          isInvalid={Boolean(errors.street)}
+          helperText={errors.street ? String(errors.street?.message) : ''}
+        />
+
+        <FormSelect
+          label="City"
+          options={
+            cityOptions.data?.map((cityOptions: { cityName: string; cityId: number }) => ({
+              label: cityOptions.cityName,
+              value: cityOptions.cityId,
+            })) || []
+          }
+          register={register('cityId', {
+            valueAsNumber: true,
+          })}
+          isInvalid={Boolean(errors.cityId)}
+          helperText={errors.cityId ? String(errors.cityId?.message) : ''}
+        />
+
+        <FormInput
+          label="Zip Code"
+          placeholder="Enter your zip code"
+          register={register('postalCode')}
+          isInvalid={Boolean(errors.postalCode)}
+          helperText={errors.postalCode ? String(errors.postalCode?.message) : ''}
+        />
+
+        <Stack direction="row" p="2">
+          <Button
+            isLoading={createStaffProfile.isLoading}
+            type="submit"
+            colorScheme="facebook"
+            flex={1}
+          >
+            Create Staff
+          </Button>
+        </Stack>
+      </FormWrapper>
+    </>
   );
 }
