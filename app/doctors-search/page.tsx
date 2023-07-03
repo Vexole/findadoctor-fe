@@ -67,7 +67,7 @@ const contentArray = [
 
 export default function DoctorsSearch() {
   return (
-    <Stack direction="column">
+    <Stack direction="column" spacing={0}>
       <Stack
         display="flex"
         direction="column"
@@ -124,8 +124,8 @@ export default function DoctorsSearch() {
           </Stack>
         </Stack>
       </Stack>
-      <Grid templateColumns={{ base: '1, 1fr', md: 'repeat(4, 1fr)' }} gap={4}>
-        <GridItem colSpan={1}>
+      <Grid templateColumns={{ base: '1, 1fr', md: 'repeat(4, 1fr)' }}>
+        <GridItem colSpan={1}  p={6}>
           <Stack spacing={4}>
             <Heading as="h5" size="sm" color="#1A365D">
               Refine your search
@@ -187,14 +187,14 @@ export default function DoctorsSearch() {
             <Button colorScheme="telegram">Update Search</Button>
           </Stack>
         </GridItem>
-        <GridItem colSpan={{ base: 1, md: 3 }} bg="#EBF8FF" p={4}>
-          <Grid templateColumns={{ base: '1, 1fr', md: "repeat(2, 1fr)"}} gap={4} alignItems="center" justifyContent={{ base: "center", md: "flex-end"}}>
-            <GridItem>
+        <GridItem colSpan={{ base: 1, md: 3 }} bg="#EBF8FF" p={6}>
+          <Grid templateColumns={{ base: '1, 1fr', md: "repeat(2, 1fr)"}} gap={4} >
+            <GridItem  alignSelf='center'>
               <Text fontSize="sm" color="gray">
                 Showing 175 searching results.
               </Text>
             </GridItem>
-            <GridItem>
+            <GridItem justifySelf="end">
               <Select
                 variant="flushed"
                 size="md"
@@ -220,6 +220,7 @@ export default function DoctorsSearch() {
                     src={content.image}
                     alt="Doctor Profile"
                     m="auto"
+                    objectFit="cover"
                   />
 
                   <Heading
