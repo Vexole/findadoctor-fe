@@ -24,7 +24,6 @@ const links = [
     role: 'admin',
     accessLevel: 'authenticated',
   },
-  { href: '/auth/logout', title: 'Logout', role: '', accessLevel: 'authenticated' },
   {
     href: '/doctors-profile/add-staff',
     title: 'Create Staff',
@@ -32,6 +31,7 @@ const links = [
     accessLevel: 'authenticated',
   },
   { href: '/patient/create', title: 'Profile', role: 'patient', accessLevel: 'authenticated' },
+  { href: '/auth/logout', title: 'Logout', role: '', accessLevel: 'authenticated' },
 ];
 
 export function NavBar() {
