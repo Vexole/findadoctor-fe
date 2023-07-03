@@ -4,6 +4,7 @@ import NextLink from 'next/link';
 
 const links = [
   { href: '/', title: 'Home', role: '', accessLevel: '' },
+  { href: '/doctors-search', title: 'Doctor Search', role: '', accessLevel: '' },
   { href: '/auth/login', title: 'Login', role: '', accessLevel: 'unauthenticated' },
   { href: '/auth/register', title: 'Register', role: '', accessLevel: 'unauthenticated' },
   {
