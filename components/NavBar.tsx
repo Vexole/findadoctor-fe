@@ -1,13 +1,13 @@
 import { useAuthenticatedUserContext } from '@/context';
 import { Link, Stack, StackDivider } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { useEffect, useState } from 'react';
 
 const links = [
   { href: '/', title: 'Home', role: '', accessLevel: '' },
   { href: '/auth/login', title: 'Login', role: '', accessLevel: 'unauthenticated' },
   { href: '/auth/register', title: 'Register', role: '', accessLevel: 'unauthenticated' },
   { href: '/doctors-profile', title: 'Doctor Profile', role: 'doctor', accessLevel: 'authenticated' },
+  { href: '/doctors-profile/availability', title: 'Doctor Availability', role: 'doctor', accessLevel: 'authenticated' },
   { href: '/admin/pending-doctors', title: 'Pending Doctors', role: 'admin', accessLevel: 'authenticated' },
   { href: '/auth/logout', title: 'Logout', role: '', accessLevel: 'authenticated' },
 ];
