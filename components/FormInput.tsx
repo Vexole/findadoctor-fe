@@ -15,14 +15,14 @@ interface FormInputProps extends FormControlProps {
   placeholder: string;
   type?: HTMLInputTypeAttribute | undefined;
   register: UseFormRegisterReturn;
-  disabled?: boolean;
+  isDisabled?: boolean;
 }
 
 export function FormInput({
   helperText,
   label,
   placeholder,
-  disabled,
+  isDisabled,
   type = 'text',
   register,
   ...props
@@ -32,7 +32,7 @@ export function FormInput({
       <FormLabel fontWeight="bold" color="#1A365D">
         {label}
       </FormLabel>
-      <Input type={type} placeholder={placeholder} {...register} disabled={disabled} />
+      <Input type={type} placeholder={placeholder} {...register} disabled={isDisabled} />
       {props.isInvalid ? (
         <FormErrorMessage>{helperText}</FormErrorMessage>
       ) : (

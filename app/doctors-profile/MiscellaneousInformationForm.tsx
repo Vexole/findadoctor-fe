@@ -1,5 +1,7 @@
+import { FormInput } from "@/components";
 import { FormWrapper } from "../../components/FormWrapper";
 import { useFieldArray } from "react-hook-form";
+import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Select } from "@chakra-ui/react";
 
 
 const MiscellaneousInformationForm = (props) => {
@@ -22,52 +24,63 @@ const MiscellaneousInformationForm = (props) => {
                 borderRadius: 'lg',
                 borderColor: '#1A365D',
             }}>
-            <div className="form-fields">
-                <label htmlFor="doctorSpecialties">Specializations</label>
-                <div className="dynamic-lists">
-                    {specializationFields.map((field, index) => {
-                        return (
-                            <div className="form-control" key={field.id}>
-                                <select {...register(`doctorSpecialties.${index}.specialtyId` as const,
+            <FormControl>
+                <FormLabel fontWeight="bold" color="#1A365D">Specializations</FormLabel>
+                {specializationFields.map((field, index) => {
+                    return (
+                        <div className="form-control" key={field.id}>
+                            <Select placeholder="Select an option"
+                                isDisabled={isDisabled}
+                                {...register(`doctorSpecialties.${index}.specialtyId` as const,
                                     {
-                                        required: "Please select a specialization"
-                                    })}
-                                    disabled={isDisabled}>
-                                    <option value="" disabled>Select an Option</option>
-                                    {specializationOptions}
-                                </select>
-                                {
-                                    !isDisabled &&
-                                    index > 0 &&
-                                    <div>
-                                        <button type="button" onClick={() => specializationRemove(index)}>Remove</button>
-                                    </div>
-                                }
-                            </div>);
-                    })
-                    }
-                    {errors.doctorSpecialties && <span className="error">Please complete specialization details.</span>}
-                    {!isDisabled && <div className="btn_add_more">
-                        <button type="button" onClick={() => specializationAppend({ specialtyId: "" })}>Add More</button>
-                    </div>}
-                </div>
-            </div>
-            <div className="form-fields">
-                <label htmlFor="fees">Fees</label>
-                <input {...register("fees", {
+                                        validate: (fieldValue: any) => {
+                                            return (fieldValue != "" || "Please select a specialization")
+                                        }
+                                    })}>
+                                {specializationOptions}
+                            </Select>
+                            {!isDisabled && index > 0 &&
+                                <div className="btn_remove">
+                                    <button type="button" onClick={() => specializationRemove(index)}>Remove</button>
+                                </div>
+                            }
+                            {Boolean(errors.doctorSpecialties) ? (
+                                <FormErrorMessage>{errors.doctorSpecialties ? String(errors.doctorSpecialties?.message) : ''}</FormErrorMessage>
+                            ) : (
+                                <FormHelperText>{errors.doctorSpecialties ? String(errors.doctorSpecialties?.message) : ''}</FormHelperText>
+                            )}
+                        </div>);
+                })
+                }
+                {!isDisabled && <div className="btn_add_more">
+                    <button type="button" onClick={() => specializationAppend({ specialtyId: "" })}>Add More</button>
+                </div>}
+            </FormControl>
+
+            <FormInput
+                label="Fees"
+                placeholder='Enter your fees'
+                isDisabled={isDisabled}
+                register={register("fees", {
                     required: "Fees is requred",
                     pattern: {
                         value: /^\d+(,\d{1,2})?$/,
                         message: 'Invalid fees'
                     }
-                })} id="fees" type="text" disabled={isDisabled} />
-                {errors.fees && <span className="error">{errors.fees.message}</span>}
-            </div>
-            <div className="form-fields">
-                <label htmlFor="waitingTime">Waiting Time</label>
-                <input {...register("waitingTime", {required: "Waiting Time is Required."})} id="waitingTime" type="text" disabled={isDisabled} />
-                {errors.waitingTime && <span className="error">{errors.waitingTime.message}</span>}
-            </div>
+                })}
+                isInvalid={Boolean(errors.fees)}
+                helperText={errors.fees ? String(errors.fees?.message) : ''}
+            />
+
+            <FormInput
+                label="Waiting Time"
+                placeholder='Enter your waiting time'
+                isDisabled={isDisabled}
+                register={register("waitingTime", { required: "Waiting Time is Required." })}
+                isInvalid={Boolean(errors.waitingTime)}
+                helperText={errors.waitingTime ? String(errors.waitingTime?.message) : ''}
+            />
+
             <div className="form-fields">
                 <label htmlFor="isAcceptingNewPatients">IsAcceptingNewPatients</label>
                 <input {...register("isAcceptingNewPatients")} id="isAcceptingNewPatients"
