@@ -115,7 +115,7 @@ export default function DoctorAvailability() {
   };
 
   return (
-    <FormWrapper onSubmit={handleSubmit(onSubmit)} title="Doctor Avaiability">
+    <FormWrapper onSubmit={handleSubmit(onSubmit)} title="Doctor Availability">
       {getValues('weekDays')?.length !== weekDaysQuery.data?.length && (
         <Button
           colorScheme="teal"

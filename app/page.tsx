@@ -16,39 +16,14 @@ export default function Home() {
     return router.push('/auth/login');
   };
 
-  if (user)
-    return (
-      <Stack spacing={3}>
-        <Heading>Welcome,</Heading>
-        <Heading size="md" as="h3">
-          {user.email}
-        </Heading>
-        <Button colorScheme="blue" onClick={handleAuth} isLoading={logout.isLoading}>
-          Logout
-        </Button>
-      </Stack>
-    );
-
   return (
     <div>
-      <div
+      <div id='home_container'
         style={{
           display: 'flex',
         }}
       >
-        <div
-          style={{
-            width: '50%',
-            backgroundColor: '#ebf8ff',
-            paddingTop: '4rem',
-            paddingBottom: '4rem',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '1rem',
-          }}
-        >
+        <div>
           <h3
             style={{
               fontSize: '3rem',
@@ -66,7 +41,7 @@ export default function Home() {
               textAlign: 'center',
             }}
           >
-            Select you doctor and preferred slot to book your appointment
+            Select your doctor and preferred slot to book your appointment
           </p>
           <div
             style={{
@@ -92,10 +67,16 @@ export default function Home() {
                 display: 'flex',
                 gap: '2rem',
                 alignItems: 'center',
+                flexWrap: 'wrap',
+                justifyContent: 'center'
               }}
             >
               <section>
-                <select name="speciality" id="speciality" placeholder="Speciality">
+                <select
+                  name="speciality"
+                  id="speciality"
+                  placeholder="Speciality"
+                >
                   <option value="speciality">Speciality</option>
                 </select>
               </section>
@@ -107,35 +88,29 @@ export default function Home() {
               <section>
                 <input type="date" name="date" id="date" />
               </section>
-              <button
-                type="button"
-                style={{
-                  padding: '0.5rem',
-                  backgroundColor: 'rgba(66,153,225,0.9)',
-                  borderRadius: '8px',
-                  color: 'white',
-                  fontWeight: 'bold',
-                }}
-              >
-                Book an Appointment
-              </button>
+              <div>
+                <button
+                  type="button"
+                  style={{
+                    padding: '0.5rem',
+                    backgroundColor: 'rgba(66,153,225,0.9)',
+                    borderRadius: '8px',
+                    color: 'white',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  Book an Appointment
+                </button>
+              </div>
             </form>
           </div>
         </div>
-        <div
-          style={{
-            width: '50%',
-            backgroundColor: '#3182ce',
-            paddingTop: '4rem',
-            paddingBottom: '4rem',
-          }}
-        >
-          <Image
+        <div>
+          <img
             src="https://thumbs.dreamstime.com/z/funny-clown-doctor-isolated-white-background-89615687.jpg"
             alt="Clown"
             height={800}
             width={500}
-            quality={100}
             style={{
               marginLeft: 'auto',
               marginRight: 'auto',
@@ -173,6 +148,7 @@ export default function Home() {
           <div
             style={{
               display: 'flex',
+              flexWrap: 'wrap',
               gap: '2rem',
               alignItems: 'center',
               justifyContent: 'space-around',
@@ -184,6 +160,7 @@ export default function Home() {
                 flexDirection: 'column',
                 gap: '1rem',
                 alignItems: 'center',
+                minWidth: '200px',
               }}
             >
               <div
@@ -198,7 +175,7 @@ export default function Home() {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="1.5"
+                  strokeWidth="1.5"
                   stroke="currentColor"
                   style={{
                     width: '3rem',
@@ -206,8 +183,8 @@ export default function Home() {
                   }}
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                     d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
                   />
                 </svg>
@@ -221,6 +198,7 @@ export default function Home() {
                 flexDirection: 'column',
                 gap: '1rem',
                 alignItems: 'center',
+                minWidth: '200px',
               }}
             >
               <div
@@ -235,7 +213,7 @@ export default function Home() {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="1.5"
+                  strokeWidth="1.5"
                   stroke="currentColor"
                   style={{
                     width: '3rem',
@@ -243,14 +221,19 @@ export default function Home() {
                   }}
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M14 12H9m5 0l-1.5-1.5M9 12L7.5 13.5"
                   />
                 </svg>
               </div>
-              <h6>Find Your Doctor</h6>
-              <small>Choose from a variety of medical specialties.</small>
+              <h6>Book an Appointment</h6>
+              <small>Schedule a convenient appointment time.</small>
             </div>
             <div
               style={{
@@ -258,6 +241,7 @@ export default function Home() {
                 flexDirection: 'column',
                 gap: '1rem',
                 alignItems: 'center',
+                minWidth: '200px',
               }}
             >
               <div
@@ -272,7 +256,7 @@ export default function Home() {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="1.5"
+                  strokeWidth="1.5"
                   stroke="currentColor"
                   style={{
                     width: '3rem',
@@ -280,62 +264,27 @@ export default function Home() {
                   }}
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
                   />
                 </svg>
               </div>
-              <h6>Find Your Doctor</h6>
-              <small>Choose from a variety of medical specialties.</small>
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1rem',
-                alignItems: 'center',
-              }}
-            >
-              <div
-                style={{
-                  padding: '1rem',
-                  backgroundColor: 'rgba(66,153,225,0.3)',
-                  width: 'fit-content',
-                  borderRadius: '50%',
-                }}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  style={{
-                    width: '3rem',
-                    height: '3rem',
-                  }}
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
-                  />
-                </svg>
-              </div>
-              <h6>Find Your Doctor</h6>
-              <small>Choose from a variety of medical specialties.</small>
+              <h6>Receive Medical Care</h6>
+              <small>Get personalized care from top professionals.</small>
             </div>
           </div>
         </div>
+
         <div
           style={{
-            backgroundColor: 'rgba(66,153,225,0.3)',
+            backgroundColor: 'rgba(66, 153, 225, 0.3)',
             borderRadius: '8px',
             display: 'flex',
             padding: '4rem',
             justifyContent: 'space-around',
           }}
+          className='booking_made_easy'
         >
           <div>
             <Image
@@ -351,11 +300,12 @@ export default function Home() {
               }}
             />
           </div>
+
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: '4rem',
+              gap: '16px',
               justifyContent: 'center',
             }}
           >
@@ -374,6 +324,8 @@ export default function Home() {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '1rem',
+                alignItems: 'center',
+                textAlign: 'center'
               }}
             >
               <li>Find Your Specialist</li>
@@ -383,7 +335,7 @@ export default function Home() {
               <button
                 style={{
                   padding: '1rem',
-                  backgroundColor: 'rgba(66,153,225,0.9)',
+                  backgroundColor: 'rgba(66, 153, 225, 0.9)',
                   borderRadius: '8px',
                   color: 'white',
                   fontWeight: 'bold',
@@ -395,217 +347,228 @@ export default function Home() {
             </ul>
           </div>
         </div>
-        <div
-          style={{
-            backgroundColor: 'rgba(66,153,225,0.3)',
-            borderRadius: '8px',
-            display: 'flex',
-            padding: '4rem',
-            justifyContent: 'space-around',
-          }}
-        >
-          <div
+
+        <div>
+          <div className='offers_container'
             style={{
+              backgroundColor: 'rgba(66,153,225,0.3)',
+              borderRadius: '8px',
               display: 'flex',
-              flexDirection: 'column',
-              gap: '4rem',
-              justifyContent: 'center',
+              gap: '16px',
+              padding: '4rem',
+              justifyContent: 'space-around',
+              flexDirection: 'row'
             }}
           >
-            <h6
-              style={{
-                textAlign: 'center',
-                fontWeight: 'bold',
-                fontSize: '1.5rem',
-              }}
-            >
-              We offer a wide range <br /> of specialists for your health
-            </h6>
             <div
               style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2,1fr)',
-                gridTemplateRows: 'repeat(2,1fr)',
-                gap: '0.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4rem',
+                justifyContent: 'center',
               }}
             >
+              <h6
+                style={{
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  fontSize: '1.5rem',
+                }}
+              >
+                We offer a wide range <br /> of specialists for your health
+              </h6>
               <div
                 style={{
-                  backgroundColor: 'white',
-                  padding: '1rem',
-                  borderRadius: '4px',
-                  display: 'flex',
-                  gap: '1rem',
-                  alignItems: 'center',
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2,1fr)',
+                  gridTemplateRows: 'repeat(2,1fr)',
+                  gap: '0.5rem',
                 }}
               >
                 <div
                   style={{
-                    backgroundColor: 'rgba(66,153,225,0.2)',
-                    padding: '0.5rem',
-                    borderRadius: '50%',
-                    width: 'fit-content',
+                    backgroundColor: 'white',
+                    padding: '1rem',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    gap: '1rem',
+                    alignItems: 'center',
                   }}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
+                  <div
                     style={{
-                      width: '2rem',
-                      height: '2rem',
+                      backgroundColor: 'rgba(66,153,225,0.2)',
+                      padding: '0.5rem',
+                      borderRadius: '50%',
+                      width: 'fit-content',
                     }}
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      style={{
+                        width: '2rem',
+                        height: '2rem',
+                      }}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <span>Dentistry</span>
                 </div>
-
-                <span>Dentistry</span>
-              </div>
-              <div
-                style={{
-                  backgroundColor: 'white',
-                  padding: '1rem',
-                  borderRadius: '4px',
-                  display: 'flex',
-                  gap: '1rem',
-                  alignItems: 'center',
-                }}
-              >
                 <div
                   style={{
-                    backgroundColor: 'rgba(66,153,225,0.2)',
-                    padding: '0.5rem',
-                    borderRadius: '50%',
-                    width: 'fit-content',
+                    backgroundColor: 'white',
+                    padding: '1rem',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    gap: '1rem',
+                    alignItems: 'center',
                   }}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
+                  <div
                     style={{
-                      width: '2rem',
-                      height: '2rem',
+                      backgroundColor: 'rgba(66,153,225,0.2)',
+                      padding: '0.5rem',
+                      borderRadius: '50%',
+                      width: 'fit-content',
                     }}
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      style={{
+                        width: '2rem',
+                        height: '2rem',
+                      }}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <span>General Health</span>
                 </div>
-                <span>General Health</span>
-              </div>
-              <div
-                style={{
-                  backgroundColor: 'white',
-                  padding: '1rem',
-                  borderRadius: '4px',
-                  display: 'flex',
-                  gap: '1rem',
-                  alignItems: 'center',
-                }}
-              >
                 <div
                   style={{
-                    backgroundColor: 'rgba(66,153,225,0.2)',
-                    padding: '0.5rem',
-                    borderRadius: '50%',
-                    width: 'fit-content',
+                    backgroundColor: 'white',
+                    padding: '1rem',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    gap: '1rem',
+                    alignItems: 'center',
                   }}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
+                  <div
                     style={{
-                      width: '2rem',
-                      height: '2rem',
+                      backgroundColor: 'rgba(66,153,225,0.2)',
+                      padding: '0.5rem',
+                      borderRadius: '50%',
+                      width: 'fit-content',
                     }}
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      style={{
+                        width: '2rem',
+                        height: '2rem',
+                      }}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <span>Phychiatry</span>
                 </div>
-                <span>Phychiatry</span>
-              </div>
-              <div
-                style={{
-                  backgroundColor: 'white',
-                  padding: '1rem',
-                  borderRadius: '4px',
-                  display: 'flex',
-                  gap: '1rem',
-                  alignItems: 'center',
-                }}
-              >
                 <div
                   style={{
-                    backgroundColor: 'rgba(66,153,225,0.2)',
-                    padding: '0.5rem',
-                    borderRadius: '50%',
-                    width: 'fit-content',
+                    backgroundColor: 'white',
+                    padding: '1rem',
+                    borderRadius: '4px',
+                    display: 'flex',
+                    gap: '1rem',
+                    alignItems: 'center',
                   }}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
+                  <div
                     style={{
-                      width: '2rem',
-                      height: '2rem',
+                      backgroundColor: 'rgba(66,153,225,0.2)',
+                      padding: '0.5rem',
+                      borderRadius: '50%',
+                      width: 'fit-content',
                     }}
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      style={{
+                        width: '2rem',
+                        height: '2rem',
+                      }}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                  <span>Neurology</span>
                 </div>
-                <span>Neurology</span>
               </div>
+              <button
+                style={{
+                  textAlign: 'left',
+                }}
+              >
+                Show More
+              </button>
             </div>
-            <button
+            <div
               style={{
-                textAlign: 'left',
+                display: 'flex',
+                justifyContent: 'center',
               }}
             >
-              Show More
-            </button>
-          </div>
-          <div>
-            <Image
-              src="https://thumbs.dreamstime.com/z/scary-clown-doctor-playing-performance-children-isolated-red-background-colourful-make-up-face-white-medical-coat-209212241.jpg"
-              alt="Clown"
-              height={800}
-              width={500}
-              quality={100}
-              style={{
-                marginLeft: 'auto',
-                marginRight: 'auto',
-                borderRadius: '75%',
-              }}
-            />
+              <Image
+                src="https://thumbs.dreamstime.com/z/scary-clown-doctor-playing-performance-children-isolated-red-background-colourful-make-up-face-white-medical-coat-209212241.jpg"
+                alt="Clown"
+                height={800}
+                width={500}
+                quality={100}
+                style={{
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                  borderRadius: '75%',
+                  objectFit: 'cover'
+                }}
+              />
+            </div>
           </div>
         </div>
+
         <footer
           style={{
             display: 'flex',
@@ -617,7 +580,7 @@ export default function Home() {
             style={{
               display: 'flex',
               flexDirection: 'column',
-              gap: '2rem',
+              gap: '1rem',
             }}
           >
             <div
@@ -646,11 +609,12 @@ export default function Home() {
               </svg>
               <span>Find a Family Doctor</span>
             </div>
-            <div>
+            <div className='follow_us'>
               <p
                 style={{
                   fontWeight: 'bold',
                   fontSize: '0.75rem',
+                  alignSelf: 'start'
                 }}
               >
                 Follow Us

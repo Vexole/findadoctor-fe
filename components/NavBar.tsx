@@ -51,13 +51,14 @@ export function NavBar() {
 
   return (
     <Stack
-      direction="row"
+      direction={{ base: 'column', md: 'row' }}
       color="blue.500"
-      px="4rem"
+      px={{ base: '2rem', md: '4rem' }}
       py="1rem"
       backgroundColor="blue.500"
       justifyContent="space-between"
       alignItems="center"
+      className='nav-bar'
     >
       <Link
         href="/"
@@ -88,7 +89,7 @@ export function NavBar() {
         </svg>
         <span>Find a Family Doctor</span>
       </Link>
-      <Stack direction="row" spacing={4} divider={<StackDivider />}>
+      <Stack direction="row" spacing={4} divider={<StackDivider />} mt={{ base: 4, md: 0 }}>
         {allowedLinks.map(({ href, title }) => (
           <Link as={NextLink} href={href} key={title} color="white">
             {title}
