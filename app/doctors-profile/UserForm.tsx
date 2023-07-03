@@ -62,9 +62,6 @@ export function UserForm(props) {
                     id="lastName" type="text" disabled={isDisabled} />
                     {errors.lastName && <span className="error">{errors.lastName.message}</span>}</div>
             </div>
-            <div className="form-fields">
-                <input {...register("gender")} id="gender" type="hidden" value="Male" />
-            </div>
             {/* <div className="form-fields">
                 <label htmlFor="age">Age</label>
 
