@@ -24,7 +24,7 @@ const DoctorsProfile = () => {
 
     const saveDoctorProfileMutation = useSaveDoctorProfileMutation();
     const router = useRouter();
-    const authenticatedUser = useAuthenticatedUserContext();
+    const authenticatedUser = getUser();
 
     const { register, handleSubmit, control, formState: { errors }, reset } = useForm<FormValues>({
         defaultValues: {
@@ -46,7 +46,7 @@ const DoctorsProfile = () => {
         router.push("/auth/login");
     }
 
-    if (getUser()['role'] !== 'Doctor') {
+    if (authenticatedUser && authenticatedUser['role'] === 'DoctorUnderReview' && authenticatedUser['isProfileComplete']) {
         router.push('/doctors-profile/under-review/')
     }
 

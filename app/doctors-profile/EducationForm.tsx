@@ -71,6 +71,7 @@ export function EducationForm(props) {
                                     label="Start Date"
                                     placeholder='Enter start date'
                                     isDisabled={isDisabled}
+                                    id={`doctorEducationBackgrounds.${index}.startDate`}
                                     register={register(`doctorEducationBackgrounds.${index}.startDate` as const, {
                                         required: "Please select start date"
                                     })}

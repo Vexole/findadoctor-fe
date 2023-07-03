@@ -60,6 +60,7 @@ const ExperienceForm = (props) => {
                                     register={register(`experiences.${index}.startDate` as const, {
                                         required: "Please select start date"
                                     })}
+                                    id={`experiences.${index}.startDate`}
                                     isInvalid={Boolean(errors.experiences?.[index]?.startDate)}
                                     helperText={errors.experiences?.[index]?.startDate ?
                                         String(errors.experiences?.[index]?.startDate.message) : ''}

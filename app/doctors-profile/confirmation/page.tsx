@@ -1,17 +1,15 @@
 "use client";
-import { logOut } from "@/utils/userUtils";
+import { getUser } from "@/utils/userUtils";
 import { useEffect } from "react";
-import { useAuthenticatedUserContext } from '@/context';
 import { useRouter } from 'next/navigation';
 
 const Confirmation = () => {
     const router = useRouter();
-    const authenticatedUser = useAuthenticatedUserContext();
+    const authenticatedUser = getUser();
     useEffect(() => {
         if (!authenticatedUser) {
             router.push("/auth/login");
         }
-        logOut();
     }, []);
 
     return (

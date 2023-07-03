@@ -4,10 +4,11 @@ import { DevTool } from '@hookform/devtools';
 import { Education, Experience, DoctorProfile as FormValues } from "@/models/DoctorProfile";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useApproveDoctorMutation, useSaveDoctorProfileMutation } from "@/hooks";
+import { useApproveDoctorMutation, useRejectDoctorMutation, useSaveDoctorProfileMutation } from "@/hooks";
 import { getCities, getLanguages, getPendingDoctorDetailById, getSpecializations } from "@/api";
 import { useForm, useFieldArray } from "react-hook-form";
 import { Button, Stack } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 
 type PropTypes = {
     params: { id: string },
@@ -25,14 +26,19 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
 
     const saveDoctorProfileApi = useSaveDoctorProfileMutation();
     const approveDoctorApi = useApproveDoctorMutation();
-    const rejectDoctorApi = useApproveDoctorMutation();
+    const rejectDoctorApi = useRejectDoctorMutation();
+    const router = useRouter();
 
     const approveByAdmin = async () => {
-        await approveDoctorApi.mutateAsync(userId);
+        await approveDoctorApi.mutateAsync(userId, {
+            onSuccess: res => router.push("/admin/pending-doctors")
+        });
     }
 
     const rejectByAdmin = async () => {
-        await rejectDoctorApi.mutateAsync(userId);
+        await rejectDoctorApi.mutateAsync(userId, {
+            onSuccess: res => router.push("/admin/pending-doctors")
+        });
     }
 
     const { register, handleSubmit, control, formState: { errors }, reset } = useForm<FormValues>({

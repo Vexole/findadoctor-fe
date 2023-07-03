@@ -6,6 +6,7 @@ type AuthenticatedUser = {
   token: string;
   userId: string;
   userRefreshToken: string;
+  isProfileComplete: boolean;
   isPasswordChangeRequired: boolean;
 };
 

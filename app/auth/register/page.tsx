@@ -41,8 +41,11 @@ export default function Register() {
     formState: { errors },
   } = useForm<FormTypes>({ resolver: yupResolver(schema) });
 
-  const onSubmit: SubmitHandler<FormTypes> = (formValues: yup.InferType<typeof schema>) =>
-    registerApi.mutate(formValues);
+  const onSubmit: SubmitHandler<FormTypes> = (formValues: yup.InferType<typeof schema>) => {
+    registerApi.mutate(formValues, {
+      onSuccess: res => router.push('/auth/login')
+    });
+  }
 
   if (authenticatedUser) router.push('/');
 
@@ -92,7 +95,8 @@ export default function Register() {
       />
       <FormSelect
         label="Role"
-        options={rolesQuery.data?.map((role) => ({label: role.roleDescription, value: role.roleName})) || []}
+        options={rolesQuery.data?.filter(role => role.roleName !== "AdministrativeAssistant")
+          .map((role) => ({ label: role.roleDescription, value: role.roleName })) || []}
         register={register('role')}
         isDisabled={rolesQuery.data?.length === 0}
         isInvalid={Boolean(errors.role)}
