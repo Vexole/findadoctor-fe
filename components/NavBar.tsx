@@ -1,7 +1,6 @@
 import { useAuthenticatedUserContext } from '@/context';
 import { Link, Stack, StackDivider } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { useEffect, useState } from 'react';
 
 const links = [
   { href: '/', title: 'Home', role: '', accessLevel: '' },
@@ -14,8 +13,8 @@ const links = [
     accessLevel: 'authenticated',
   },
   {
-    href: '/doctors-profile/add-staff',
-    title: 'Create Staff',
+    href: '/doctors-profile/availability',
+    title: 'Doctor Availability',
     role: 'doctor',
     accessLevel: 'authenticated',
   },
@@ -26,6 +25,13 @@ const links = [
     accessLevel: 'authenticated',
   },
   { href: '/auth/logout', title: 'Logout', role: '', accessLevel: 'authenticated' },
+  {
+    href: '/doctors-profile/add-staff',
+    title: 'Create Staff',
+    role: 'doctor',
+    accessLevel: 'authenticated',
+  },
+  { href: '/patient/create', title: 'Profile', role: 'patient', accessLevel: 'authenticated' },
 ];
 
 export function NavBar() {

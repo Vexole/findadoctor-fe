@@ -28,11 +28,17 @@ export function FormSelect({
 }: FormSelectProps) {
   return (
     <FormControl {...props}>
-      <FormLabel>{label}</FormLabel>
+      <FormLabel fontWeight="bold" color="#1A365D">
+        {label}
+      </FormLabel>
       <Select placeholder={placeholder} {...register}>
         {options.map(item => {
           if (typeof item === 'string') return <option key={item}>{item}</option>;
-          return <option key={item.value} value={item.value}>{item.label}</option>;
+          return (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          );
         })}
       </Select>
       {props.isInvalid ? (
