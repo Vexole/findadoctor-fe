@@ -1,4 +1,5 @@
 'use client';
+import { CalendarIcon, Search2Icon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -8,11 +9,61 @@ import {
   Heading,
   Input,
   InputGroup,
-  InputLeftElement,
+  InputRightElement,
   Select,
   Stack,
   Text,
+  Image,
 } from '@chakra-ui/react';
+// import Image from 'next/image';
+
+const contentArray = [
+  {
+    image: '/images/doctor1.jpg',
+    title: 'Ducan Pitt',
+    specialty: 'Orthodontics',
+  },
+  {
+    image: '/images/doctor2.jpg',
+    title: 'Mary Weather',
+    specialty: 'Endodontics',
+  },
+  {
+    image: '/images/doctor3.jpg',
+    title: 'Jacob Abel',
+    specialty: 'Periodontics',
+  },
+  {
+    image: '/images/doctor4.jpg',
+    title: 'Gill Hames',
+    specialty: 'Pediatric',
+  },
+  {
+    image: '/images/doctor5.jpg',
+    title: 'Finn McDonald',
+    specialty: 'Dentistry',
+  },
+  {
+    image: '/images/doctor6.jpg',
+    title: 'Donna Summer',
+    specialty: 'Prosthodontics',
+  },
+  {
+    image: '/images/doctor7.jpg',
+    title: 'Dagmar McLean',
+    specialty: 'Psychiatry',
+  },
+  {
+    image: '/images/doctor8.jpg',
+    title: 'Richard Kicker',
+    specialty: 'Urology',
+  },
+  {
+    image: '/images/doctor9.jpg',
+    title: 'Millie Billie',
+    specialty: 'Dermatology',
+  },
+];
 
 export default function DoctorsSearch() {
   return (
@@ -27,8 +78,10 @@ export default function DoctorsSearch() {
         color="white"
       >
         <Box m={6}>
-          <Heading as="h3">Find a Family Doctor. Schedule an Appointment.</Heading>
-          <Text fontSize="xl">
+          <Heading as="h3" textAlign="center">
+            Find a Family Doctor. Schedule an Appointment.
+          </Heading>
+          <Text fontSize="xl" textAlign="center">
             Choose your preferred family doctor and time slot to book an appointment.
           </Text>
         </Box>
@@ -38,82 +91,167 @@ export default function DoctorsSearch() {
             Make a Medical Appointment
           </Heading>
           <Stack direction="row" spacing={4}>
-            <Select size="md" placeholder="Select option">
+            <Grid templateColumns={{ base: '1, 1fr', md: 'repeat(4, 1fr)' }} gap={4} w="100%">
+              <GridItem colSpan={1}>
+                <Select size="md" placeholder="Specialty / Doctor / Hospital">
+                  <option value="option1">Option 1</option>
+                  <option value="option2">Option 2</option>
+                  <option value="option3">Option 3</option>
+                </Select>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <InputGroup>
+                  <InputRightElement pointerEvents="none">
+                    <Search2Icon color="gray.400" />
+                  </InputRightElement>
+                  <Input type="text" placeholder="Location" />
+                </InputGroup>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <InputGroup>
+                  <InputRightElement pointerEvents="none">
+                    <CalendarIcon color="gray.400" />
+                  </InputRightElement>
+                  <Input type="text" placeholder="Date" />
+                </InputGroup>
+              </GridItem>
+              <GridItem colSpan={1}>
+                <Button size="md" w="100%" colorScheme="telegram">
+                  Search
+                </Button>
+              </GridItem>
+            </Grid>
+          </Stack>
+        </Stack>
+      </Stack>
+      <Grid templateColumns={{ base: '1, 1fr', md: 'repeat(4, 1fr)' }} gap={4}>
+        <GridItem colSpan={1}>
+          <Stack spacing={4}>
+            <Heading as="h5" size="sm" color="#1A365D">
+              Refine your search
+            </Heading>
+            <InputGroup>
+              <InputRightElement pointerEvents="none">
+                <Search2Icon color="gray.400" />
+              </InputRightElement>
+              <Input type="text" placeholder="Search" />
+            </InputGroup>
+            <Text fontSize="sm" color="#1A365D" fontWeight="500">
+              Specialty
+            </Text>
+            <Checkbox defaultChecked fontWeight="400">
+              General practioner
+            </Checkbox>
+            <Checkbox fontWeight="400" color="gray.700">
+              Dentistry
+            </Checkbox>
+            <Checkbox fontWeight="400" color="gray.700">
+              Neurology
+            </Checkbox>
+            <Checkbox fontWeight="400" color="gray.700">
+              X-Ray
+            </Checkbox>
+            <Checkbox fontWeight="400" color="gray.700">
+              Dermatology
+            </Checkbox>
+            <Checkbox defaultChecked fontWeight="400">
+              Urology
+            </Checkbox>
+            <Checkbox defaultChecked fontWeight="400">
+              Phychiatry
+            </Checkbox>
+            <Text fontSize="sm" color="#1A365D" fontWeight="500">
+              Qualification
+            </Text>
+            <Checkbox fontWeight="400">MBBS</Checkbox>
+            <Checkbox fontWeight="400">MBBch</Checkbox>
+            <Checkbox fontWeight="400">MD</Checkbox>
+            <Checkbox fontWeight="400">DO</Checkbox>
+            <Text fontSize="sm" color="#1A365D" fontWeight="500">
+              State
+            </Text>
+            <InputGroup>
+              <InputRightElement pointerEvents="none">
+                <Search2Icon color="gray.400" />
+              </InputRightElement>
+              <Input type="text" placeholder="Ontario (ON)" />
+            </InputGroup>
+            <Text fontSize="sm" color="#1A365D" fontWeight="500">
+              City
+            </Text>
+            <Select size="md" placeholder="Choose a city">
               <option value="option1">Option 1</option>
               <option value="option2">Option 2</option>
               <option value="option3">Option 3</option>
             </Select>
-            <Input size="md" placeholder="Location" />
-            <Input size="md" placeholder="Date" type="date" />
-            <Button size="md" colorScheme="telegram">
-              Search
-            </Button>
+            <Button colorScheme="telegram">Update Search</Button>
           </Stack>
-        </Stack>
-      </Stack>
-      <Stack direction="row">
-        <Stack w="30%" spacing={4} direction="column">
-          <Heading as="h6" size="md" color="telegram">
-            Refine your search
-          </Heading>
-          <Input size="md" placeholder="Location" />
-          <Text fontSize="md" color="#1A365D" fontWeight="regular">
-            Specialty
-          </Text>
-          <Checkbox defaultChecked>Checkbox</Checkbox>
-          <Checkbox>Checkbox</Checkbox>
-          <Checkbox>Checkbox</Checkbox>
-          <Checkbox>Checkbox</Checkbox>
-          <Checkbox>Checkbox</Checkbox>
-          <Checkbox defaultChecked>Checkbox</Checkbox>
-          <Checkbox defaultChecked>Checkbox</Checkbox>
-          <Text fontSize="md" color="#1A365D" fontWeight="regular">
-            Qualification
-          </Text>
-          <Checkbox>Checkbox</Checkbox>
-          <Checkbox>Checkbox</Checkbox>
-          <Checkbox>Checkbox</Checkbox>
-          <Checkbox>Checkbox</Checkbox>
-          <Text fontSize="md" color="#1A365D" fontWeight="regular">
-            State
-          </Text>
-          <Select size="md" placeholder="Select option">
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-          </Select>
-          <Text fontSize="md" color="#1A365D" fontWeight="regular">
-            City
-          </Text>
-          <Select size="md" placeholder="Select option">
-            <option value="option1">Option 1</option>
-            <option value="option2">Option 2</option>
-            <option value="option3">Option 3</option>
-          </Select>
-          <Button colorScheme="telegram">Update Search</Button>
-        </Stack>
-        <Stack w="70%" bg="#EBF8FF" p={6} spacing={6}>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Text fontSize="sm" color="gray">
-              Showing 175 searching results.
-            </Text>
-            <Select
-              variant="flushed"
-              size="md"
-              w="200px"
-              p={2}
-              placeholder="Sorted by: Highest rated"
-            />
-          </Stack>
-          <Grid templateColumns="repeat(5, 1fr)" gap={6}>
-            <GridItem w="100%" h="10" bg="blue.500" />
-            <GridItem w="100%" h="10" bg="blue.500" />
-            <GridItem w="100%" h="10" bg="blue.500" />
-            <GridItem w="100%" h="10" bg="blue.500" />
-            <GridItem w="100%" h="10" bg="blue.500" />
+        </GridItem>
+        <GridItem colSpan={{ base: 1, md: 3 }} bg="#EBF8FF" p={4}>
+          <Grid templateColumns={{ base: '1, 1fr', md: "repeat(2, 1fr)"}} gap={4} alignItems="center" justifyContent={{ base: "center", md: "flex-end"}}>
+            <GridItem>
+              <Text fontSize="sm" color="gray">
+                Showing 175 searching results.
+              </Text>
+            </GridItem>
+            <GridItem>
+              <Select
+                variant="flushed"
+                size="md"
+                w="200px"
+                p={2}
+                placeholder="Sorted by: Highest rated"
+              />
+            </GridItem>
           </Grid>
-        </Stack>
-      </Stack>
+          <Grid
+            templateColumns={{ base: '1, 1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
+            templateRows={{ base: '1, 1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
+            gap={6}
+          >
+            {contentArray.map((content, index) => (
+              <GridItem w="100%" key={index}>
+                <Box bg="white" w="100%" height="100%" p={4} color="white" borderRadius="lg">
+                  <Image
+                    borderRadius="full"
+                    boxSize="120px"
+                    w="150px"
+                    height="150px"
+                    src={content.image}
+                    alt="Doctor Profile"
+                    m="auto"
+                  />
+
+                  <Heading
+                    mt="1"
+                    fontWeight="semibold"
+                    as="h4"
+                    size="md"
+                    lineHeight="tight"
+                    noOfLines={1}
+                    color="#1A365D"
+                    textAlign="center"
+                  >
+                    {content.title}
+                  </Heading>
+                  <Text
+                    mt="1"
+                    fontWeight="400"
+                    as="h6"
+                    size="sm"
+                    lineHeight="tight"
+                    noOfLines={1}
+                    color="gray.500"
+                    textAlign="center"
+                  >
+                    {content.specialty}
+                  </Text>
+                </Box>
+              </GridItem>
+            ))}
+          </Grid>
+        </GridItem>
+      </Grid>
     </Stack>
   );
 }
