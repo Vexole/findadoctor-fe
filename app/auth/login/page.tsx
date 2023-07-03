@@ -23,7 +23,12 @@ export default function Login() {
   const login = useLoginMutation();
   const router = useRouter();
 
-  if (authenticatedUser) router.push('/');
+  if (authenticatedUser) {
+    if (authenticatedUser.isPasswordChangeRequired)
+      router.push('/auth/change-password');
+    else
+      router.push('/');
+  }
 
   const {
     handleSubmit,
@@ -37,9 +42,7 @@ export default function Login() {
         if (e.isPasswordChangeRequired) {
           return router.push(`/auth/change-password`);
         } else {
-          return router.push(`/auth/change-password`);
-
-          // return router.push('/');
+          return router.push('/');
         }
       }
     });

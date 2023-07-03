@@ -6,6 +6,7 @@ type AuthenticatedUser = {
   token: string;
   userId: string;
   userRefreshToken: string;
+  isPasswordChangeRequired: boolean;
 };
 
 export const AuthenticatedUserContext = createContext<AuthenticatedUser | undefined>(undefined);
