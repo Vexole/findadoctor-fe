@@ -37,7 +37,8 @@ const links = [
     role: 'doctor',
     accessLevel: 'authenticated',
   },
-  { href: '/patient/create', title: 'Profile', role: 'patient', accessLevel: 'authenticated' },
+  { href: '/patient/create', title: 'Profile', role: 'patient', accessLevel: 'authenticated', isProfileCompleteRequired: false },
+  { href: '/patient/update', title: 'Profile', role: 'patient', accessLevel: 'authenticated', isProfileCompleteRequired: true },
   { href: '/auth/logout', title: 'Logout', role: '', accessLevel: 'authenticated' },
 ];
 
@@ -45,9 +46,17 @@ export function NavBar() {
   const authenticatedUser = useAuthenticatedUserContext();
   const userRole = authenticatedUser?.role ?? '';
   const accessLevel = authenticatedUser ? 'authenticated' : 'unauthenticated';
-  const allowedLinks = links
+  let allowedLinks = links
     .filter(link => link.role === '' || link.role === userRole.toLowerCase())
     .filter(link => link.accessLevel === '' || link.accessLevel === accessLevel);
+
+  if (authenticatedUser && userRole === 'Patient' && authenticatedUser.isProfileComplete) {
+    allowedLinks = allowedLinks.filter(link => !(link.title === 'Profile' && !link.isProfileCompleteRequired))
+  }
+
+  if (authenticatedUser && userRole === 'Patient' && !authenticatedUser.isProfileComplete) {
+    allowedLinks = allowedLinks.filter(link => !(link.title === 'Profile' && link.isProfileCompleteRequired))
+  }
 
   return (
     <Stack
