@@ -6,16 +6,17 @@ import {
   FormHelperText,
   FormLabel,
   Input,
+  InputProps,
 } from '@chakra-ui/react';
 import { UseFormRegisterReturn } from 'react-hook-form';
 
 interface FormInputProps extends FormControlProps {
   helperText?: string;
   label: string;
-  placeholder: string;
+  placeholder?: string;
   type?: HTMLInputTypeAttribute | undefined;
   register: UseFormRegisterReturn;
-  isDisabled?: boolean;
+  inputProps?: InputProps;
 }
 
 export function FormInput({
@@ -25,6 +26,7 @@ export function FormInput({
   isDisabled,
   type = 'text',
   register,
+  inputProps,
   ...props
 }: FormInputProps) {
   return (
@@ -32,7 +34,7 @@ export function FormInput({
       <FormLabel fontWeight="bold" color="#1A365D">
         {label}
       </FormLabel>
-      <Input type={type} placeholder={placeholder} {...register} disabled={isDisabled} />
+      <Input type={type} placeholder={placeholder} {...inputProps} {...register} disabled={isDisabled} />
       {props.isInvalid ? (
         <FormErrorMessage>{helperText}</FormErrorMessage>
       ) : (

@@ -34,7 +34,11 @@ export function FormSelect({
       <Select placeholder={placeholder} {...register} disabled={isDisabled}>
         {options.map(item => {
           if (typeof item === 'string') return <option key={item}>{item}</option>;
-          return <option key={item.value} value={item.value}>{item.label}</option>;
+          return (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          );
         })}
       </Select>
       {props.isInvalid ? (

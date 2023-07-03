@@ -49,8 +49,6 @@ export default function Register() {
 
   if (authenticatedUser) router.push('/');
 
-  console.log(rolesQuery.data);
-
   return (
     <FormWrapper
       onSubmit={handleSubmit(onSubmit)}
