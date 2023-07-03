@@ -58,6 +58,7 @@ export default function Register() {
         <FormInput
           type="password"
           label="Password"
+          placeholder='Enter New Password'
           register={register('newPassword')}
           isInvalid={Boolean(errors.newPassword)}
           helperText={
@@ -69,6 +70,7 @@ export default function Register() {
         <FormInput
           type="password"
           label="Confirm Password"
+          placeholder='Enter New Password'
           register={register('confirmPassword')}
           isInvalid={Boolean(errors.confirmPassword)}
           helperText={errors.confirmPassword ? String(errors.confirmPassword?.message) : ''}

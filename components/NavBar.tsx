@@ -14,6 +14,12 @@ const links = [
     accessLevel: 'authenticated',
   },
   {
+    href: '/doctors-profile',
+    title: 'Doctor Profile',
+    role: 'doctorunderreview',
+    accessLevel: 'authenticated',
+  },
+  {
     href: '/doctors-profile/availability',
     title: 'Doctor Availability',
     role: 'doctor',

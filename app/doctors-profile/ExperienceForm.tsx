@@ -1,5 +1,7 @@
+import { FormInput } from "@/components";
 import { FormWrapper } from "../../components/FormWrapper";
 import { useFieldArray } from "react-hook-form";
+import { FormLabel } from "@chakra-ui/react";
 
 const ExperienceForm = (props) => {
     const { register, control, errors, isDisabled } = props;
@@ -20,66 +22,78 @@ const ExperienceForm = (props) => {
                 borderRadius: 'lg',
                 borderColor: '#1A365D',
             }}>
-            <div className="form-fields">
-                <label htmlFor="experiences">Experiences</label>
-                <div className="dynamic-lists">
+            <div>
+                <FormLabel fontWeight="bold" color="#1A365D">
+                    Experiences</FormLabel>
+                <div>
                     {experienceFields.map((field, index) => {
                         return (
                             <div className="form-control" key={field.id}>
-                                <input
-                                    {...register(`experiences.${index}.companyName` as const, {
+                                <FormInput
+                                    marginTop={8}
+                                    label="Company Name"
+                                    placeholder='Enter company name'
+                                    isDisabled={isDisabled}
+                                    register={register(`experiences.${index}.companyName` as const, {
                                         required: "Please enter the company name"
                                     })}
-                                    type="text"
-                                    placeholder="Company Name"
-                                    disabled={isDisabled}
+                                    isInvalid={Boolean(errors.experiences?.[index]?.companyName)}
+                                    helperText={errors.experiences?.[index]?.companyName ? String(errors.experiences?.[index]?.companyName.message) : ''}
                                 />
-                                <label htmlFor={`experiences.${index}.description`}>Description</label>
-                                <input
-                                    {...register(`experiences.${index}.description` as const, {
+
+                                <FormInput
+                                    label="Description"
+                                    placeholder='Enter description'
+                                    isDisabled={isDisabled}
+                                    register={register(`experiences.${index}.description` as const, {
                                         required: "Please enter the description"
                                     })}
-                                    type="text"
-                                    placeholder="Description"
-                                    disabled={isDisabled}
+                                    isInvalid={Boolean(errors.experiences?.[index]?.description)}
+                                    helperText={errors.experiences?.[index]?.description ? String(errors.experiences?.[index]?.description.message) : ''}
                                 />
-                                <label htmlFor="startDate">Start Date</label>
-                                <input {...register(`experiences.${index}.startDate` as const, {
-                                    required: "Please select start date"
-                                })} type="date" id={`experiences.${index}.startDate`} disabled={isDisabled} />
-                                <label htmlFor="endDate">End Date</label>
-                                <input {...register(`experiences.${index}.endDate` as const, {
-                                    required: "Please select end date",
-                                    validate: {
-                                        endDateGreaterThanStartDate: (value: string) => {
-                                            let startDate: string = document.getElementById(`experiences.${index}.startDate`)?.value;
-                                            if (!startDate || startDate === '') {
-                                                return true;
+
+                                <FormInput
+                                    type="date"
+                                    label="Start Date"
+                                    placeholder='Enter start date'
+                                    isDisabled={isDisabled}
+                                    register={register(`experiences.${index}.startDate` as const, {
+                                        required: "Please select start date"
+                                    })}
+                                    id={`experiences.${index}.startDate`}
+                                    isInvalid={Boolean(errors.experiences?.[index]?.startDate)}
+                                    helperText={errors.experiences?.[index]?.startDate ?
+                                        String(errors.experiences?.[index]?.startDate.message) : ''}
+                                />
+
+                                <FormInput
+                                    type="date"
+                                    label="End Date"
+                                    placeholder='Enter end date'
+                                    isDisabled={isDisabled}
+                                    register={register(`experiences.${index}.endDate` as const, {
+                                        required: "Please select end date",
+                                        validate: {
+                                            endDateGreaterThanStartDate: (value: string) => {
+                                                let startDate: string = document.getElementById(`experiences.${index}.startDate`)?.value;
+                                                if (!startDate || startDate === '') {
+                                                    return true;
+                                                }
+                                                return new Date(value) >= new Date(startDate) || "End date must be after start date";
                                             }
-                                            return new Date(value) >= new Date(startDate) || "End date must be after start date";
                                         }
-                                    }
-                                })} type="date" disabled={isDisabled} />
+                                    })}
+                                    isInvalid={Boolean(errors.experiences?.[index]?.endDate)}
+                                    helperText={errors.experiences?.[index]?.endDate ?
+                                        String(errors.experiences?.[index]?.endDate.message) : ''}
+                                />
+
                                 {
                                     !isDisabled && index > 0 &&
                                     <div className="btn_remove">
                                         <button type="button" onClick={() => experienceRemove(index)}>Remove</button>
                                     </div>
                                 }
-                                <div className="errors">
-                                    {errors && errors.experiences?.[index]?.companyName && (
-                                        <div className="error">{errors.experiences?.[index]?.companyName.message}</div>
-                                    )}
-                                    {errors.experiences?.[index]?.description && (
-                                        <div className="error">{errors.experiences?.[index]?.description.message}</div>
-                                    )}
-                                    {errors.experiences?.[index]?.startDate && (
-                                        <div className="error">{errors.experiences?.[index]?.startDate.message}</div>
-                                    )}
-                                    {errors.experiences?.[index]?.endDate && (
-                                        <div className="error">{errors.experiences?.[index]?.endDate.message}</div>
-                                    )}
-                                </div>
                             </div>);
                     })
                     }

@@ -1,5 +1,6 @@
 import React from "react";
 import { FormWrapper } from "../../components/FormWrapper";
+import { FormInput, FormSelectNoLoop } from "@/components";
 
 export function AddressForm(props) {
     const { register, errors } = props;
@@ -17,29 +18,35 @@ export function AddressForm(props) {
                 borderRadius: 'lg',
                 borderColor: '#1A365D',
             }}>
-            <div className="form-fields">
-                <label htmlFor="street">Street Address</label>
-                <input {...register("street", { required: 'Street Address is required' })}
-                    id="street" type="text" disabled={isDisabled} />
-                {errors.street && <span className="error">{errors.street.message}</span>}
-            </div>
-            <div className="form-fields">
-                <label htmlFor="cityId">City</label>
-                <select {...register("cityId", {
+            <FormInput
+                label="Street Address"
+                placeholder="Enter your street address"
+                register={register("street", { required: 'Street Address is required' })}
+                isInvalid={Boolean(errors.street)}
+                isDisabled={isDisabled}
+                helperText={errors.street ? String(errors.street?.message) : ''}
+            />
+
+            <FormSelectNoLoop
+                label="City"
+                options={cityOptions || []}
+                register={register("cityId", {
                     validate: (fieldValue: string) => {
                         return fieldValue !== "" || "Please select a city";
                     }
-                })} id="city" disabled={isDisabled}>
-                    <option value="">Select an option</option>
-                    {cityOptions}
-                </select>
-                {errors.cityId && <span className="error">{errors.cityId.message}</span>}
-            </div>
-            <div className="form-fields">
-                <label htmlFor="postalCode">Postal Code</label>
-                <input {...register("postalCode", { required: 'Postal Code is required' })}
-                    id="postalCode" type="text" disabled={isDisabled} />
-                {errors.postalCode && <span className="error">{errors.postalCode.message}</span>}
-            </div>
+                })}
+                isDisabled={isDisabled}
+                isInvalid={Boolean(errors.cityId)}
+                helperText={errors.cityId ? String(errors.cityId?.message) : ''}
+            />
+
+            <FormInput
+                label="Postal Code"
+                placeholder="Enter your postal code"
+                register={register("postalCode", { required: 'Postal Code is required' })}
+                isInvalid={Boolean(errors.postalCode)}
+                isDisabled={isDisabled}
+                helperText={errors.postalCode ? String(errors.postalCode?.message) : ''}
+            />
         </FormWrapper>);
 }

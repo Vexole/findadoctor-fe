@@ -15,6 +15,7 @@ export * from './useSpecializationsQuery';
 export * from './useLanguagesQuery';
 export * from './useSaveDoctorProfileMutation';
 export * from './useDoctorProfileQuery';
+export * from './useBookAppointmentMutation';
 export * from './useDoctorAvailabilityMutation';
 export * from './useDoctorAvailabilityQuery';
 export * from './useUpdateDoctorAvailabilityMutation';

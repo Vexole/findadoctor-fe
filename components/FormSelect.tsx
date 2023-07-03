@@ -16,6 +16,7 @@ interface FormSelectProps extends FormControlProps {
   placeholder?: string;
   options: string[] | LabelValuePair[];
   register: UseFormRegisterReturn;
+  isDisabled?: boolean;
 }
 
 export function FormSelect({
@@ -24,14 +25,13 @@ export function FormSelect({
   register,
   placeholder = 'Select an option',
   options = [],
+  isDisabled,
   ...props
 }: FormSelectProps) {
   return (
     <FormControl {...props}>
-      <FormLabel fontWeight="bold" color="#1A365D">
-        {label}
-      </FormLabel>
-      <Select placeholder={placeholder} {...register}>
+      <FormLabel fontWeight="bold" color="#1A365D">{label}</FormLabel>
+      <Select placeholder={placeholder} {...register} disabled={isDisabled}>
         {options.map(item => {
           if (typeof item === 'string') return <option key={item}>{item}</option>;
           return (

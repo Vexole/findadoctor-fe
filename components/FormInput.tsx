@@ -23,6 +23,7 @@ export function FormInput({
   helperText,
   label,
   placeholder,
+  isDisabled,
   type = 'text',
   register,
   inputProps,
@@ -33,7 +34,7 @@ export function FormInput({
       <FormLabel fontWeight="bold" color="#1A365D">
         {label}
       </FormLabel>
-      <Input type={type} placeholder={placeholder} {...inputProps} {...register} />
+      <Input type={type} placeholder={placeholder} {...inputProps} {...register} disabled={isDisabled} />
       {props.isInvalid ? (
         <FormErrorMessage>{helperText}</FormErrorMessage>
       ) : (

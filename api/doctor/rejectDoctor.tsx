@@ -5,6 +5,6 @@ export function rejectDoctor(doctorId: string) {
         .post(`/admin/reject-pending-doctor/`, { userId: doctorId })
         .then(res => res.data.data)
         .catch((e) => {
-            throw new Error(e.message);
+            throw e;
         });
 }

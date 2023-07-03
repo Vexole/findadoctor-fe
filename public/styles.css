@@ -93,6 +93,10 @@ input[type="date"] {
   justify-self: end !important;
 }
 
+.btn_add_more {
+  margin-top: 16px;
+}
+
 table {
   width: 100%;
 }
@@ -116,6 +120,7 @@ table {
 
 .go3046353551 {
   overflow-y: auto !important;
+  justify-content: center !important;
 }
 
 .go3046353551 button {

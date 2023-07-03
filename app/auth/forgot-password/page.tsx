@@ -1,11 +1,12 @@
 'use client';
 import { FormInput, FormWrapper } from '@/components';
-import { Button } from '@chakra-ui/react';
+import { Button, Text } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { useForgotPasswordMutation } from '@/hooks';
+import NextLink from 'next/link';
 
 const schema = yup
   .object({
@@ -40,6 +41,9 @@ export default function ForgotPassword() {
         borderRadius: 'lg',
         borderColor: '#1A365D',
       }}>
+      <Text textAlign={'center'} margin={2}>
+        Enter your email address and we will send you instructions to reset your password.
+      </Text>
       <FormInput
         label="Email"
         placeholder='Enter your email address'
@@ -48,9 +52,21 @@ export default function ForgotPassword() {
         helperText={errors.email ? String(errors.email?.message) : ''}
       />
 
-      <Button isLoading={forgotPassword.isLoading} type="submit" colorScheme="blue">
+      <Button isLoading={forgotPassword.isLoading} type="submit" colorScheme="facebook">
         Reset Password
       </Button>
+
+      <Text textAlign={'center'} color="#1A365D" padding={2}>
+        <Button
+          variant="link"
+          as={NextLink}
+          href="/auth/login"
+          textAlign={'right'}
+          color="#1A365D"
+        >
+          Back to Login
+        </Button>
+      </Text>
     </FormWrapper>
   );
 }

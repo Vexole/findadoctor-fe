@@ -6,6 +6,8 @@ type AuthenticatedUser = {
   token: string;
   userId: string;
   userRefreshToken: string;
+  isProfileComplete: boolean;
+  isPasswordChangeRequired: boolean;
 };
 
 export const AuthenticatedUserContext = createContext<AuthenticatedUser | undefined>(undefined);

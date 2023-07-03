@@ -23,7 +23,12 @@ export default function Login() {
   const login = useLoginMutation();
   const router = useRouter();
 
-  if (authenticatedUser) router.push('/');
+  if (authenticatedUser) {
+    if (authenticatedUser.isPasswordChangeRequired)
+      router.push('/auth/change-password');
+    else
+      router.push('/');
+  }
 
   const {
     handleSubmit,
@@ -35,10 +40,9 @@ export default function Login() {
     login.mutate(formValues, {
       onSuccess: (e) => {
         if (e.isPasswordChangeRequired) {
-          router.push(`/auth/change-password`);
-          return;
+          return router.push(`/auth/change-password`);
         } else {
-          router.push('/');
+          return router.push('/');
         }
       }
     });
