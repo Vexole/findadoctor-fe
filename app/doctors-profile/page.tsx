@@ -25,6 +25,7 @@ const DoctorsProfile = () => {
     const saveDoctorProfileMutation = useSaveDoctorProfileMutation();
     const router = useRouter();
     const authenticatedUser = getUser();
+    let oldDoctorProfileData: FormValues;
 
     const { register, handleSubmit, control, formState: { errors }, reset } = useForm<FormValues>({
         defaultValues: {
@@ -121,6 +122,7 @@ const DoctorsProfile = () => {
         if (isDisabled && isLastStep) {
             setIsDisabled(false);
             setIsEditMode(true);
+            oldDoctorProfileData = { ...(doctorProfile.data) };
         }
         else if (isLastStep) {
             try {
@@ -140,13 +142,18 @@ const DoctorsProfile = () => {
                 (<div style={{
                     position: "relative",
                     background: "white",
-                    border: "1px solid black",
+                    width: '80%',
                     padding: "2rem",
-                    margin: "1rem auto",
-                    borderRadius: ".5rem"
+                    margin: "1rem auto"
                 }}>
                     <form onSubmit={handleSubmit(submitProfile)} noValidate>
-                        <div style={{ position: "absolute", top: ".5rem", right: ".5rem" }}>
+                        {isDisabled && !isEditMode && <div style={{ position: "absolute", top: ".5rem" }}>
+                            <p className="doctor-profile-links" onClick={() => { setIsDisabled(false); setIsEditMode(true); oldDoctorProfileData = { ...(doctorProfile.data) }; }}>Update Your Profile</p>
+                        </div>}
+                        {!isDisabled && isEditMode && <div style={{ position: "absolute", top: ".5rem" }}>
+                            <p className="doctor-profile-links" onClick={() => { setIsDisabled(true); setIsEditMode(false); reset(oldDoctorProfileData); }}>Cancel</p>
+                        </div>}
+                        <div style={{ position: "absolute", top: ".5rem", right: ".75rem" }}>
                             {currentStepIndex + 1} / {steps.length}
                         </div>
                         {step}
@@ -157,7 +164,6 @@ const DoctorsProfile = () => {
                                     !isDisabled && isLastStep ? "Submit" : "Next"}
                             </button>
                         </div>
-                        {/* {error && <span className="error">{error}</span>} */}
                     </form>
                 </div>
                 )

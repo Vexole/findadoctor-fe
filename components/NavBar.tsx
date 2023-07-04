@@ -9,13 +9,13 @@ const links = [
   { href: '/auth/register', title: 'Register', role: '', accessLevel: 'unauthenticated' },
   {
     href: '/doctors-profile',
-    title: 'Doctor Profile',
+    title: 'Profile',
     role: 'doctor',
     accessLevel: 'authenticated',
   },
   {
     href: '/doctors-profile',
-    title: 'Doctor Profile',
+    title: 'Profile',
     role: 'doctorunderreview',
     accessLevel: 'authenticated',
   },

@@ -131,6 +131,10 @@ table {
   width: 120px !important;
 }
 
+.doctor-profile-links:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
 
 #home_container {
   display: flex;
