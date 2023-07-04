@@ -76,7 +76,7 @@ export default function Timeslot() {
             <ScheduleMeeting
                 borderRadius={10}
                 primaryColor="#3f5b85"
-                eventDurationInMinutes={30}
+                eventDurationInMinutes={60}
                 selectedStartTime={selectedTimeslot}
                 defaultDate={selectedTimeslot}
                 availableTimeslots={availableTimeSlotsLessUnavailableTimeSlots}

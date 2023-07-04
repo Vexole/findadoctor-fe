@@ -3,24 +3,6 @@ import { getCities } from '@/api';
 import { getGender } from '@/api/shared/gender';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-// {
-//   "firstName": "string",
-//   "middleName": "string",
-//   "lastName": "string",
-//   "phone": "string",
-//   "contactInformation": "string",
-//   "gender": "string",
-//   "dateOfBirth": "2023-07-02T18:18:23.527Z",
-//   "cityId": 0,
-//   "street": "string",
-//   "postalCode": "string",
-//   "email": "user@example.com",
-//   "password": "stringst",
-//   "doctorUserId": "string",
-//   "dateOfHire": "2023-07-02T18:18:23.527Z",
-//   "emergencyContact": "string"
-// }
-
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -93,6 +75,7 @@ export default function AddDoctorStaffProfile() {
     }
   });
 
+  const router = useRouter();
   const toast = useToast();
   const genderOptions = useQuery(['genderOptions'], getGender);
   const cityOptions = useQuery(['cityOptions'], getCities);
@@ -104,6 +87,7 @@ export default function AddDoctorStaffProfile() {
         duration: 3000,
         isClosable: true,
       });
+      router.push('/');
       // replace('/doctor');
     },
     onError: () => {

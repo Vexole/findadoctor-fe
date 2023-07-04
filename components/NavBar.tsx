@@ -37,7 +37,8 @@ const links = [
     role: 'doctor',
     accessLevel: 'authenticated',
   },
-  { href: '/patient/create', title: 'Profile', role: 'patient', accessLevel: 'authenticated' },
+  { href: '/patient/create', title: 'Profile', role: 'patient', accessLevel: 'authenticated', isProfileCompleteRequired: false },
+  { href: '/patient/update', title: 'Profile', role: 'patient', accessLevel: 'authenticated', isProfileCompleteRequired: true },
   { href: '/auth/logout', title: 'Logout', role: '', accessLevel: 'authenticated' },
 ];
 
@@ -45,19 +46,28 @@ export function NavBar() {
   const authenticatedUser = useAuthenticatedUserContext();
   const userRole = authenticatedUser?.role ?? '';
   const accessLevel = authenticatedUser ? 'authenticated' : 'unauthenticated';
-  const allowedLinks = links
+  let allowedLinks = links
     .filter(link => link.role === '' || link.role === userRole.toLowerCase())
     .filter(link => link.accessLevel === '' || link.accessLevel === accessLevel);
 
+  if (authenticatedUser && userRole === 'Patient' && authenticatedUser.isProfileComplete) {
+    allowedLinks = allowedLinks.filter(link => !(link.title === 'Profile' && !link.isProfileCompleteRequired))
+  }
+
+  if (authenticatedUser && userRole === 'Patient' && !authenticatedUser.isProfileComplete) {
+    allowedLinks = allowedLinks.filter(link => !(link.title === 'Profile' && link.isProfileCompleteRequired))
+  }
+
   return (
     <Stack
-      direction="row"
+      direction={{ base: 'column', md: 'row' }}
       color="blue.500"
-      px="4rem"
+      px={{ base: '2rem', md: '4rem' }}
       py="1rem"
       backgroundColor="blue.500"
       justifyContent="space-between"
       alignItems="center"
+      className='nav-bar'
     >
       <Link
         href="/"
@@ -88,7 +98,7 @@ export function NavBar() {
         </svg>
         <span>Find a Family Doctor</span>
       </Link>
-      <Stack direction="row" spacing={4} divider={<StackDivider />}>
+      <Stack direction="row" spacing={4} divider={<StackDivider />} mt={{ base: 4, md: 0 }}>
         {allowedLinks.map(({ href, title }) => (
           <Link as={NextLink} href={href} key={title} color="white">
             {title}
