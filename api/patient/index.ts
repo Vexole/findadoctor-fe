@@ -1,1 +1,3 @@
-export * from './bookAppointment';
+export * from './createPatientProfile';
+export * from './getPatientProfile';
+export * from './updatePatientProfile';

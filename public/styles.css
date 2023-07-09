@@ -159,6 +159,29 @@ table {
   padding-bottom: 4rem;
 }
 
+.appointment-booking {
+  width: 80%;
+  margin: 16px auto;
+}
+
+.pending-doctor-profile {
+  width: 70%;
+  margin: auto;
+}
+
+.profile-image-container {
+  margin: 24px 0;
+}
+
+.profile-image {
+  height: 150px;
+  width: 150px;
+  border: 1px solid;
+  border-radius: 50%;
+  margin: auto;
+  object-fit: cover;
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
   #home_container {
@@ -203,5 +226,13 @@ table {
   .follow_us {
     align-self: center;
     text-align: center;
+  }
+
+  .appointment-booking {
+    width: 100%;
+  }
+
+  .pending-doctor-profile {
+    width: 95%;
   }
 }

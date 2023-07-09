@@ -15,7 +15,7 @@ export type Education = {
 
 export type DoctorProfile = {
   name: string;
-  // profilePicture: string;
+  profilePicture: any;
   title: string;
   firstName: string;
   middleName: string;

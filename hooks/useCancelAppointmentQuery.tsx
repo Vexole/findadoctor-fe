@@ -1,13 +1,13 @@
-import { bookAppointment } from '@/api/appointment';
+import { cancelAppointment } from '@/api/appointment';
 import { useToast } from '@chakra-ui/react';
 import { useMutation } from '@tanstack/react-query';
 
-export const useBookAppointmentMutation = () => {
+export const useCancelAppointmentMutation = () => {
     const toast = useToast();
-    return useMutation((params: Parameters<typeof bookAppointment>[0]) => bookAppointment(params), {
+    return useMutation((params: Parameters<typeof cancelAppointment>[0]) => cancelAppointment(params), {
         onSuccess: data => {
             toast({
-                title: 'Appointment Booked!',
+                title: 'Appointment Canceled!',
                 status: 'success',
                 isClosable: true,
             });

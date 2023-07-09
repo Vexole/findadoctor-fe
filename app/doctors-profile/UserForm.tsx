@@ -2,11 +2,11 @@ import { useFieldArray } from "react-hook-form";
 import { FormWrapper } from "../../components/FormWrapper";
 import { FormInput, FormSelect } from "@/components";
 import { FormSelectNoLoop } from "@/components/FormSelectNoLoop";
-import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Select } from "@chakra-ui/react";
+import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, Select } from "@chakra-ui/react";
 
 export function UserForm(props) {
     const { register, control, errors } = props;
-    const { languageOptions, genderOptions, isDisabled } = props;
+    const { languageOptions, genderOptions, isDisabled, isEditMode, profilePictureUrl, handleProfilePictureChange } = props;
 
     const { fields: languageFields, append: languageAppend, remove: languageRemove } = useFieldArray({
         name: 'doctorLanguages',
@@ -27,10 +27,27 @@ export function UserForm(props) {
                 borderRadius: 'lg',
                 borderColor: '#1A365D',
             }}>
-            {/* <div className="form-fields">
-                <label htmlFor="profilePicture">Profile Picture</label>
-                <input type="file" {...register("profilePicture")} />
-            </div> */}
+
+            {!isDisabled && !isEditMode && <FormControl>
+                <img className="profile-image" src={profilePictureUrl} alt="Profile Picture" />
+                <FormLabel htmlFor="profilePicture">Profile Picture</FormLabel>
+                <Input type="file" accept="image/*"  {...register("profilePicture")}
+                    onChange={e => handleProfilePictureChange(e)} />
+            </FormControl>
+            }
+
+            {!isDisabled && isEditMode && <FormControl>
+                <img className="profile-image" src={profilePictureUrl} alt="Profile Picture" />
+                <FormLabel htmlFor="profilePicture">Change Profile Picture</FormLabel>
+                <Input type="file" accept="image/*"  {...register("profilePicture")}
+                    onChange={e => handleProfilePictureChange(e)} />
+            </FormControl>
+            }
+
+            {isDisabled && !isEditMode && <FormControl>
+                <img className="profile-image" src={profilePictureUrl} alt="Profile Picture" />
+            </FormControl>
+            }
 
             <FormSelect
                 label="Title"

@@ -1,14 +1,15 @@
 'use client';
-import { DoctorRow } from './DoctorRow';
-import { usePendingDoctorsQuery, useApproveDoctorMutation, useRejectDoctorMutation } from '@/hooks';
+import { AppointmentRow } from './AppointmentRow';
+import { usePendingDoctorsQuery, useApproveDoctorMutation, useRejectDoctorMutation, useAppointmentsQuery } from '@/hooks';
 import { Center, Spinner, Stack, Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import { useAuthenticatedUserContext } from '@/context';
 
-const DoctorsList = () => {
+const AppointmentList = () => {
   const authenticatedUser = useAuthenticatedUserContext();
   const router = useRouter();
   const pendingDoctorsQuery = usePendingDoctorsQuery();
+  const appointmentsQuery = useAppointmentsQuery();
   const approveDoctorMutation = useApproveDoctorMutation();
   const rejectDoctorMutation = useRejectDoctorMutation();
 
@@ -32,32 +33,20 @@ const DoctorsList = () => {
     }
   };
 
-  const rejectDoctorByAdmin = async (doctorId: string, reason: string) => {
-    debugger
-    try {
-      const result = await rejectDoctorMutation.mutateAsync(doctorId, {
-        onSuccess: () => router.push('/admin/pending-doctors'),
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  if (appointmentsQuery.data.length <= 0) return <h2>No Records Found!</h2>;
 
-  if (pendingDoctorsQuery.data.length <= 0) return <h2>No Records Found!</h2>;
-
-  const pendingDoctorsList = pendingDoctorsQuery.data.map((doctor, index: number) => (
-    <DoctorRow
-      pendingDoctors={doctor}
+  const appointmentsList = appointmentsQuery.data.map((doctor, index: number) => (
+    <AppointmentRow
+      appointment={doctor}
       key={doctor.doctorUserId}
       index={index}
-      approveDoctorByAdmin={approveDoctorByAdmin}
-      rejectDoctorByAdmin={rejectDoctorByAdmin}
+      cancelAppointment={approveDoctorByAdmin}
     />
   ));
 
   return (
     <Stack>
-      <h2>Pending Doctors List</h2>
+      <h2>Appointments List</h2>
       <TableContainer>
         <Table variant='striped' colorScheme='gray' size='sm'>
           <Thead>
@@ -82,4 +71,4 @@ const DoctorsList = () => {
   );
 };
 
-export default DoctorsList;
+export default AppointmentList;
