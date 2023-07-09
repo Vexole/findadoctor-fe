@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import ExperienceForm from "./ExperienceForm";
 import MiscellaneousInformationForm from "./MiscellaneousInformationForm";
-import { useCitiesQuery, useDoctorProfileQuery, useGendersQuery, useLanguagesQuery, usePendingDoctorsQuery, useSaveDoctorProfileMutation, useSpecializationsQuery } from "@/hooks";
+import { useCitiesQuery, useDoctorProfileQuery, useGendersQuery, useLanguagesQuery, usePendingDoctorsQuery, useSaveDoctorProfileMutation, useSpecializationsQuery, useUpdateDoctorProfileMutation } from "@/hooks";
 import { getUser } from "@/utils/userUtils";
 import { uploadImage } from '@/utils/cloudinary';
 
@@ -25,6 +25,7 @@ const DoctorsProfile = () => {
     const [oldDoctorProfileData, setOldDoctorProfileData] = useState<FormValues | undefined>();
 
     const saveDoctorProfileMutation = useSaveDoctorProfileMutation();
+    const updateDoctorProfileMutation = useUpdateDoctorProfileMutation();
     const router = useRouter();
     const authenticatedUser = getUser();
 
@@ -140,7 +141,9 @@ const DoctorsProfile = () => {
         <MiscellaneousInformationForm register={register} control={control} errors={errors} specializationOptions={specializationOptions} isDisabled={isDisabled} />
     ]);
 
-    const submitProfile = async (data: FormValues) => {
+    const submitProfile = async (data: FormValues, event: any) => {
+        const buttonName = (event.nativeEvent.submitter as HTMLButtonElement).name || "";
+
         if (isDisabled && isLastStep) {
             handleUpdateProfile();
         }
@@ -154,15 +157,24 @@ const DoctorsProfile = () => {
                     setError(e);
                 }
             } else {
-                try {
-                    await saveDoctorProfileMutation.mutateAsync(data);
-                    router.push('/doctors-profile/confirmation');
-                } catch (e: any) {
-                    setError(e);
-                }
+                return updateProfile(data);
             }
         } else {
-            next();
+            if (buttonName === 'update') {
+                return updateProfile(data);
+            } else {
+                next();
+            }
+        }
+    }
+
+    const updateProfile = async (data: FormValues) => {
+        try {
+            await updateDoctorProfileMutation.mutateAsync(data);
+            setIsDisabled(true);
+            setIsEditMode(false);
+        } catch (e: any) {
+            setError(e);
         }
     }
 
@@ -193,6 +205,7 @@ const DoctorsProfile = () => {
                                 {(isEditMode && isLastStep) ? "Update" : (isDisabled && isLastStep) ? "Edit" :
                                     !isDisabled && isLastStep ? "Submit" : "Next"}
                             </button>
+                            {isEditMode && !isLastStep && <button type="submit" name="update">Update</button>}
                         </div>
                     </form>
                 </div>

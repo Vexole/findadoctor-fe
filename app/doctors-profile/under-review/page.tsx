@@ -1,15 +1,27 @@
 "use client";
 import { useAuthenticatedUserContext } from '@/context';
+import { useLogoutMutation } from '@/hooks';
+import { getUser } from '@/utils/userUtils';
 import { useRouter } from 'next/navigation';
 
 import { useEffect } from "react";
 const UnderReview = () => {
     const router = useRouter();
-    const authenticatedUser = useAuthenticatedUserContext();
+    const logout = useLogoutMutation();
+    const authenticatedUser = getUser();
+
     useEffect(() => {
         if (!authenticatedUser) {
             router.push("/auth/login");
         }
+
+        const handleLogout = async () => {
+            if (authenticatedUser.role === 'DoctorUnderReview') {
+                await logout.mutateAsync();
+            }
+        };
+
+        // handleLogout();
     }, []);
 
     return (

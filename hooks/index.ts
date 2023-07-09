@@ -25,3 +25,4 @@ export * from './useCancelAppointmentQuery';
 export * from './useUpdateAppointmentMutation';
 export * from './useDoctorAppointmentsQuery';
 export * from './usePatientAppointmentsQuery';
+export * from './useUpdateDoctorProfileMutation';
