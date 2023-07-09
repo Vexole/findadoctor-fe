@@ -13,14 +13,6 @@ const Confirmation = () => {
         if (!authenticatedUser) {
             router.push("/auth/login");
         }
-
-        const handleLogout = async () => {
-            if (authenticatedUser.role === 'DoctorUnderReview') {
-                await logout.mutateAsync();
-            }
-        };
-
-        // handleLogout();
     }, []);
 
     return (
