@@ -1,22 +1,23 @@
-import { bookAppointment } from '@/api/appointment';
+import { updateDoctorProfile } from '@/api';
 import { useToast } from '@chakra-ui/react';
 import { useMutation } from '@tanstack/react-query';
 
-export const useBookAppointmentMutation = () => {
+export const useUpdateDoctorProfileMutation = () => {
     const toast = useToast();
-    return useMutation((params: Parameters<typeof bookAppointment>[0]) => bookAppointment(params), {
+    return useMutation((params: Parameters<typeof updateDoctorProfile>[0]) => updateDoctorProfile(params), {
         onSuccess: data => {
             toast({
-                title: 'Appointment Booked!',
+                title: 'Profile Updated!',
                 status: 'success',
                 isClosable: true,
             });
         },
-        onError: () =>
+        onError: (error) => {
             toast({
-                title: 'Something went wrong. Try Again Later.',
+                title: error.response.data.errors.error[0],
                 status: 'error',
                 isClosable: true,
-            }),
+            })
+        },
     });
 };

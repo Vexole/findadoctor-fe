@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ScheduleMeeting, timeSlotDifference } from "react-schedule-meeting";
 
-export default function Timeslot() {
+export default function BookAppointment() {
     const [selectedTimeslot, setSelectedTimeslot] = useState(
         // new Date(new Date(new Date().setDate(new Date().getDate()+1)).setHours(9, 0, 0, 0))
     );
