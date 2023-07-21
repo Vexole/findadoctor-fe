@@ -2,27 +2,21 @@
 const moment = require('moment');
 import { useAuthenticatedUserContext } from "@/context";
 import { useBookAppointmentMutation } from "@/hooks";
-import { getUser } from "@/utils/userUtils";
-import { Button, Flex, useToast } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ScheduleMeeting, timeSlotDifference } from "react-schedule-meeting";
 
-export default function Timeslot({ params }: { params: { id?: string } }) {
+export default function BookAppointment() {
     const [selectedTimeslot, setSelectedTimeslot] = useState(
         // new Date(new Date(new Date().setDate(new Date().getDate()+1)).setHours(9, 0, 0, 0))
     );
-    const [eventDurationInMinutes, setEventDurationInMinutes] = useState(60);
 
     const router = useRouter();
-    const toast = useToast();
-
-    debugger
-
     const bookAppointment = useBookAppointmentMutation();
-    const authenticatedUser = getUser();
+    const authenticatedUser = useAuthenticatedUserContext();
 
-    if (authenticatedUser?.role != "Patient") router.push('/auth/logout');
+    // if (authenticatedUser?.role != "Patient") router.push('/auth/logout');
 
     function getSaturdaysAndSundays(startDate: any, endDate: any) {
         const result = [];
@@ -65,20 +59,14 @@ export default function Timeslot({ params }: { params: { id?: string } }) {
 
     const handleBookAppointment = () => {
         const localOffset = selectedTimeslot.getTimezoneOffset() * 60000;
-        const localTime = new Date(selectedTimeslot.getTime() - localOffset);
-        const fromTime = localTime.toISOString().split('T')[1].split('.')[0];
-        let endTimeSlot = new Date(localTime);
-        const toTime = new Date((endTimeSlot.setMinutes(endTimeSlot.getMinutes() + eventDurationInMinutes)))
-            .toISOString().split('T')[1].split('.')[0];
+        const localISOTime = new Date(selectedTimeslot.getTime() - localOffset).toISOString();
         bookAppointment.mutate({
-            patientUserId: authenticatedUser?.userId ?? "",
-            appointmentDate: localTime.toISOString(),
-            doctorUserId: '5ae22881-2d1e-499c-a631-058db425370d',
-            fromTime,
-            toTime
+            userId: authenticatedUser?.userId ?? "",
+            date: localISOTime,
+            doctorId: ''
         }, {
-            onSuccess: (data) => {
-                router.push('/patient/appointments');
+            onSuccess: (e) => {
+
             }
         });
     }
@@ -88,7 +76,7 @@ export default function Timeslot({ params }: { params: { id?: string } }) {
             <ScheduleMeeting
                 borderRadius={10}
                 primaryColor="#3f5b85"
-                eventDurationInMinutes={eventDurationInMinutes}
+                eventDurationInMinutes={60}
                 selectedStartTime={selectedTimeslot}
                 defaultDate={selectedTimeslot}
                 availableTimeslots={availableTimeSlotsLessUnavailableTimeSlots}
@@ -100,7 +88,6 @@ export default function Timeslot({ params }: { params: { id?: string } }) {
                     onClick={handleBookAppointment}
                     type="submit"
                     colorScheme="facebook"
-                    isDisabled={selectedTimeslot == null}
                 >
                     Book Appointment
                 </Button>

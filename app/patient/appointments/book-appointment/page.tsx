@@ -1,28 +1,62 @@
 'use client';
 const moment = require('moment');
-import { useAuthenticatedUserContext } from "@/context";
-import { useBookAppointmentMutation } from "@/hooks";
+import { useBookAppointmentMutation, useUpdateAppointmentMutation } from "@/hooks";
 import { getUser } from "@/utils/userUtils";
-import { Button, Flex, useToast } from "@chakra-ui/react";
+import { Button, Flex } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ScheduleMeeting, timeSlotDifference } from "react-schedule-meeting";
 
-export default function Timeslot({ params }: { params: { id?: string } }) {
+export default function BookAppointment() {
     const [selectedTimeslot, setSelectedTimeslot] = useState(
         // new Date(new Date(new Date().setDate(new Date().getDate()+1)).setHours(9, 0, 0, 0))
     );
     const [eventDurationInMinutes, setEventDurationInMinutes] = useState(60);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [appointment, setAppointment] = useState();
 
     const router = useRouter();
-    const toast = useToast();
-
-    debugger
-
     const bookAppointment = useBookAppointmentMutation();
+    const updateAppointment = useUpdateAppointmentMutation();
     const authenticatedUser = getUser();
 
     if (authenticatedUser?.role != "Patient") router.push('/auth/logout');
+
+    useEffect(() => {
+        if (localStorage.appointment) {
+            const appointment = JSON.parse(localStorage.appointment);
+            setSelectedTimeslot(new Date(appointment.appointmentDate));
+            setAppointment(appointment);
+            setIsEditMode(true);
+        }
+    }, []);
+
+    const handleUpdateAppointment = () => {
+        const localOffset = selectedTimeslot.getTimezoneOffset() * 60000;
+        const localTime = new Date(selectedTimeslot.getTime() - localOffset);
+        const fromTime = localTime.toISOString().split('T')[1].split('.')[0];
+        let endTimeSlot = new Date(localTime);
+        const toTime = new Date((endTimeSlot.setMinutes(endTimeSlot.getMinutes() + eventDurationInMinutes)))
+            .toISOString().split('T')[1].split('.')[0];
+        updateAppointment.mutate({
+            id: appointment?.id,
+            patientUserId: appointment?.patientUserId,
+            appointmentDate: localTime.toISOString(),
+            doctorUserId: appointment?.doctorUserId,
+            fromTime,
+            toTime
+        }, {
+            onSuccess: (data) => {
+                localStorage.removeItem('appointment');
+                router.push('/patient/appointments');
+            }
+        });
+    }
+
+    const handleCancelUpdateAppointment = () => {
+        localStorage.removeItem('appointment');
+        return router.push('/patient/appointments');
+    }
 
     function getSaturdaysAndSundays(startDate: any, endDate: any) {
         const result = [];
@@ -88,22 +122,40 @@ export default function Timeslot({ params }: { params: { id?: string } }) {
             <ScheduleMeeting
                 borderRadius={10}
                 primaryColor="#3f5b85"
-                eventDurationInMinutes={eventDurationInMinutes}
+                eventDurationInMinutes={60}
                 selectedStartTime={selectedTimeslot}
                 defaultDate={selectedTimeslot}
                 availableTimeslots={availableTimeSlotsLessUnavailableTimeSlots}
                 onStartTimeSelect={timeslot => setSelectedTimeslot(timeslot.startTime)}
             />
-            <Flex justify="center" marginTop={4}>
+
+            <Flex justify="center" gap={3} marginTop={4}>
                 <Button
+                    isLoading={bookAppointment.isLoading}
+                    onClick={handleCancelUpdateAppointment}
+                    type="submit"
+                    colorScheme="yellow"
+                >
+                    Back
+                </Button>
+
+                {isEditMode && <Button
+                    isLoading={bookAppointment.isLoading}
+                    onClick={handleUpdateAppointment}
+                    type="submit"
+                    colorScheme="facebook"
+                >
+                    Update Appointment
+                </Button>}
+                {!isEditMode && <Button
                     isLoading={bookAppointment.isLoading}
                     onClick={handleBookAppointment}
                     type="submit"
-                    colorScheme="facebook"
                     isDisabled={selectedTimeslot == null}
+                    colorScheme="facebook"
                 >
                     Book Appointment
-                </Button>
+                </Button>}
             </Flex>
         </div>
     );
