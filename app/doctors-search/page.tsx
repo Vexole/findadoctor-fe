@@ -1,5 +1,12 @@
 'use client';
-import { CalendarIcon, Search2Icon } from '@chakra-ui/icons';
+import { DoctorLanguages, DoctorSpecialties, GetDoctorsParams } from '@/api';
+import {
+  useCitiesByStateQuery,
+  useDoctorsQuery,
+  useLanguagesQuery,
+  useSpecializationsQuery,
+  useStatesQuery,
+} from '@/hooks';
 import {
   Box,
   Button,
@@ -8,64 +15,77 @@ import {
   GridItem,
   Heading,
   Input,
-  InputGroup,
-  InputRightElement,
   Select,
   Stack,
   Text,
   Image,
+  Spinner,
+  Collapse,
 } from '@chakra-ui/react';
-// import Image from 'next/image';
+import { ChangeEvent, PropsWithChildren, useState } from 'react';
 
-const contentArray = [
-  {
-    image: '/images/doctor1.jpg',
-    title: 'Ducan Pitt',
-    specialty: 'Orthodontics',
-  },
-  {
-    image: '/images/doctor2.jpg',
-    title: 'Mary Weather',
-    specialty: 'Endodontics',
-  },
-  {
-    image: '/images/doctor3.jpg',
-    title: 'Jacob Abel',
-    specialty: 'Periodontics',
-  },
-  {
-    image: '/images/doctor4.jpg',
-    title: 'Gill Hames',
-    specialty: 'Pediatric',
-  },
-  {
-    image: '/images/doctor5.jpg',
-    title: 'Finn McDonald',
-    specialty: 'Dentistry',
-  },
-  {
-    image: '/images/doctor6.jpg',
-    title: 'Donna Summer',
-    specialty: 'Prosthodontics',
-  },
-  {
-    image: '/images/doctor7.jpg',
-    title: 'Dagmar McLean',
-    specialty: 'Psychiatry',
-  },
-  {
-    image: '/images/doctor8.jpg',
-    title: 'Richard Kicker',
-    specialty: 'Urology',
-  },
-  {
-    image: '/images/doctor9.jpg',
-    title: 'Millie Billie',
-    specialty: 'Dermatology',
-  },
-];
+export type FormTypes = {
+  states: number;
+  cities: number;
+  postalCode: string;
+  specialties: string[];
+  languages: string[];
+};
+
+const initialFormValues: FormTypes = {
+  states: 0,
+  cities: 0,
+  postalCode: '',
+  specialties: [],
+  languages: [],
+};
+
+const TextContainer = ({ title, children }: PropsWithChildren<{ title: string }>) => (
+  <>
+    {' '}
+    <Text fontSize="sm" color="#1A365D" fontWeight="600">
+      {title}
+    </Text>
+    {children}
+  </>
+);
 
 export default function DoctorsSearch() {
+  const [formValues, setFormValues] = useState(initialFormValues);
+  const [queryParams, setQueryParams] = useState<GetDoctorsParams>({});
+
+  const { data: doctorsList, isLoading } = useDoctorsQuery(queryParams);
+  const { data: specialtiesList } = useSpecializationsQuery();
+  const { data: languagesList } = useLanguagesQuery();
+  const { data: statesList } = useStatesQuery();
+  const { data: citiesByStateList } = useCitiesByStateQuery(formValues.states);
+
+  const [showHiddenLanguages, setShowHiddenLanguages] = useState(false);
+
+  const handleFormValues = (key: keyof FormTypes, value: number | string | string[]) =>
+    setFormValues(prevFormValues => ({
+      ...prevFormValues,
+      [key]: value,
+    }));
+
+  const handleCheckboxChange = (key: keyof FormTypes, name: string) => {
+    const checkboxArray = formValues[key] as string[];
+    if (checkboxArray.includes(name))
+      return handleFormValues(
+        key,
+        checkboxArray.filter(optionName => name !== optionName)
+      );
+    return handleFormValues(key, [...checkboxArray, name]);
+  };
+
+  const handleLanguagesToggle = () => setShowHiddenLanguages(!showHiddenLanguages);
+
+  const handleSearch = () => {
+    const states = statesList?.find(state => state.stateId === formValues.states)?.stateName;
+    const cities = citiesByStateList?.find(city => city.cityId === formValues.cities)?.cityName;
+    setQueryParams({ ...formValues, states, cities });
+  };
+
   return (
     <Stack direction="column" spacing={0}>
       <Stack
@@ -75,6 +95,8 @@ export default function DoctorsSearch() {
         p={6}
         bg="#4199E1"
         w="100%"
+        h={200}
+        justifyContent="center"
         color="white"
       >
         <Box m={6}>
@@ -85,172 +107,169 @@ export default function DoctorsSearch() {
             Choose your preferred family doctor and time slot to book an appointment.
           </Text>
         </Box>
-
-        <Stack p={6} bg="#fff" w="100%" color="#1A365D" borderRadius="lg" spacing={6}>
-          <Heading as="h4" size="md" color="telegram">
-            Make a Medical Appointment
-          </Heading>
-          <Stack direction="row" spacing={4}>
-            <Grid templateColumns={{ base: '1, 1fr', md: 'repeat(4, 1fr)' }} gap={4} w="100%">
-              <GridItem colSpan={1}>
-                <Select size="md" placeholder="Specialty / Doctor / Hospital">
-                  <option value="option1">Option 1</option>
-                  <option value="option2">Option 2</option>
-                  <option value="option3">Option 3</option>
-                </Select>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <InputGroup>
-                  <InputRightElement pointerEvents="none">
-                    <Search2Icon color="gray.400" />
-                  </InputRightElement>
-                  <Input type="text" placeholder="Location" />
-                </InputGroup>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <InputGroup>
-                  <InputRightElement pointerEvents="none">
-                    <CalendarIcon color="gray.400" />
-                  </InputRightElement>
-                  <Input type="text" placeholder="Date" />
-                </InputGroup>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Button size="md" w="100%" colorScheme="telegram">
-                  Search
-                </Button>
-              </GridItem>
-            </Grid>
-          </Stack>
-        </Stack>
       </Stack>
       <Grid templateColumns={{ base: '1, 1fr', md: 'repeat(4, 1fr)' }}>
-        <GridItem colSpan={1}  p={6}>
+        <GridItem colSpan={1} p={6}>
           <Stack spacing={4}>
-            <Heading as="h5" size="sm" color="#1A365D">
+            <Heading as="h5" size="md" color="#1A365D">
               Refine your search
             </Heading>
-            <InputGroup>
-              <InputRightElement pointerEvents="none">
-                <Search2Icon color="gray.400" />
-              </InputRightElement>
-              <Input type="text" placeholder="Search" />
-            </InputGroup>
-            <Text fontSize="sm" color="#1A365D" fontWeight="500">
-              Specialty
-            </Text>
-            <Checkbox defaultChecked fontWeight="400">
-              General practioner
-            </Checkbox>
-            <Checkbox fontWeight="400" color="gray.700">
-              Dentistry
-            </Checkbox>
-            <Checkbox fontWeight="400" color="gray.700">
-              Neurology
-            </Checkbox>
-            <Checkbox fontWeight="400" color="gray.700">
-              X-Ray
-            </Checkbox>
-            <Checkbox fontWeight="400" color="gray.700">
-              Dermatology
-            </Checkbox>
-            <Checkbox defaultChecked fontWeight="400">
-              Urology
-            </Checkbox>
-            <Checkbox defaultChecked fontWeight="400">
-              Phychiatry
-            </Checkbox>
-            <Text fontSize="sm" color="#1A365D" fontWeight="500">
-              Qualification
-            </Text>
-            <Checkbox fontWeight="400">MBBS</Checkbox>
-            <Checkbox fontWeight="400">MBBch</Checkbox>
-            <Checkbox fontWeight="400">MD</Checkbox>
-            <Checkbox fontWeight="400">DO</Checkbox>
-            <Text fontSize="sm" color="#1A365D" fontWeight="500">
-              State
-            </Text>
-            <InputGroup>
-              <InputRightElement pointerEvents="none">
-                <Search2Icon color="gray.400" />
-              </InputRightElement>
-              <Input type="text" placeholder="Ontario (ON)" />
-            </InputGroup>
-            <Text fontSize="sm" color="#1A365D" fontWeight="500">
-              City
-            </Text>
-            <Select size="md" placeholder="Choose a city">
-              <option value="option1">Option 1</option>
-              <option value="option2">Option 2</option>
-              <option value="option3">Option 3</option>
-            </Select>
-            <Button colorScheme="telegram">Update Search</Button>
+
+            <TextContainer title="Specialty">
+              {specialtiesList?.map(({ specialtyId, specialtyName }: DoctorSpecialties) => (
+                <Checkbox
+                  fontWeight="400"
+                  key={`specialty-${specialtyId}`}
+                  isChecked={formValues.specialties.includes(specialtyName)}
+                  onChange={() => handleCheckboxChange('specialties', specialtyName)}
+                >
+                  {specialtyName}
+                </Checkbox>
+              ))}
+            </TextContainer>
+
+            <TextContainer title="Language">
+              <Collapse startingHeight={100} in={showHiddenLanguages}>
+                <Stack direction="column">
+                  {languagesList?.map(({ languageId, languageName }: DoctorLanguages) => (
+                    <Checkbox
+                      fontWeight="400"
+                      key={`languageId-${languageId}`}
+                      isChecked={formValues.languages.includes(languageName)}
+                      onChange={() => handleCheckboxChange('languages', languageName)}
+                    >
+                      {languageName}
+                    </Checkbox>
+                  ))}
+                </Stack>
+              </Collapse>
+              <Button
+                size="sm"
+                w={100}
+                variant="outline"
+                onClick={handleLanguagesToggle}
+                mt={2}
+                colorScheme="blue"
+              >
+                Show {showHiddenLanguages ? 'Less' : 'More'}
+              </Button>
+            </TextContainer>
+
+            <TextContainer title="State">
+              <Select
+                placeholder="Choose a state"
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  handleFormValues('states', Number(e.target.value))
+                }
+                value={formValues.states}
+              >
+                {statesList?.map(({ stateId, stateName }) => (
+                  <option key={`stateId-${stateId}`} value={stateId}>
+                    {stateName}
+                  </option>
+                ))}
+              </Select>
+            </TextContainer>
+            <TextContainer title="City">
+              <Select
+                placeholder="Choose a city"
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  handleFormValues('cities', Number(e.target.value))
+                }
+                value={formValues.cities}
+              >
+                {citiesByStateList?.map(({ cityId, cityName }) => (
+                  <option key={`cityId-${cityId}`} value={cityId}>
+                    {cityName}
+                  </option>
+                ))}
+              </Select>
+            </TextContainer>
+            <TextContainer title="Postal Code">
+              <Input
+                type="text"
+                placeholder="Enter a Postal Code"
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  handleFormValues('postalCode', e.target.value)
+                }
+                value={formValues.postalCode}
+              />
+            </TextContainer>
+            <Button colorScheme="telegram" onClick={handleSearch}>
+              Update Search
+            </Button>
+            <Button colorScheme="telegram" variant="outline" onClick={() => setFormValues(initialFormValues)}>
+              Reset Filters
+            </Button>
           </Stack>
         </GridItem>
         <GridItem colSpan={{ base: 1, md: 3 }} bg="#EBF8FF" p={6}>
-          <Grid templateColumns={{ base: '1, 1fr', md: "repeat(2, 1fr)"}} gap={4} >
-            <GridItem  alignSelf='center'>
-              <Text fontSize="sm" color="gray">
-                Showing 175 searching results.
-              </Text>
-            </GridItem>
-            <GridItem justifySelf="end">
-              <Select
-                variant="flushed"
-                size="md"
-                w="200px"
-                p={2}
-                placeholder="Sorted by: Highest rated"
-              />
-            </GridItem>
-          </Grid>
-          <Grid
-            templateColumns={{ base: '1, 1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
-            templateRows={{ base: '1, 1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
-            gap={6}
-          >
-            {contentArray.map((content, index) => (
-              <GridItem w="100%" key={index}>
-                <Box bg="white" w="100%" height="100%" p={4} color="white" borderRadius="lg">
-                  <Image
-                    borderRadius="full"
-                    boxSize="120px"
-                    w="150px"
-                    height="150px"
-                    src={content.image}
-                    alt="Doctor Profile"
-                    m="auto"
-                    objectFit="cover"
-                  />
-
-                  <Heading
-                    mt="1"
-                    fontWeight="semibold"
-                    as="h4"
-                    size="md"
-                    lineHeight="tight"
-                    noOfLines={1}
-                    color="#1A365D"
-                    textAlign="center"
-                  >
-                    {content.title}
-                  </Heading>
-                  <Text
-                    mt="1"
-                    fontWeight="400"
-                    as="h6"
-                    size="sm"
-                    lineHeight="tight"
-                    noOfLines={1}
-                    color="gray.500"
-                    textAlign="center"
-                  >
-                    {content.specialty}
-                  </Text>
-                </Box>
+          {!isLoading && (
+            <Grid templateColumns={{ base: '1, 1fr', md: 'repeat(2, 1fr)' }} gap={4}>
+              <GridItem alignSelf="center">
+                <Text fontSize="sm" color="gray">
+                  {`Showing ${doctorsList?.length || 0} searching results.`}
+                </Text>
               </GridItem>
-            ))}
-          </Grid>
+            </Grid>
+          )}
+          {isLoading && <Spinner />}
+          {!isLoading && (
+            <Grid
+              templateColumns={{ base: '1, 1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
+              templateRows={{ base: '1, 1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
+              gap={6}
+            >
+              {doctorsList?.map((doctor, index) => (
+                <GridItem w="100%" key={`doctor-${index}`}>
+                  <Box bg="white" w="100%" height="100%" p={4} color="white" borderRadius="lg">
+                    <Image
+                      borderRadius="full"
+                      boxSize="120px"
+                      w="150px"
+                      height="150px"
+                      src={
+                        doctor.profilePicture && doctor.gender === 'Female'
+                          ? '/images/doctor-avatar-female.png'
+                          : '/images/doctor-avatar-male.png'
+                      }
+                      alt="Doctor Profile"
+                      m="auto"
+                      objectFit="cover"
+                    />
+
+                    <Heading
+                      mt="1"
+                      fontWeight="semibold"
+                      as="h4"
+                      size="md"
+                      lineHeight="tight"
+                      noOfLines={1}
+                      color="#1A365D"
+                      textAlign="center"
+                    >
+                      {`${doctor.title} ${doctor.name}`}
+                    </Heading>
+                    {doctor.doctorSpecialties.map(({ specialtyId, specialtyName }) => (
+                      <Text
+                        key={`specialtyByDoctor-${specialtyId}`}
+                        mt="1"
+                        fontWeight="400"
+                        as="h6"
+                        size="sm"
+                        lineHeight="tight"
+                        noOfLines={1}
+                        color="gray.500"
+                        textAlign="center"
+                      >
+                        {specialtyName}
+                      </Text>
+                    ))}
+                  </Box>
+                </GridItem>
+              ))}
+            </Grid>
+          )}
         </GridItem>
       </Grid>
     </Stack>
