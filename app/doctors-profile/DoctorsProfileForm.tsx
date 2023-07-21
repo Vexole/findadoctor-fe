@@ -23,6 +23,7 @@ type PropTypes = {
 const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
     cityOptions, specializationOptions, languageOptions, genderOptions }: PropTypes) => {
     const [userId, setUserId] = useState(params.id);
+    const [profileImageUrl, setProfileImageUrl] = useState("");
 
     const saveDoctorProfileApi = useSaveDoctorProfileMutation();
     const approveDoctorApi = useApproveDoctorMutation();
@@ -55,6 +56,8 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
             try {
                 const doctorProfile = await getPendingDoctorDetailById(params.id);
                 const doctorProfileData = doctorProfile.data;
+                setProfileImageUrl(doctorProfileData.profilePicture);
+
                 if (doctorProfileData) {
                     const formattedData = {
                         ...doctorProfileData,
@@ -109,11 +112,10 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
         <>
             {/* {saveDoctorProfileMutation.isError && <p>Error occurred while saving doctor profile: {saveDoctorProfileMutation?.error?.message}</p>} <br></br> */}
             {/* {saveDoctorProfileMutation.isLoading && "Loading..."} */}
-            <form onSubmit={handleSubmit(submitProfile)} noValidate>
-                {/* <div className="form-fields">
-                    <label htmlFor="profilePicture">Profile Picture</label>
-                    <input type="file" {...register("profilePicture")} />
-                </div> */}
+            <form onSubmit={handleSubmit(submitProfile)} noValidate className="pending-doctor-profile">
+                <div className="profile-image-container">
+                    <img className="profile-image" src={profileImageUrl} alt="Profile Picture" />
+                </div>
                 <div className="form-fields">
                     <label htmlFor="title">Title</label>
                     <select {...register("title", { required: 'Title is required' })} id="title" disabled={isDisabled}>

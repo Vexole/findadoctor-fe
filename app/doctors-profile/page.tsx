@@ -9,9 +9,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from 'next/navigation';
 import ExperienceForm from "./ExperienceForm";
 import MiscellaneousInformationForm from "./MiscellaneousInformationForm";
-import { useCitiesQuery, useDoctorProfileQuery, useGendersQuery, useLanguagesQuery, usePendingDoctorsQuery, useSaveDoctorProfileMutation, useSpecializationsQuery } from "@/hooks";
+import { useCitiesQuery, useDoctorProfileQuery, useGendersQuery, useLanguagesQuery, usePendingDoctorsQuery, useSaveDoctorProfileMutation, useSpecializationsQuery, useUpdateDoctorProfileMutation } from "@/hooks";
 import { getUser } from "@/utils/userUtils";
-import { useAuthenticatedUserContext } from "@/context";
+import { uploadImage } from '@/utils/cloudinary';
 
 const DoctorsProfile = () => {
     const [languageOptions, setLanguageOptions] = useState<JSX.Element[]>([]);
@@ -21,14 +21,17 @@ const DoctorsProfile = () => {
     const [error, setError] = useState();
     const [isDisabled, setIsDisabled] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
+    const [profilePictureUrl, setProfilePictureUrl] = useState("https://res.cloudinary.com/dbmmtklps/image/upload/v1688519237/q8v58luexpmgoxacidj9.jpg");
+    const [oldDoctorProfileData, setOldDoctorProfileData] = useState<FormValues | undefined>();
 
     const saveDoctorProfileMutation = useSaveDoctorProfileMutation();
+    const updateDoctorProfileMutation = useUpdateDoctorProfileMutation();
     const router = useRouter();
     const authenticatedUser = getUser();
 
-    const { register, handleSubmit, control, formState: { errors }, reset } = useForm<FormValues>({
+    const { register, handleSubmit, watch, control, formState: { errors }, reset } = useForm<FormValues>({
         defaultValues: {
-            // profilePicture: "default.png",
+            profilePicture: "",
             doctorSpecialties: [{ specialtyId: "" }],
             doctorEducationBackgrounds: [{ startDate: "", endDate: "", fieldOfStudy: "", degree: "", institutionName: "" }],
             experiences: [{ startDate: "", endDate: "", companyName: "", description: "" }],
@@ -89,7 +92,7 @@ const DoctorsProfile = () => {
     useEffect(() => {
         if (doctorProfile.data) {
             const doctorProfileData = doctorProfile.data;
-
+            setProfilePictureUrl(doctorProfileData.profilePicture);
             const formattedData = {
                 ...doctorProfileData,
                 doctorEducationBackgrounds: doctorProfileData.doctorEducationBackgrounds.map((education: Education) => ({
@@ -108,29 +111,70 @@ const DoctorsProfile = () => {
         }
     }, [doctorProfile.data]);
 
+    const handleProfilePictureChange = (data: any) => {
+        uploadImage(data.target.files)
+            .then(res => {
+                setProfilePictureUrl(res.data.url);
+            });
+    }
+
+    const handleUpdateProfile = () => {
+        setIsDisabled(false);
+        setIsEditMode(true);
+        setOldDoctorProfileData({ ...(doctorProfile.data as FormValues) });
+    }
+
+    const handleCancelUpdateProfile = () => {
+        setIsDisabled(true);
+        setIsEditMode(false);
+        setProfilePictureUrl(oldDoctorProfileData?.profilePicture);
+        reset(oldDoctorProfileData);
+    }
+
     const { steps, currentStepIndex, step, isFirstStep, isLastStep, back, next } = useMultiStepForm([
-        <UserForm register={register} control={control} errors={errors} languageOptions={languageOptions} genderOptions={genderOptions} isDisabled={isDisabled} />,
+        <UserForm register={register} control={control} errors={errors} languageOptions={languageOptions} genderOptions={genderOptions}
+            isDisabled={isDisabled} isEditMode={isEditMode} profilePictureUrl={profilePictureUrl}
+            handleProfilePictureChange={handleProfilePictureChange} />,
         <AddressForm register={register} control={control} errors={errors} cityOptions={cityOptions} isDisabled={isDisabled} />,
         <EducationForm register={register} control={control} errors={errors} isDisabled={isDisabled} />,
         <ExperienceForm register={register} control={control} errors={errors} isDisabled={isDisabled} />,
         <MiscellaneousInformationForm register={register} control={control} errors={errors} specializationOptions={specializationOptions} isDisabled={isDisabled} />
     ]);
 
+    const submitProfile = async (data: FormValues, event: any) => {
+        const buttonName = (event.nativeEvent.submitter as HTMLButtonElement).name || "";
 
-    const submitProfile = async (data: FormValues) => {
         if (isDisabled && isLastStep) {
-            setIsDisabled(false);
-            setIsEditMode(true);
+            handleUpdateProfile();
         }
         else if (isLastStep) {
-            try {
-                await saveDoctorProfileMutation.mutateAsync(data);
-                router.push('/doctors-profile/confirmation');
-            } catch (e: any) {
-                setError(e);
+            data.profilePicture = profilePictureUrl;
+            if (!isEditMode) {
+                try {
+                    await saveDoctorProfileMutation.mutateAsync(data);
+                    router.push('/doctors-profile/confirmation');
+                } catch (e: any) {
+                    setError(e);
+                }
+            } else {
+                return updateProfile(data);
             }
         } else {
-            next();
+            if (buttonName === 'update') {
+                return updateProfile(data);
+            } else {
+                next();
+            }
+        }
+    }
+
+    const updateProfile = async (data: FormValues) => {
+        try {
+            await updateDoctorProfileMutation.mutateAsync(data);
+            setIsDisabled(true);
+            setIsEditMode(false);
+        } catch (e: any) {
+            setError(e);
         }
     }
 
@@ -140,13 +184,18 @@ const DoctorsProfile = () => {
                 (<div style={{
                     position: "relative",
                     background: "white",
-                    border: "1px solid black",
+                    width: '80%',
                     padding: "2rem",
-                    margin: "1rem auto",
-                    borderRadius: ".5rem"
+                    margin: "1rem auto"
                 }}>
                     <form onSubmit={handleSubmit(submitProfile)} noValidate>
-                        <div style={{ position: "absolute", top: ".5rem", right: ".5rem" }}>
+                        {isDisabled && !isEditMode && <div style={{ position: "absolute", top: ".5rem" }}>
+                            <p className="doctor-profile-links" onClick={() => handleUpdateProfile()}>Update Your Profile</p>
+                        </div>}
+                        {!isDisabled && isEditMode && <div style={{ position: "absolute", top: ".5rem" }}>
+                            <p className="doctor-profile-links" onClick={() => handleCancelUpdateProfile()}>Cancel</p>
+                        </div>}
+                        <div style={{ position: "absolute", top: ".5rem", right: ".75rem" }}>
                             {currentStepIndex + 1} / {steps.length}
                         </div>
                         {step}
@@ -156,8 +205,8 @@ const DoctorsProfile = () => {
                                 {(isEditMode && isLastStep) ? "Update" : (isDisabled && isLastStep) ? "Edit" :
                                     !isDisabled && isLastStep ? "Submit" : "Next"}
                             </button>
+                            {isEditMode && !isLastStep && <button type="submit" name="update">Update</button>}
                         </div>
-                        {/* {error && <span className="error">{error}</span>} */}
                     </form>
                 </div>
                 )

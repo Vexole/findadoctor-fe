@@ -19,7 +19,13 @@ export * from './useBookAppointmentMutation';
 export * from './useDoctorAvailabilityMutation';
 export * from './useDoctorAvailabilityQuery';
 export * from './useUpdateDoctorAvailabilityMutation';
+export * from './useAppointmentsQuery';
+export * from './useBookAppointmentMutation';
+export * from './useCancelAppointmentQuery';
+export * from './useUpdateAppointmentMutation';
+export * from './useDoctorAppointmentsQuery';
+export * from './usePatientAppointmentsQuery';
+export * from './useUpdateDoctorProfileMutation';
 export * from './useDoctorsQuery';
 export * from './useStatesQuery';
 export * from './useCitiesByStateQuery';
-

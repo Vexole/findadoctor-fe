@@ -1,27 +1,28 @@
 import { useAuthenticatedUserContext } from '@/context';
+import { getUser } from '@/utils/userUtils';
 import { Link, Stack, StackDivider } from '@chakra-ui/react';
 import NextLink from 'next/link';
 
 const links = [
   { href: '/', title: 'Home', role: '', accessLevel: '' },
-  { href: '/doctors-search', title: 'Doctor Search', role: '', accessLevel: '' },
+  { href: '/doctors-search', title: 'Doctor Search', role: '', accessLevel: '', restrictRole: 'Doctor' },
   { href: '/auth/login', title: 'Login', role: '', accessLevel: 'unauthenticated' },
   { href: '/auth/register', title: 'Register', role: '', accessLevel: 'unauthenticated' },
   {
     href: '/doctors-profile',
-    title: 'Doctor Profile',
+    title: 'Profile',
     role: 'doctor',
     accessLevel: 'authenticated',
   },
   {
     href: '/doctors-profile',
-    title: 'Doctor Profile',
+    title: 'Profile',
     role: 'doctorunderreview',
     accessLevel: 'authenticated',
   },
   {
     href: '/doctors-profile/availability',
-    title: 'Doctor Availability',
+    title: 'Availability',
     role: 'doctor',
     accessLevel: 'authenticated',
   },
@@ -44,11 +45,20 @@ const links = [
 
 export function NavBar() {
   const authenticatedUser = useAuthenticatedUserContext();
-  const userRole = authenticatedUser?.role ?? '';
+  const userRole = authenticatedUser?.role ?? getUser()?.role ?? "";
   const accessLevel = authenticatedUser ? 'authenticated' : 'unauthenticated';
   let allowedLinks = links
     .filter(link => link.role === '' || link.role === userRole.toLowerCase())
-    .filter(link => link.accessLevel === '' || link.accessLevel === accessLevel);
+    .filter(link => link.accessLevel === '' || link.accessLevel === accessLevel)
+    .filter(link => {
+      if (link.restrictRole) {
+        if (link.restrictRole !== userRole) {
+          return link;
+        }
+      } else {
+        return link;
+      }
+    });
 
   if (authenticatedUser && userRole === 'Patient' && authenticatedUser.isProfileComplete) {
     allowedLinks = allowedLinks.filter(link => !(link.title === 'Profile' && !link.isProfileCompleteRequired))
@@ -100,7 +110,7 @@ export function NavBar() {
       </Link>
       <Stack direction="row" spacing={4} divider={<StackDivider />} mt={{ base: 4, md: 0 }}>
         {allowedLinks.map(({ href, title }) => (
-          <Link as={NextLink} href={href} key={title} color="white">
+          <Link as={NextLink} href={href} style={{ cursor: 'pointer' }} key={title} color="white">
             {title}
           </Link>
         ))}
