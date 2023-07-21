@@ -33,12 +33,16 @@ export default function DoctorAppointments() {
         }
     }
 
+    const viewPatient = async (patientId: string) => router.push("/");
+
     if (doctorAppointmentsQuery.data.length <= 0) return <h2>No Appointments Yet!</h2>;
 
     return (<>
         {doctorAppointmentsQuery.data.length <= 0 ?
             (<h2>No Appointments Yet!</h2>) :
-            (<DoctorAppointmentList appointmentList={doctorAppointmentsQuery.data} handleCancelAppointment={cancelAppointment} />)}
+            (<DoctorAppointmentList appointmentList={doctorAppointmentsQuery.data} 
+                cancelAppointment={cancelAppointment}
+                viewPatient={viewPatient} />)}
     </>
     );
 }

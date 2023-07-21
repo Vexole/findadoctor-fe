@@ -28,3 +28,4 @@ export * from './usePatientAppointmentsQuery';
 export * from './useUpdateDoctorProfileMutation';
 export * from './useSharedDoctorProfileQuery';
 export * from './useSharedPatientProfileQuery';
+export * from './usePatientProfileQuery';

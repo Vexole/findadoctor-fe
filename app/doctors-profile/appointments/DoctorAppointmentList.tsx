@@ -3,7 +3,7 @@ import { DoctorAppointmentRow } from './DoctorAppointmentRow';
 import { Center, Stack, Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 
 const DoctorAppointmentList = (props: any) => {
-  const {appointmentList, cancelAppointment} = props;
+  const {appointmentList, cancelAppointment, viewPatient} = props;
 
   const appointmentsList = appointmentList.map((appointment: any, index: number) => (
     <DoctorAppointmentRow
@@ -11,6 +11,7 @@ const DoctorAppointmentList = (props: any) => {
       key={appointment.id}
       index={index}
       handleCancelAppointment={cancelAppointment}
+      handleViewPatient={viewPatient}
     />
   ));
 
@@ -26,7 +27,7 @@ const DoctorAppointmentList = (props: any) => {
               <Th><Center>Date</Center></Th>
               <Th><Center>Time</Center></Th>
               <Th><Center>Status</Center></Th>
-              <Th colSpan={2}></Th>
+              <Th></Th>
             </Tr>
           </Thead>
           <Tbody>{appointmentsList}</Tbody>

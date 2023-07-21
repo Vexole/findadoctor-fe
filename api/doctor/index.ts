@@ -8,3 +8,4 @@ export * from './updateDoctorProfile';
 export * from './addDoctorAvailability';
 export * from './getDoctorAvailability';
 export * from './updateDoctorAvailability';
+export * from './getTimeslotAvailability';

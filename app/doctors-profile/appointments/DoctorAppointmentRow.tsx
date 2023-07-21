@@ -8,6 +8,7 @@ type PropTypes = {
     appointment: any;
     index: number;
     handleCancelAppointment: any;
+    handleViewPatient: any;
 };
 
 export function DoctorAppointmentRow(props: PropTypes) {
@@ -31,10 +32,15 @@ export function DoctorAppointmentRow(props: PropTypes) {
             <Td>{fromTime.substring(0, 5)} - {toTime.substring(0, 5)}</Td>
             <Td>{status}</Td>
             <Td colSpan={2} >
-                {status === 'Scheduled' && <Button colorScheme="red" onClick={() => props.handleCancelAppointment(id, doctorUserId, patientUserId)}>
-                    Cancel
+                {<Button colorScheme="green" onClick={() => props.handleViewPatient(patientUserId)}>
+                    View Patient
                 </Button>}
             </Td>
+            {/* <Td colSpan={2} >
+                {status !== 'Cancelled' && <Button colorScheme="red" onClick={() => props.handleCancelAppointment(id, doctorUserId, patientUserId)}>
+                    Cancel
+                </Button>}
+            </Td> */}
         </Tr>
     );
 }

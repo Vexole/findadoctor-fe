@@ -1,7 +1,6 @@
 "use client";
 import { useAuthenticatedUserContext } from '@/context';
 import { useLogoutMutation } from '@/hooks';
-import { logOut } from '@/utils/userUtils';
 import { useRouter } from 'next/navigation';
 
 import { useEffect } from "react";
@@ -13,6 +12,7 @@ const LogOut = () => {
 
     useEffect(() => {
         const handleLogout = async () => {
+            localStorage.removeItem('patient');
             if (user) {
                 await logout.mutateAsync();
             }
