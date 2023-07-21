@@ -1,5 +1,6 @@
 import axiosInstance from '@/http/axiosInstance';
 import { ApiPayload } from '../common';
+import { stringify } from 'querystring';
 
 export type DoctorSpecialties = {
   specialtyId: number;
@@ -56,7 +57,17 @@ type Doctors = {
   age: number;
 };
 
-export async function getDoctors() {
-  const { data } = await axiosInstance.get<ApiPayload<Doctors>>(`/Shared/get-doctors`);
+export type GetDoctorsParams = {
+  states?: string,
+  cities?: string,
+  postalCode?: string;
+  specialties?: string[];
+  languages?: string[];
+}
+
+export async function getDoctors({specialties, languages, ...params}: GetDoctorsParams) {
+  const specialtyParams = specialties?.length ? stringify({specialties}) : '';
+  const languageParams = languages?.length ? stringify({languages}) : '';
+  const { data } = await axiosInstance.get<ApiPayload<Doctors>>(`/Shared/get-doctors?${specialtyParams}${languageParams}`, {params});
   return data.data;
 }

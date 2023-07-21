@@ -1,5 +1,5 @@
 'use client';
-import { DoctorLanguages, DoctorSpecialties } from '@/api';
+import { DoctorLanguages, DoctorSpecialties, GetDoctorsParams } from '@/api';
 import {
   useCitiesByStateQuery,
   useDoctorsQuery,
@@ -7,7 +7,6 @@ import {
   useSpecializationsQuery,
   useStatesQuery,
 } from '@/hooks';
-import { CalendarIcon, Search2Icon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -16,8 +15,6 @@ import {
   GridItem,
   Heading,
   Input,
-  InputGroup,
-  InputRightElement,
   Select,
   Stack,
   Text,
@@ -25,22 +22,69 @@ import {
   Spinner,
   Collapse,
 } from '@chakra-ui/react';
-import { ChangeEvent, ReactEventHandler, useState } from 'react';
+import { ChangeEvent, PropsWithChildren, useState } from 'react';
+
+export type FormTypes = {
+  states: number;
+  cities: number;
+  postalCode: string;
+  specialties: string[];
+  languages: string[];
+};
+
+const initialFormValues: FormTypes = {
+  states: 0,
+  cities: 0,
+  postalCode: '',
+  specialties: [],
+  languages: [],
+};
+
+const TextContainer = ({ title, children }: PropsWithChildren<{ title: string }>) => (
+  <>
+    {' '}
+    <Text fontSize="sm" color="#1A365D" fontWeight="600">
+      {title}
+    </Text>
+    {children}
+  </>
+);
 
 export default function DoctorsSearch() {
-  const { data: doctorsList, isLoading } = useDoctorsQuery();
+  const [formValues, setFormValues] = useState(initialFormValues);
+  const [queryParams, setQueryParams] = useState<GetDoctorsParams>({});
+
+  const { data: doctorsList, isLoading } = useDoctorsQuery(queryParams);
   const { data: specialtiesList } = useSpecializationsQuery();
   const { data: languagesList } = useLanguagesQuery();
   const { data: statesList } = useStatesQuery();
-  const [selectedCity, setSelectedCity] = useState(0);
-  const [showHiddenLanguages, setShowHiddenLanguages] = useState(false);
-  const { data: citiesByStateList } = useCitiesByStateQuery(selectedCity);
+  const { data: citiesByStateList } = useCitiesByStateQuery(formValues.states);
 
-  const getCitiesByState = (e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCity(Number(e.target.value));
+  const [showHiddenLanguages, setShowHiddenLanguages] = useState(false);
+
+  const handleFormValues = (key: keyof FormTypes, value: number | string | string[]) =>
+    setFormValues(prevFormValues => ({
+      ...prevFormValues,
+      [key]: value,
+    }));
+
+  const handleCheckboxChange = (key: keyof FormTypes, name: string) => {
+    const checkboxArray = formValues[key] as string[];
+    if (checkboxArray.includes(name))
+      return handleFormValues(
+        key,
+        checkboxArray.filter(optionName => name !== optionName)
+      );
+    return handleFormValues(key, [...checkboxArray, name]);
   };
 
   const handleLanguagesToggle = () => setShowHiddenLanguages(!showHiddenLanguages);
+
+  const handleSearch = () => {
+    const states = statesList?.find(state => state.stateId === formValues.states)?.stateName;
+    const cities = citiesByStateList?.find(city => city.cityId === formValues.cities)?.cityName;
+    setQueryParams({ ...formValues, states, cities });
+  };
 
   return (
     <Stack direction="column" spacing={0}>
@@ -51,6 +95,8 @@ export default function DoctorsSearch() {
         p={6}
         bg="#4199E1"
         w="100%"
+        h={200}
+        justifyContent="center"
         color="white"
       >
         <Box m={6}>
@@ -61,132 +107,112 @@ export default function DoctorsSearch() {
             Choose your preferred family doctor and time slot to book an appointment.
           </Text>
         </Box>
-
-        <Stack p={6} bg="#fff" w="100%" color="#1A365D" borderRadius="lg" spacing={6}>
-          <Heading as="h4" size="md" color="telegram">
-            Make a Medical Appointment
-          </Heading>
-          <Stack direction="row" spacing={4}>
-            <Grid templateColumns={{ base: '1, 1fr', md: 'repeat(4, 1fr)' }} gap={4} w="100%">
-              <GridItem colSpan={1}>
-                <InputGroup>
-                  <InputRightElement pointerEvents="none">
-                    <Search2Icon color="gray.400" />
-                  </InputRightElement>
-                  <Input type="text" placeholder="Name" />
-                </InputGroup>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <InputGroup>
-                  <InputRightElement pointerEvents="none">
-                    <Search2Icon color="gray.400" />
-                  </InputRightElement>
-                  <Input type="text" placeholder="Postal Code" />
-                </InputGroup>
-              </GridItem>
-              <GridItem colSpan={1} pt={2} textAlign="center">
-                <Checkbox fontWeight="400">Accepting New Patients</Checkbox>
-              </GridItem>
-              <GridItem colSpan={1}>
-                <Button size="md" w="100%" colorScheme="telegram">
-                  Search
-                </Button>
-              </GridItem>
-            </Grid>
-          </Stack>
-        </Stack>
       </Stack>
       <Grid templateColumns={{ base: '1, 1fr', md: 'repeat(4, 1fr)' }}>
         <GridItem colSpan={1} p={6}>
           <Stack spacing={4}>
-            <Heading as="h5" size="sm" color="#1A365D">
+            <Heading as="h5" size="md" color="#1A365D">
               Refine your search
             </Heading>
-            {/* <InputGroup>
-              <InputRightElement pointerEvents="none">
-                <Search2Icon color="gray.400" />
-              </InputRightElement>
-              <Input type="text" placeholder="Search" />
-            </InputGroup> */}
-            <Text fontSize="sm" color="#1A365D" fontWeight="600">
-              Specialty
-            </Text>
-            {specialtiesList?.map(({ specialtyId, specialtyName }: DoctorSpecialties) => (
-              <Checkbox
-                fontWeight="400"
-                key={`specialty-${specialtyId}`}
-                defaultValue={specialtyId}
-              >
-                {specialtyName}
-              </Checkbox>
-            ))}
-            <Text fontSize="sm" color="#1A365D" fontWeight="600">
-              Language
-            </Text>
 
-            <Collapse startingHeight={100} in={showHiddenLanguages}>
-              <Stack direction="column">
-                {languagesList?.map(({ languageId, languageName }: DoctorLanguages) => (
-                  <Checkbox
-                    fontWeight="400"
-                    key={`languageId-${languageId}`}
-                    defaultValue={languageId}
-                  >
-                    {languageName}
-                  </Checkbox>
+            <TextContainer title="Specialty">
+              {specialtiesList?.map(({ specialtyId, specialtyName }: DoctorSpecialties) => (
+                <Checkbox
+                  fontWeight="400"
+                  key={`specialty-${specialtyId}`}
+                  isChecked={formValues.specialties.includes(specialtyName)}
+                  onChange={() => handleCheckboxChange('specialties', specialtyName)}
+                >
+                  {specialtyName}
+                </Checkbox>
+              ))}
+            </TextContainer>
+
+            <TextContainer title="Language">
+              <Collapse startingHeight={100} in={showHiddenLanguages}>
+                <Stack direction="column">
+                  {languagesList?.map(({ languageId, languageName }: DoctorLanguages) => (
+                    <Checkbox
+                      fontWeight="400"
+                      key={`languageId-${languageId}`}
+                      isChecked={formValues.languages.includes(languageName)}
+                      onChange={() => handleCheckboxChange('languages', languageName)}
+                    >
+                      {languageName}
+                    </Checkbox>
+                  ))}
+                </Stack>
+              </Collapse>
+              <Button
+                size="sm"
+                w={100}
+                variant="outline"
+                onClick={handleLanguagesToggle}
+                mt={2}
+                colorScheme="blue"
+              >
+                Show {showHiddenLanguages ? 'Less' : 'More'}
+              </Button>
+            </TextContainer>
+
+            <TextContainer title="State">
+              <Select
+                placeholder="Choose a state"
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  handleFormValues('states', Number(e.target.value))
+                }
+                value={formValues.states}
+              >
+                {statesList?.map(({ stateId, stateName }) => (
+                  <option key={`stateId-${stateId}`} value={stateId}>
+                    {stateName}
+                  </option>
                 ))}
-              </Stack>
-            </Collapse>
-            <Button
-              size="sm"
-              w={100}
-              variant="outline"
-              onClick={handleLanguagesToggle}
-              mt={2}
-              colorScheme="blue"
-            >
-              Show {showHiddenLanguages ? 'Less' : 'More'}
+              </Select>
+            </TextContainer>
+            <TextContainer title="City">
+              <Select
+                placeholder="Choose a city"
+                onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                  handleFormValues('cities', Number(e.target.value))
+                }
+                value={formValues.cities}
+              >
+                {citiesByStateList?.map(({ cityId, cityName }) => (
+                  <option key={`cityId-${cityId}`} value={cityId}>
+                    {cityName}
+                  </option>
+                ))}
+              </Select>
+            </TextContainer>
+            <TextContainer title="Postal Code">
+              <Input
+                type="text"
+                placeholder="Enter a Postal Code"
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                  handleFormValues('postalCode', e.target.value)
+                }
+                value={formValues.postalCode}
+              />
+            </TextContainer>
+            <Button colorScheme="telegram" onClick={handleSearch}>
+              Update Search
             </Button>
-            <Text fontSize="sm" color="#1A365D" fontWeight="600">
-              State
-            </Text>
-            <Select placeholder="Choose a state" onChange={getCitiesByState}>
-              {statesList?.map(({ stateId, stateName }) => (
-                <option key={`stateId-${stateId}`} value={stateId}>
-                  {stateName}
-                </option>
-              ))}
-            </Select>
-            <Text fontSize="sm" color="#1A365D" fontWeight="600">
-              City
-            </Text>
-            <Select placeholder="Choose a city">
-              {citiesByStateList?.map(({ cityId, cityName }) => (
-                <option key={`cityId-${cityId}`} value={cityId}>
-                  {cityName}
-                </option>
-              ))}
-            </Select>
-            <Button colorScheme="telegram">Update Search</Button>
+            <Button colorScheme="telegram" variant="outline" onClick={() => setFormValues(initialFormValues)}>
+              Reset Filters
+            </Button>
           </Stack>
         </GridItem>
         <GridItem colSpan={{ base: 1, md: 3 }} bg="#EBF8FF" p={6}>
-          <Grid templateColumns={{ base: '1, 1fr', md: 'repeat(2, 1fr)' }} gap={4}>
-            <GridItem alignSelf="center">
-              <Text fontSize="sm" color="gray">
-                {`Showing ${doctorsList?.length} searching results.`}
-              </Text>
-            </GridItem>
-            <GridItem justifySelf="end">
-              <Select
-                variant="flushed"
-                size="md"
-                w="200px"
-                p={2}
-                placeholder="Sorted by: Highest rated"
-              />
-            </GridItem>
-          </Grid>
+          {!isLoading && (
+            <Grid templateColumns={{ base: '1, 1fr', md: 'repeat(2, 1fr)' }} gap={4}>
+              <GridItem alignSelf="center">
+                <Text fontSize="sm" color="gray">
+                  {`Showing ${doctorsList?.length || 0} searching results.`}
+                </Text>
+              </GridItem>
+            </Grid>
+          )}
           {isLoading && <Spinner />}
           {!isLoading && (
             <Grid
