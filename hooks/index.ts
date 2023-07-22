@@ -29,3 +29,6 @@ export * from './useUpdateDoctorProfileMutation';
 export * from './useSharedDoctorProfileQuery';
 export * from './useSharedPatientProfileQuery';
 export * from './usePatientProfileQuery';
+export * from './useDoctorsQuery';
+export * from './useStatesQuery';
+export * from './useCitiesByStateQuery';
