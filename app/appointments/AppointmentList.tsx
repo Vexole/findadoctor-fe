@@ -24,7 +24,6 @@ const AppointmentList = () => {
     try {
       const result = await approveDoctorMutation.mutateAsync(doctorId, {
         onSuccess: () => {
-          debugger
           router.push('/admin/pending-doctors')
         },
       });

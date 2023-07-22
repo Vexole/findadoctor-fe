@@ -15,7 +15,6 @@ export const useChangePasswordMutation = () => {
                     isClosable: true,
                 }),
             onError: (e: any) => {
-                debugger
                 toast({
                     title: e.response.data.errors.error[0] || 'Something Went Wrong. Try Again Later.',
                     status: 'error',

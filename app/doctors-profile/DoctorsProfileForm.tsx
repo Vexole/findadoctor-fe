@@ -1,5 +1,4 @@
 "use client";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { DevTool } from '@hookform/devtools';
 import { Education, Experience, DoctorProfile as FormValues } from "@/models/DoctorProfile";
 import { useEffect, useState } from "react";
@@ -7,8 +6,8 @@ import Link from "next/link";
 import { useApproveDoctorMutation, useRejectDoctorMutation, useSaveDoctorProfileMutation } from "@/hooks";
 import { getCities, getLanguages, getPendingDoctorDetailById, getSpecializations } from "@/api";
 import { useForm, useFieldArray } from "react-hook-form";
-import { Button, Stack } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import { Button, Stack, Grid, Box, Image, Select, Input, Text, VStack, HStack, useToast, Checkbox } from "@chakra-ui/react";
 
 type PropTypes = {
     params: { id: string },
@@ -113,338 +112,310 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
             {/* {saveDoctorProfileMutation.isError && <p>Error occurred while saving doctor profile: {saveDoctorProfileMutation?.error?.message}</p>} <br></br> */}
             {/* {saveDoctorProfileMutation.isLoading && "Loading..."} */}
             <form onSubmit={handleSubmit(submitProfile)} noValidate className="pending-doctor-profile">
-                <div className="profile-image-container">
-                    <img className="profile-image" src={profileImageUrl} alt="Profile Picture" />
-                </div>
-                <div className="form-fields">
-                    <label htmlFor="title">Title</label>
-                    <select {...register("title", { required: 'Title is required' })} id="title" disabled={isDisabled}>
-                        <option value="">Select an option</option>
-                        <option value="Dr.">Dr.</option>
-                        <option value="Dr.(Ms.)">Dr.(Ms.)</option>
-                        <option value="Dr.(Mrs.)">Dr.(Mrs.)</option>
-                        <option value="Dr.(Miss)">Dr.(Miss)</option>
-                        <option value="Dr.(Mr.)">Dr.(Mr.)</option>
-                    </select>
-                    {/* {errors.title && <span className="error">{errors.title.message}</span>} */}
-                </div>
-                <div className="form-fields">
-                    <label htmlFor="firstName">Fist Name</label>
-                    <input {...register("firstName", { required: 'First Name is required' })}
-                        id="firstName" type="text" disabled={isDisabled} />
-                    {/* {errors.firstName && <span className="error">{errors.firstName.message}</span>} */}
-                </div>
-                <div className="form-fields">
-                    <label htmlFor="middleName">Middle Name</label>
-                    <input {...register("middleName")}
-                        id="middleName" type="text" disabled={isDisabled} />
-                    {/* {errors.middleName && <span className="error">{errors.middleName.message}</span>} */}
-                </div>
-                <div className="form-fields">
-                    <label htmlFor="lastName">Last Name</label>
-                    <input {...register("lastName", { required: 'Last Name is required' })}
-                        id="lastName" type="text" disabled={isDisabled} />
-                    {/* {errors.lastName && <span className="error">{errors.lastName.message}</span>} */}
-                </div>
-                {/* <div className="form-fields">
-                    <label htmlFor="age">Age</label>
-                    <input {...register("age", { valueAsNumber: true, required: "Age must be between 18 and 74", min: 18, max: 75 })}
-                        id="age" type="text" disabled={isDisabled} />
-                </div> */}
-                <div className="form-fields">
-                    <label htmlFor="phoneNumber">Phone Number</label>
-                    <input {...register("phone", {
-                        required: "Phone Number is requred",
-                        pattern: {
-                            value: /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/,
-                            message: 'Invalid phone number format'
-                        }
-                    })} id="phone" type="text" disabled={isDisabled} />
-                    {/* {errors.phone && <span className="error">{errors.phone.message}</span>} */}
-                </div>
-                <div className="form-fields">
-                    <label htmlFor="gender">Gender</label>
-                    <div>
-                        <select {...register("gender", {
-                            validate: (fieldValue: string) => {
-                                return fieldValue !== "" || "Please select a gender";
-                            }
-                        })} id="gender" disabled={isDisabled}>
-                            <option value="">Select an Option</option>
-                            {genderOptions}
-                        </select>
+                <Grid templateColumns={{ sm: "1fr", md: "2fr 3fr 2fr" }} gap={6} maxW="1024px" mx="auto">
+                    <Box>
+                        <Box w="200px" h="200px" rounded="full" overflow="hidden" boxShadow="md" mx="auto">
+                            <Image src={profileImageUrl} alt="Profile Picture" objectFit="cover" w="100%" h="100%" />
+                        </Box>
+                        <VStack spacing={4} align="stretch">
+                            <Box>
+                                <Text fontWeight="bold">Title</Text>
+                                <Select {...register("title", { required: 'Title is required' })} isDisabled={isDisabled}>
+                                    <option value="">Select an option</option>
+                                    <option value="Dr.">Dr.</option>
+                                    <option value="Dr.(Ms.)">Dr.(Ms.)</option>
+                                    <option value="Dr.(Mrs.)">Dr.(Mrs.)</option>
+                                    <option value="Dr.(Miss)">Dr.(Miss)</option>
+                                    <option value="Dr.(Mr.)">Dr.(Mr.)</option>
+                                </Select>
+                            </Box>
 
-                        {errors.gender && <span className="error">Please select a gender.</span>}
-                    </div>
-                </div>
-                <div className="form-fields">
-                    <label htmlFor="doctorLanguages">Languages</label>
-                    <div className="dynamic-lists">
-                        {languageFields.map((field, index) => {
-                            return (
-                                <div className="form-control" key={field.id}>
-                                    <select {...register(`doctorLanguages.${index}.languageId` as const,
-                                        {
-                                            validate: (fieldValue) => {
-                                                return (fieldValue != "" || "Please select a language")
-                                            }
-                                        })}
-                                        disabled={isDisabled} >
-                                        <option value="" disabled>Select an Option</option>
-                                        {languageOptions}
-                                    </select>
-                                    {!isDisabled && index > 0 &&
-                                        <div className="btn_remove">
-                                            <button type="button" onClick={() => languageRemove(index)}>Remove</button>
-                                        </div>
-                                    }
-                                </div>);
-                        })
-                        }
-                        {/* {errors.doctorLanguages && <span className="error">Please select a language.</span>} */}
-                        {!isDisabled && <div className="btn_add_more">
-                            <button type="button" onClick={() => languageAppend({ languageId: "" })}>Add More</button>
-                        </div>}
-                    </div>
-                </div>
+                            <Box>
+                                <Text fontWeight="bold">First Name</Text>
+                                <Input {...register("firstName", { required: 'First Name is required' })} type="text" isDisabled={isDisabled} />
+                            </Box>
 
+                            <Box>
+                                <Text fontWeight="bold">Middle Name</Text>
+                                <Input {...register("middleName")} type="text" isDisabled={isDisabled} />
+                            </Box>
 
+                            <Box>
+                                <Text fontWeight="bold">Last Name</Text>
+                                <Input {...register("lastName", { required: 'Last Name is required' })} type="text" isDisabled={isDisabled} />
+                            </Box>
 
-                <div className="form-fields">
-                    <label htmlFor="street">Street Address</label>
-                    <input {...register("street", { required: 'Street Address is required' })}
-                        id="street" type="text" disabled={isDisabled} />
-                    {/* {errors.street && <span className="error">{errors.street.message}</span>} */}
-                </div>
-                <div className="form-fields">
-                    <label htmlFor="cityId">City</label>
-                    <select {...register("cityId", {
-                        validate: (fieldValue) => {
-                            return (fieldValue !== "" || "Please select a city")
-                        }
-                    })} id="city" disabled={isDisabled} >
-                        <option value="">Select an option</option>
-                        {cityOptions}
-                    </select>
-                    {/* {errors.cityId && <span className="error">{errors.cityId.message}</span>} */}
-                </div>
-                <div className="form-fields">
-                    <label htmlFor="postalCode">Postal Code</label>
-                    <input {...register("postalCode", { required: 'Unit Number is required' })}
-                        id="postalCode" type="text" disabled={isDisabled} />
-                    {/* {errors.postalCode && <span className="error">{errors.postalCode.message}</span>} */}
-                </div>
-
-
-
-                <div className="form-fields">
-                    <label htmlFor="doctorEducationBackgrounds">Qualifications</label>
-                    <div className="dynamic-lists">
-                        {qualificationFields.map((field, index) => {
-                            return (
-                                <div className="form-control" key={field.id}>
-                                    <input {...register(`doctorEducationBackgrounds.${index}.degree` as const,
-                                        { required: 'Degree is required' })}
-                                        id={`doctorEducationBackgrounds.${index}.degree`}
-                                        type="text" placeholder="Degree" disabled={isDisabled} />
-                                    <input
-                                        {...register(`doctorEducationBackgrounds.${index}.institutionName` as const, {
-                                            required: "Please enter the institute name"
-                                        })}
-                                        type="text"
-                                        placeholder="Institute Name" disabled={isDisabled}
-                                    />
-                                    <input
-                                        {...register(`doctorEducationBackgrounds.${index}.fieldOfStudy` as const, {
-                                            required: "Please enter the field of study"
-                                        })}
-                                        type="text"
-                                        placeholder="Field of Study" disabled={isDisabled}
-                                    />
-                                    <label htmlFor="startDate">Start Date</label>
-                                    <input {...register(`doctorEducationBackgrounds.${index}.startDate` as const, {
-                                        required: "Please select start date"
-                                    })} type="date" id={`doctorEducationBackgrounds.${index}.startDate`} disabled={isDisabled} />
-                                    <label htmlFor="endDate">End Date</label>
-                                    <input {...register(`doctorEducationBackgrounds.${index}.endDate` as const, {
-                                        required: "Please select end date",
-                                        validate: {
-                                            endDateGreaterThanStartDate: (value) => {
-                                                const startDate: string = document.getElementById(`doctorEducationBackgrounds.${index}.startDate`)?.value;
-                                                if (!startDate || startDate === '') {
-                                                    return true;
-                                                }
-                                                return new Date(value) >= new Date(startDate) || "End date cannot be before start date";
-                                            }
+                            <Box>
+                                <Text fontWeight="bold">Phone Number</Text>
+                                <Input
+                                    {...register("phone", {
+                                        required: "Phone Number is required",
+                                        pattern: {
+                                            value: /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]\d{3}[\s.-]\d{4}$/,
+                                            message: 'Invalid phone number format'
                                         }
-                                    })} type="date" disabled={isDisabled} />
-                                    {
-                                        !isDisabled && index > 0 &&
-                                        <div className="btn_remove">
-                                            <button type="button" onClick={() => qualificationRemove(index)}>Remove</button>
-                                        </div>
-                                    }
-                                    {/* <div className="errors">
-                                        {errors.doctorEducationBackgrounds?.[index]?.degree && (
-                                            <div className="error">{errors.doctorEducationBackgrounds?.[index]?.degree.message}</div>
-                                        )}
-                                        {errors.doctorEducationBackgrounds?.[index]?.institutionName && (
-                                            <div className="error">{errors.doctorEducationBackgrounds?.[index]?.institutionName.message}</div>
-                                        )}
-                                        {errors.doctorEducationBackgrounds?.[index]?.fieldOfStudy && (
-                                            <div className="error">{errors.doctorEducationBackgrounds?.[index]?.fieldOfStudy.message}</div>
-                                        )}
-                                        {errors.doctorEducationBackgrounds?.[index]?.startDate && (
-                                            <div className="error">{errors.doctorEducationBackgrounds?.[index]?.startDate.message}</div>
-                                        )}
-                                        {errors.doctorEducationBackgrounds?.[index]?.endDate && (
-                                            <div className="error">{errors.doctorEducationBackgrounds?.[index]?.endDate.message}</div>
-                                        )}
-                                    </div> */}
-                                </div>);
-                        })
-                        }
-                        {!isDisabled && <div className="btn_add_more">
-                            <button type="button" onClick={() => qualificationAppend({ startDate: "", endDate: "", fieldOfStudy: "", degree: "", institutionName: "" })}>Add More</button>
-                        </div>}
-                    </div>
-                </div>
+                                    })}
+                                    id="phone" type="text" isDisabled={isDisabled}
+                                />
+                            </Box>
 
-
-
-                <div className="form-fields">
-                    <label htmlFor="experiences">Experiences</label>
-                    <div className="dynamic-lists">
-                        {experienceFields.map((field, index) => {
-                            return (
-                                <div className="form-control" key={field.id}>
-                                    <input
-                                        {...register(`experiences.${index}.companyName` as const, {
-                                            required: "Please enter the company name"
-                                        })}
-                                        type="text"
-                                        placeholder="Company Name"
-                                        disabled={isDisabled}
-                                    />
-                                    <label htmlFor={`experiences.${index}.description`}>Description</label>
-                                    <input
-                                        {...register(`experiences.${index}.description` as const, {
-                                            required: "Please enter the description"
-                                        })}
-                                        type="text"
-                                        placeholder="Description"
-                                        disabled={isDisabled}
-                                    />
-                                    <label htmlFor="startDate">Start Date</label>
-                                    <input {...register(`experiences.${index}.startDate` as const, {
-                                        required: "Please select start date"
-                                    })} type="date" id={`experiences.${index}.startDate`} disabled={isDisabled} />
-                                    <label htmlFor="endDate">End Date</label>
-                                    <input {...register(`experiences.${index}.endDate` as const, {
-                                        required: "Please select end date",
-                                        validate: {
-                                            endDateGreaterThanStartDate: (value) => {
-                                                let startDate: string = document.getElementById(`experiences.${index}.startDate`)?.value;
-                                                if (!startDate || startDate === '') {
-                                                    return true;
-                                                }
-                                                return new Date(value) >= new Date(startDate) || "End date must be after start date";
-                                            }
+                            <Box>
+                                <Text fontWeight="bold">Gender</Text>
+                                <Select
+                                    {...register("gender", {
+                                        validate: (fieldValue) => {
+                                            return fieldValue !== "" || "Please select a gender";
                                         }
-                                    })} type="date" disabled={isDisabled} />
-                                    {
-                                        !isDisabled && index > 0 &&
-                                        <div className="btn_remove">
-                                            <button type="button" onClick={() => experienceRemove(index)}>Remove</button>
-                                        </div>
+                                    })}
+                                    id="gender" isDisabled={isDisabled}
+                                >
+                                    <option value="">Select an Option</option>
+                                    {genderOptions}
+                                </Select>
+                                {errors.gender && <Text color="red">Please select a gender.</Text>}
+                            </Box>
+
+                            <Box>
+                                <Text fontWeight="bold">Languages</Text>
+                                <VStack spacing={4} align="stretch">
+                                    {languageFields.map((field, index) => (
+                                        <Box key={field.id}>
+                                            <Select
+                                                {...register(`doctorLanguages.${index}.languageId`, {
+                                                    validate: (fieldValue) => {
+                                                        return fieldValue !== "" || "Please select a language";
+                                                    }
+                                                })}
+                                                isDisabled={isDisabled}
+                                            >
+                                                <option value="" disabled>Select an Option</option>
+                                                {languageOptions}
+                                            </Select>
+                                            {!isDisabled && index > 0 &&
+                                                <Button variant="link" colorScheme="red" size="sm" onClick={() => languageRemove(index)}>Remove</Button>
+                                            }
+                                        </Box>
+                                    ))}
+                                    {!isDisabled && <Button colorScheme="blue" size="sm" onClick={() => languageAppend({ languageId: "" })}>Add More</Button>}
+                                </VStack>
+                            </Box>
+                        </VStack>
+                    </Box>
+
+                    <VStack spacing={6} align="stretch">
+                        <Box>
+                            <Text fontWeight="bold">Qualifications</Text>
+                            <VStack spacing={4} align="stretch">
+                                {qualificationFields.map((field, index) => (
+                                    <VStack key={field.id} spacing={2} align="stretch">
+                                        <Input
+                                            {...register(`doctorEducationBackgrounds.${index}.degree` as const, { required: 'Degree is required' })}
+                                            type="text"
+                                            placeholder="Degree"
+                                            isDisabled={isDisabled}
+                                        />
+                                        <Input
+                                            {...register(`doctorEducationBackgrounds.${index}.institutionName` as const, {
+                                                required: "Please enter the institute name"
+                                            })}
+                                            type="text"
+                                            placeholder="Institute Name"
+                                            isDisabled={isDisabled}
+                                        />
+                                        <Input
+                                            {...register(`doctorEducationBackgrounds.${index}.fieldOfStudy` as const, {
+                                                required: "Please enter the field of study"
+                                            })}
+                                            type="text"
+                                            placeholder="Field of Study"
+                                            isDisabled={isDisabled}
+                                        />
+                                        <HStack spacing={4}>
+                                            <Box>
+                                                <label htmlFor={`doctorEducationBackgrounds.${index}.startDate`}>Start Date</label>
+                                                <Input
+                                                    {...register(`doctorEducationBackgrounds.${index}.startDate` as const, {
+                                                        required: "Please select start date"
+                                                    })}
+                                                    type="date"
+                                                    id={`doctorEducationBackgrounds.${index}.startDate`}
+                                                    isDisabled={isDisabled}
+                                                />
+                                            </Box>
+                                            <Box>
+                                                <label htmlFor={`doctorEducationBackgrounds.${index}.endDate`}>End Date</label>
+                                                <Input
+                                                    {...register(`doctorEducationBackgrounds.${index}.endDate` as const, {
+                                                        required: "Please select end date",
+                                                        validate: {
+                                                            endDateGreaterThanStartDate: (value) => {
+                                                                const startDate: string = document.getElementById(
+                                                                    `doctorEducationBackgrounds.${index}.startDate`
+                                                                )?.value;
+                                                                if (!startDate || startDate === '') {
+                                                                    return true;
+                                                                }
+                                                                return new Date(value) >= new Date(startDate) || "End date cannot be before start date";
+                                                            }
+                                                        }
+                                                    })}
+                                                    type="date"
+                                                    isDisabled={isDisabled}
+                                                />
+                                            </Box>
+                                            {!isDisabled && index > 0 && (
+                                                <Button onClick={() => qualificationRemove(index)}>Remove</Button>
+                                            )}
+                                        </HStack>
+                                    </VStack>
+                                ))}
+                                {!isDisabled && (
+                                    <Button onClick={() => qualificationAppend({ startDate: "", endDate: "", fieldOfStudy: "", degree: "", institutionName: "" })}>
+                                        Add More
+                                    </Button>
+                                )}
+                            </VStack>
+                        </Box>
+
+                        <Box>
+                            <Box>
+                                <Text fontWeight="bold">Experiences</Text>
+                                <VStack spacing={4} align="stretch">
+                                    {experienceFields.map((field, index) => (
+                                        <VStack key={field.id} spacing={2} align="stretch">
+                                            <Input
+                                                {...register(`experiences.${index}.companyName` as const, {
+                                                    required: "Please enter the company name"
+                                                })}
+                                                type="text"
+                                                placeholder="Company Name"
+                                                isDisabled={isDisabled}
+                                            />
+                                            <Input
+                                                {...register(`experiences.${index}.description` as const, {
+                                                    required: "Please enter the description"
+                                                })}
+                                                type="text"
+                                                placeholder="Description"
+                                                isDisabled={isDisabled}
+                                            />
+                                            <HStack spacing={4}>
+                                                <Box>
+                                                    <label htmlFor={`experiences.${index}.startDate`}>Start Date</label>
+                                                    <Input
+                                                        {...register(`experiences.${index}.startDate` as const, {
+                                                            required: "Please select start date"
+                                                        })}
+                                                        type="date"
+                                                        id={`experiences.${index}.startDate`}
+                                                        isDisabled={isDisabled}
+                                                    />
+                                                </Box>
+                                                <Box>
+                                                    <label htmlFor={`experiences.${index}.endDate`}>End Date</label>
+                                                    <Input
+                                                        {...register(`experiences.${index}.endDate` as const, {
+                                                            required: "Please select end date",
+                                                            validate: {
+                                                                endDateGreaterThanStartDate: (value) => {
+                                                                    const startDate: string = document.getElementById(
+                                                                        `experiences.${index}.startDate`
+                                                                    )?.value;
+                                                                    if (!startDate || startDate === '') {
+                                                                        return true;
+                                                                    }
+                                                                    return new Date(value) >= new Date(startDate) || "End date must be after start date";
+                                                                }
+                                                            }
+                                                        })}
+                                                        type="date"
+                                                        isDisabled={isDisabled}
+                                                    />
+                                                </Box>
+                                                {!isDisabled && index > 0 && (
+                                                    <Button onClick={() => experienceRemove(index)}>Remove</Button>
+                                                )}
+                                            </HStack>
+                                        </VStack>
+                                    ))}
+                                    {!isDisabled && (
+                                        <Button onClick={() => experienceAppend({ startDate: "", endDate: "", companyName: "", description: "" })}>
+                                            Add More
+                                        </Button>
+                                    )}
+                                </VStack>
+                            </Box>
+                        </Box>
+                    </VStack>
+
+                    <VStack spacing={6} align="stretch">
+                        <Box>
+                            <Text fontWeight="bold">Specializations</Text>
+                            <VStack spacing={4} align="stretch">
+                                {specializationFields.map((field, index) => (
+                                    <VStack key={field.specialtyId} spacing={2} align="stretch">
+                                        <Select
+                                            {...register(`doctorSpecialties.${index}.specialtyId` as const, {
+                                                required: "Please select a specialization"
+                                            })}
+                                            disabled={isDisabled}
+                                            placeholder="Select an Option"
+                                        >
+                                            {specializationOptions}
+                                        </Select>
+                                        {!isDisabled && index > 0 && (
+                                            <Button onClick={() => specializationRemove(index)}>Remove</Button>
+                                        )}
+                                    </VStack>
+                                ))}
+                                {!isDisabled && (
+                                    <Button onClick={() => specializationAppend({ specialtyId: "" })}>
+                                        Add More
+                                    </Button>
+                                )}
+                            </VStack>
+                        </Box>
+
+                        <Box>
+                            <Text fontWeight="bold">Fees</Text>
+                            <Input
+                                {...register("fees", {
+                                    required: "Fees is required",
+                                    pattern: {
+                                        value: /^\d+(,\d{1,2})?$/,
+                                        message: 'Invalid fees'
                                     }
-                                    {/* <div className="errors">
-                                        {errors && errors.experiences?.[index]?.companyName && (
-                                            <div className="error">{errors.experiences?.[index]?.companyName.message}</div>
-                                        )}
-                                        {errors.experiences?.[index]?.description && (
-                                            <div className="error">{errors.experiences?.[index]?.description.message}</div>
-                                        )}
-                                        {errors.experiences?.[index]?.startDate && (
-                                            <div className="error">{errors.experiences?.[index]?.startDate.message}</div>
-                                        )}
-                                        {errors.experiences?.[index]?.endDate && (
-                                            <div className="error">{errors.experiences?.[index]?.endDate.message}</div>
-                                        )}
-                                    </div> */}
-                                </div>);
-                        })
-                        }
-                        {!isDisabled && <div className="btn_add_more">
-                            <button type="button" onClick={() => experienceAppend({ startDate: "", endDate: "", companyName: "", description: "" })}>Add More</button>
-                        </div>}
-                    </div>
-                </div>
+                                })}
+                                type="text"
+                                id="fees"
+                                isDisabled={isDisabled}
+                            />
+                        </Box>
 
+                        <Box>
+                            <Text fontWeight="bold">Waiting Time</Text>
+                            <Input
+                                {...register("waitingTime")}
+                                type="text"
+                                id="waitingTime"
+                                isDisabled={isDisabled}
+                            />
+                        </Box>
 
+                        <Box>
+                            <Text fontWeight="bold">IsAcceptingNewPatients</Text>
+                            <input {...register("isAcceptingNewPatients")} id="isAcceptingNewPatients" type="checkbox" disabled={isDisabled} />
+                        </Box>
 
-                <div className="form-fields">
-                    <label htmlFor="doctorSpecialties">Specializations</label>
-                    <div className="dynamic-lists">
-                        {specializationFields.map((field, index) => {
-                            return (
-                                <div className="form-control" key={field.specialtyId}>
-                                    <select {...register(`doctorSpecialties.${index}.specialtyId` as const,
-                                        {
-                                            required: "Please select a specialization"
-                                        })}
-                                        disabled={isDisabled}
-                                    >
-                                        <option value="" disabled>Select an Option</option>
-                                        {specializationOptions}
-                                    </select>
-                                    {
-                                        !isDisabled && index > 0 &&
-                                        <div>
-                                            <button type="button" onClick={() => specializationRemove(index)}>Remove</button>
-                                        </div>
-                                    }
-                                </div>);
-                        })
-                        }
-                        {/* {errors.doctorSpecialties && <span className="error">Please complete specialization details.</span>} */}
-                        {!isDisabled && <div className="btn_add_more">
-                            <button type="button" onClick={() => specializationAppend({ specialtyId: "" })}>Add More</button>
-                        </div>}
-                    </div>
-                </div>
-
-                <div className="form-fields">
-                    <label htmlFor="fees">Fees</label>
-                    <input {...register("fees", {
-                        required: "Fees is requred",
-                        pattern: {
-                            value: /^\d+(,\d{1,2})?$/,
-                            message: 'Invalid fees'
-                        }
-                    })} id="fees" type="text" disabled={isDisabled} />
-                    {/* {errors.fees && <span className="error">{errors.fees.message}</span>} */}
-                </div>
-
-                <div className="form-fields">
-                    <label htmlFor="waitingTime">Waiting Time</label>
-                    <input {...register("waitingTime")} id="waitingTime" type="text" disabled={isDisabled} />
-                    {/* {errors.waitingTime && <span className="error">{errors.waitingTime.message}</span>} */}
-                </div>
-
-                <div className="form-fields">
-                    <label htmlFor="isAcceptingNewPatients">IsAcceptingNewPatients</label>
-                    <input {...register("isAcceptingNewPatients")} id="isAcceptingNewPatients" type="checkbox" disabled={isDisabled} />
-                </div>
-
-
-                {isAdmin && (<Stack direction={'row'} spacing={3} alignItems={'center'}>
-                    <Link href={`/admin/pending-doctors`}>
-                        <span>Back</span>
-                    </Link>
-                    <Button type="button" colorScheme="blue" onClick={approveByAdmin}>Approve</Button>
-                    <Button type="button" colorScheme="red" onClick={rejectByAdmin}>Reject</Button>
-                </Stack>)}
+                        {isAdmin && (
+                            <HStack justifyContent="flex-end" spacing={4}>
+                                <Link href="/admin/pending-doctors"><Button colorScheme="yellow">Back</Button></Link>
+                                <Button colorScheme="blue" onClick={approveByAdmin}>Approve</Button>
+                                <Button colorScheme="red" onClick={rejectByAdmin}>Reject</Button>
+                            </HStack>
+                        )}
+                    </VStack>
+                </Grid>
             </form>
             {/* <DevTool control={control} /> */}
         </>

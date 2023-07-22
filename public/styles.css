@@ -165,8 +165,11 @@ table {
 }
 
 .pending-doctor-profile {
-  width: 70%;
-  margin: auto;
+  width: 90%;
+  margin: 16px auto;
+  border: 1px solid black;
+  padding: 24px 0;
+  border-radius: 16px;
 }
 
 .profile-image-container {
@@ -180,6 +183,94 @@ table {
   border-radius: 50%;
   margin: auto;
   object-fit: cover;
+}
+
+.pending-doctor-profile .css-mrdutq {
+  max-width: 1024px !important;
+}
+
+.pending-doctor-profile .profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.pending-doctor-profile .profile-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #4299e1;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pending-doctor-profile .form-sections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.pending-doctor-profile .form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pending-doctor-profile label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.pending-doctor-profile input, 
+.pending-doctor-profile select {
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 16px;
+  color: #2d3748;
+  transition: border-color 0.3s ease;
+}
+
+.pending-doctor-profile input:focus, 
+.pending-doctor-profile select:focus {
+  outline: none;
+  border-color: #4299e1;
+}
+
+.pending-doctor-profile input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+.pending-doctor-profile select {
+  background-color: #edf2f7;
+}
+
+.pending-doctor-profile .buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.pending-doctor-profile button {
+  padding: 14px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #ffffff;
+  transition: background-color 0.3s ease;
+}
+
+.pending-doctor-profile button.blue {
+  background-color: #4299e1;
+}
+
+.pending-doctor-profile button.red {
+  background-color: #e53e3e;
 }
 
 /* Responsive Styles */
@@ -234,5 +325,9 @@ table {
 
   .pending-doctor-profile {
     width: 95%;
+  }
+
+  .pending-doctor-profile .form-sections {
+    grid-template-columns: 1fr;
   }
 }

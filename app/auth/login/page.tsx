@@ -43,7 +43,6 @@ export default function Login() {
         if (data.isPasswordChangeRequired) {
           return router.push(`/auth/change-password`);
         } else {
-          debugger
           if (data.role === 'Patient' && data.isProfileComplete) {
             const patientProfile = await getPatientProfile();
             localStorage.patient = JSON.stringify(patientProfile);

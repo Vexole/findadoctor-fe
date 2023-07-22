@@ -17,8 +17,6 @@ export default function Timeslot({ params }: { params: { id?: string } }) {
     const router = useRouter();
     const toast = useToast();
 
-    debugger
-
     const bookAppointment = useBookAppointmentMutation();
     const authenticatedUser = getUser();
 
