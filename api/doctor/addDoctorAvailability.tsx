@@ -1,12 +1,7 @@
 import axiosInstance from '@/http/axiosInstance';
+import { DoctorAvailability } from './getDoctorAvailability';
 
-type DoctorAvailabilityParams = {
-  dayOfWeek: string;
-  fromTime: string;
-  toTime: string;
-  appointmentLength: string;
-  doctorId: string;
-}[];
+type DoctorAvailabilityParams = DoctorAvailability[];
 
 export async function addDoctorAvailability(params: DoctorAvailabilityParams) {
   const { data } = await axiosInstance.post('/doctorAvailability/add-doctor-availability', params);

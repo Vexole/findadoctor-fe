@@ -1,14 +1,7 @@
 import axiosInstance from '@/http/axiosInstance';
+import { DoctorAvailability } from './getDoctorAvailability';
 
-type UpdateDoctorAvailabilityParams = {
-  availabilityId?: number;
-  dayOfWeek: string;
-  fromTime: string;
-  toTime: string;
-  appointmentLength: string;
-  doctorId: string;
-  isActive?: boolean;
-}[];
+type UpdateDoctorAvailabilityParams = DoctorAvailability[];
 
 export async function updateDoctorAvailability(params: UpdateDoctorAvailabilityParams) {
   const { data } = await axiosInstance.put(
