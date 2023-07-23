@@ -31,7 +31,6 @@ export default function BookAppointment() {
             const timeslots = await getTimeslotAvailability(patientProfile.associatedDoctor.doctorUserId, timeslotDate.toISOString().split('T')[0]);
             if (timeslots.length > 0) {
                 timeslots.forEach((timeslot: any) => {
-                    console.log(timeslot)
                     const fromTime = timeslot.fromTime.split(":");
                     const toTime = timeslot.toTime.split(":");
                     openTimeslots.push({

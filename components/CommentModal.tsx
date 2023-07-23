@@ -41,7 +41,7 @@ const CommentModal = ({ isOpen, onClose, onSubmit }: PropTypes) => {
                     <Button colorScheme="blue" onClick={handleOnSubmit}>
                         Submit
                     </Button>
-                    <Button colorScheme="red" onClick={onClose}>
+                    <Button colorScheme="red" style={{ marginLeft: '8px' }} onClick={onClose}>
                         Cancel
                     </Button>
                 </ModalFooter>

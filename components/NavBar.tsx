@@ -1,6 +1,22 @@
+"use client"
+import { useState } from 'react';
 import { useAuthenticatedUserContext } from '@/context';
 import { getUser } from '@/utils/userUtils';
-import { Link, Stack, StackDivider } from '@chakra-ui/react';
+import {
+  Stack,
+  Link,
+  IconButton,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerBody,
+  useDisclosure,
+  StackDivider,
+  Collapse,
+  Box
+} from '@chakra-ui/react';
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import NextLink from 'next/link';
 
 const links = [
@@ -58,7 +74,7 @@ const links = [
   },
   {
     href: '/doctors-profile/patient-profile',
-    title: 'Patient Profile',
+    title: 'Patients',
     role: 'doctor',
     accessLevel: 'authenticated',
   },
@@ -80,6 +96,9 @@ const links = [
 ];
 
 export function NavBar() {
+  const { isOpen, onToggle } = useDisclosure();
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
   const authenticatedUser = useAuthenticatedUserContext();
   const userRole = authenticatedUser?.role ?? getUser()?.role ?? '';
   const accessLevel = authenticatedUser ? 'authenticated' : 'unauthenticated';
@@ -107,6 +126,10 @@ export function NavBar() {
       link => !(link.title === 'Profile' && link.isProfileCompleteRequired)
     );
   }
+
+  const toggleMenu = () => {
+    setIsSmallScreen(!isSmallScreen);
+  };
 
   return (
     <Stack
@@ -148,13 +171,53 @@ export function NavBar() {
         </svg>
         <span>Find a Family Doctor</span>
       </Link>
-      <Stack direction="row" spacing={4} divider={<StackDivider />} mt={{ base: 4, md: 0 }}>
+
+      <Box display={{ base: 'block', md: 'none' }}>
+        <IconButton
+          aria-label="Open menu"
+          icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+          colorScheme="white"
+          onClick={onToggle}
+          size="md"
+        />
+      </Box>
+
+      <Stack
+        direction="row"
+        spacing={4}
+        display={{ base: 'none', md: 'flex' }}
+        divider={<StackDivider />}
+        mt={{ base: 4, md: 0 }}
+      >
         {allowedLinks.map(({ href, title }) => (
-          <Link as={NextLink} href={href} style={{ cursor: 'pointer' }} key={title} color="white">
+          <Link
+            as={NextLink}
+            href={href}
+            style={{ cursor: 'pointer', color: 'white' }}
+            key={title}
+            color="white"
+          >
             {title}
           </Link>
         ))}
       </Stack>
+
+      {/* Hamburger menu for smaller devices */}
+      <Collapse in={isOpen} animateOpacity>
+        <Stack direction="column" spacing={4}>
+          {allowedLinks.map(({ href, title }) => (
+            <Link
+              as={NextLink}
+              href={href}
+              style={{ cursor: 'pointer', color: 'white' }}
+              key={title}
+              color="blue.500"
+            >
+              {title}
+            </Link>
+          ))}
+        </Stack>
+      </Collapse>
     </Stack>
   );
 }

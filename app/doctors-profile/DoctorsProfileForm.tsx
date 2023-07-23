@@ -26,9 +26,9 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
     const [profileImageUrl, setProfileImageUrl] = useState("");
     const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
     const closeRejectModal = () => setIsRejectModalOpen(false);
-  
+
     const handleReject = () => {
-      setIsRejectModalOpen(true);
+        setIsRejectModalOpen(true);
     }
 
     const saveDoctorProfileApi = useSaveDoctorProfileMutation();
@@ -43,7 +43,7 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
     }
 
     const rejectByAdmin = async (reason: string) => {
-        await rejectDoctorApi.mutateAsync(userId, {
+        await rejectDoctorApi.mutateAsync([userId, reason], {
             onSuccess: res => router.push("/admin/pending-doctors")
         });
     }
@@ -119,7 +119,7 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
             {/* {saveDoctorProfileMutation.isError && <p>Error occurred while saving doctor profile: {saveDoctorProfileMutation?.error?.message}</p>} <br></br> */}
             {/* {saveDoctorProfileMutation.isLoading && "Loading..."} */}
             <form onSubmit={handleSubmit(submitProfile)} noValidate className="pending-doctor-profile">
-                <Grid templateColumns={{ sm: "1fr", md: "2fr 3fr 2fr" }} gap={6} maxW="1024px" mx="auto">
+                <Grid templateColumns={{ sm: "1fr", lg: "2fr 3fr 2fr" }} gap={6} maxW="1024px" mx="auto">
                     <Box>
                         <Box w="200px" h="200px" rounded="full" overflow="hidden" boxShadow="md" mx="auto">
                             <Image src={profileImageUrl} alt="Profile Picture" objectFit="cover" w="100%" h="100%" />
