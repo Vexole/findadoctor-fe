@@ -1,5 +1,7 @@
 'use client';
 import { DoctorLanguages, DoctorSpecialties, GetDoctorsParams } from '@/api';
+import { requestDoctor } from '@/api/doctor/requestDoctor';
+import { useAuthenticatedUserContext } from '@/context';
 import {
   useCitiesByStateQuery,
   useDoctorsQuery,
@@ -21,7 +23,9 @@ import {
   Image,
   Spinner,
   Collapse,
+  useToast,
 } from '@chakra-ui/react';
+import { useMutation } from '@tanstack/react-query';
 import { ChangeEvent, PropsWithChildren, useState } from 'react';
 
 export type FormTypes = {
@@ -84,6 +88,48 @@ export default function DoctorsSearch() {
     const states = statesList?.find(state => state.stateId === formValues.states)?.stateName;
     const cities = citiesByStateList?.find(city => city.cityId === formValues.cities)?.cityName;
     setQueryParams({ ...formValues, states, cities });
+  };
+
+  const authenticatedUser = useAuthenticatedUserContext();
+  const toast = useToast();
+
+  const isPatient = authenticatedUser?.role === 'Patient';
+  const patientUIserId = authenticatedUser?.userId;
+  const isPatientProfileCompleted = authenticatedUser?.isProfileComplete;
+
+  const requestFamilyDoctorMutation = useMutation(requestDoctor, {
+    onSuccess: () => {
+      toast({
+        title: 'Followed successfully',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        title: 'Staff profile not created',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    },
+  });
+
+  const handleFollowClick = async (doctorId: string) => {
+    if (isPatientProfileCompleted) {
+      requestFamilyDoctorMutation.mutateAsync({
+        doctorId,
+        patientId: patientUIserId as string,
+      });
+    } else {
+      toast({
+        title: 'Pleae complete your profile first',
+        status: 'error',
+        duration: 1500,
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -198,7 +244,11 @@ export default function DoctorsSearch() {
             <Button colorScheme="telegram" onClick={handleSearch}>
               Update Search
             </Button>
-            <Button colorScheme="telegram" variant="outline" onClick={() => setFormValues(initialFormValues)}>
+            <Button
+              colorScheme="telegram"
+              variant="outline"
+              onClick={() => setFormValues(initialFormValues)}
+            >
               Reset Filters
             </Button>
           </Stack>
@@ -265,6 +315,17 @@ export default function DoctorsSearch() {
                         {specialtyName}
                       </Text>
                     ))}
+                    {isPatient && (
+                      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '8px' }}>
+                        <Button
+                          type="submit"
+                          colorScheme="facebook"
+                          onClick={() => handleFollowClick(doctor.userId)}
+                        >
+                          Follow
+                        </Button>
+                      </div>
+                    )}
                   </Box>
                 </GridItem>
               ))}

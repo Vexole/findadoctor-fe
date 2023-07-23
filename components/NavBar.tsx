@@ -5,7 +5,13 @@ import NextLink from 'next/link';
 
 const links = [
   { href: '/', title: 'Home', role: '', accessLevel: '' },
-  { href: '/doctors-search', title: 'Doctor Search', role: '', accessLevel: '', restrictRole: 'Doctor' },
+  {
+    href: '/doctors-search',
+    title: 'Doctor Search',
+    role: '',
+    accessLevel: '',
+    restrictRole: 'Doctor',
+  },
   { href: '/auth/login', title: 'Login', role: '', accessLevel: 'unauthenticated' },
   { href: '/auth/register', title: 'Register', role: '', accessLevel: 'unauthenticated' },
   {
@@ -38,14 +44,32 @@ const links = [
     role: 'doctor',
     accessLevel: 'authenticated',
   },
-  { href: '/patient/create', title: 'Profile', role: 'patient', accessLevel: 'authenticated', isProfileCompleteRequired: false },
-  { href: '/patient/update', title: 'Profile', role: 'patient', accessLevel: 'authenticated', isProfileCompleteRequired: true },
+  {
+    href: '/doctors-profile/patient-profile',
+    title: 'Patient Profile',
+    role: 'doctor',
+    accessLevel: 'authenticated',
+  },
+  {
+    href: '/patient/create',
+    title: 'Profile',
+    role: 'patient',
+    accessLevel: 'authenticated',
+    isProfileCompleteRequired: false,
+  },
+  {
+    href: '/patient',
+    title: 'Profile',
+    role: 'patient',
+    accessLevel: 'authenticated',
+    isProfileCompleteRequired: true,
+  },
   { href: '/auth/logout', title: 'Logout', role: '', accessLevel: 'authenticated' },
 ];
 
 export function NavBar() {
   const authenticatedUser = useAuthenticatedUserContext();
-  const userRole = authenticatedUser?.role ?? getUser()?.role ?? "";
+  const userRole = authenticatedUser?.role ?? getUser()?.role ?? '';
   const accessLevel = authenticatedUser ? 'authenticated' : 'unauthenticated';
   let allowedLinks = links
     .filter(link => link.role === '' || link.role === userRole.toLowerCase())
@@ -61,11 +85,15 @@ export function NavBar() {
     });
 
   if (authenticatedUser && userRole === 'Patient' && authenticatedUser.isProfileComplete) {
-    allowedLinks = allowedLinks.filter(link => !(link.title === 'Profile' && !link.isProfileCompleteRequired))
+    allowedLinks = allowedLinks.filter(
+      link => !(link.title === 'Profile' && !link.isProfileCompleteRequired)
+    );
   }
 
   if (authenticatedUser && userRole === 'Patient' && !authenticatedUser.isProfileComplete) {
-    allowedLinks = allowedLinks.filter(link => !(link.title === 'Profile' && link.isProfileCompleteRequired))
+    allowedLinks = allowedLinks.filter(
+      link => !(link.title === 'Profile' && link.isProfileCompleteRequired)
+    );
   }
 
   return (
@@ -77,7 +105,7 @@ export function NavBar() {
       backgroundColor="blue.500"
       justifyContent="space-between"
       alignItems="center"
-      className='nav-bar'
+      className="nav-bar"
     >
       <Link
         href="/"
