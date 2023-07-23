@@ -62,6 +62,15 @@ export default function DoctorsSearch() {
 
   const [showHiddenLanguages, setShowHiddenLanguages] = useState(false);
 
+  const getDoctorPicture = (profilePicture: string | undefined, gender: string) => {
+    if (!profilePicture) {
+      return gender === 'Female'
+        ? '/images/doctor-avatar-female.png'
+        : '/images/doctor-avatar-male.png';
+    }
+    return profilePicture;
+  };
+
   const handleFormValues = (key: keyof FormTypes, value: number | string | string[]) =>
     setFormValues(prevFormValues => ({
       ...prevFormValues,
@@ -198,14 +207,18 @@ export default function DoctorsSearch() {
             <Button colorScheme="telegram" onClick={handleSearch}>
               Update Search
             </Button>
-            <Button colorScheme="telegram" variant="outline" onClick={() => setFormValues(initialFormValues)}>
+            <Button
+              colorScheme="telegram"
+              variant="outline"
+              onClick={() => setFormValues(initialFormValues)}
+            >
               Reset Filters
             </Button>
           </Stack>
         </GridItem>
         <GridItem colSpan={{ base: 1, md: 3 }} bg="#EBF8FF" p={6}>
           {!isLoading && (
-            <Grid templateColumns={{ base: '1, 1fr', md: 'repeat(2, 1fr)' }} gap={4}>
+            <Grid templateColumns={{ base: '1, 1fr', md: 'repeat(2, 1fr)' }} mb={4}>
               <GridItem alignSelf="center">
                 <Text fontSize="sm" color="gray">
                   {`Showing ${doctorsList?.length || 0} searching results.`}
@@ -228,11 +241,7 @@ export default function DoctorsSearch() {
                       boxSize="120px"
                       w="150px"
                       height="150px"
-                      src={
-                        doctor.profilePicture && doctor.gender === 'Female'
-                          ? '/images/doctor-avatar-female.png'
-                          : '/images/doctor-avatar-male.png'
-                      }
+                      src={getDoctorPicture(doctor.profilePicture, doctor.gender)}
                       alt="Doctor Profile"
                       m="auto"
                       objectFit="cover"
