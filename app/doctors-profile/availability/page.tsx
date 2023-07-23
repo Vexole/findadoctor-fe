@@ -1,15 +1,17 @@
 'use client';
 import { FormInput, FormSelect, FormWrapper } from '@/components';
 import {
+  useDeleteDoctorAvailabilityAppointmentsMutation,
   useDoctorAvailabilityMutation,
   useDoctorAvailabilityQuery,
   useUpdateDoctorAvailabilityMutation,
 } from '@/hooks';
-import { Button, IconButton, Stack, Text } from '@chakra-ui/react';
+import { Button, FormLabel, IconButton, Stack, Text, Tooltip } from '@chakra-ui/react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { useWeekDaysQuery } from '@/hooks/useWeekDaysQuery';
-import { CloseIcon } from '@chakra-ui/icons';
+import { CloseIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useEffect } from 'react';
+import { useDeleteDoctorAvailabilityMutation } from '@/hooks/useDeleteDoctorAvailabilityMutation';
 
 type FormTypes = {
   weekDays: {
@@ -26,8 +28,10 @@ type FormTypes = {
 export default function DoctorAvailability() {
   const weekDaysQuery = useWeekDaysQuery();
   const { data: doctorAvailability } = useDoctorAvailabilityQuery();
-  const updateAvailabilityApi = useUpdateDoctorAvailabilityMutation();
   const addAvailabilityApi = useDoctorAvailabilityMutation();
+  const updateAvailabilityApi = useUpdateDoctorAvailabilityMutation();
+  const deleteAvailabilityApi = useDeleteDoctorAvailabilityMutation();
+  const deleteAvailabilityAppointmentsApi = useDeleteDoctorAvailabilityAppointmentsMutation();
   const authenticatedUser = localStorage.user ? JSON.parse(localStorage.user) : {};
   const doctorId = authenticatedUser?.userId;
 
@@ -38,15 +42,12 @@ export default function DoctorAvailability() {
     formState: { errors },
     getValues,
   } = useForm<FormTypes>();
-  const { fields, append, remove, update } = useFieldArray({ control, name: 'weekDays' });
+  const { fields, append, remove } = useFieldArray({ control, name: 'weekDays' });
 
   useEffect(() => {
     if (!doctorAvailability) return;
-    doctorAvailability.forEach(item => {
-      const fieldIndex = fields.findIndex(field => field.availabilityId === item.availabilityId);
-      if (fieldIndex < 0) return append(item);
-      return update(fieldIndex, item);
-    });
+    fields.forEach(() => remove(0));
+    doctorAvailability.forEach(doctorAvailability => append(doctorAvailability));
   }, [doctorAvailability]);
 
   const onSubmit: SubmitHandler<FormTypes> = (formValues: FormTypes) => {
@@ -114,8 +115,19 @@ export default function DoctorAvailability() {
     return true;
   };
 
+  const handleDeleteAvailability = (index: number, availabilityId: number) => {
+    if (availabilityId) return deleteAvailabilityApi.mutate({ availabilityId });
+    remove(index);
+  };
+
+  const handleDeleteAvailabilityAppointments = (availabilityId: number) =>
+    deleteAvailabilityAppointmentsApi.mutate({
+      availabilityId,
+      cancellationMessage: 'The appointments are not avaiable anymore.',
+    });
+
   return (
-    <FormWrapper onSubmit={handleSubmit(onSubmit)} title="Doctor Availability">
+    <FormWrapper onSubmit={handleSubmit(onSubmit)} title="Doctor Availability" p={6}>
       {getValues('weekDays')?.length !== weekDaysQuery.data?.length && (
         <Button
           colorScheme="teal"
@@ -166,12 +178,26 @@ export default function DoctorAvailability() {
             isInvalid={Boolean(errors.weekDays?.[index]?.appointmentLength)}
             helperText={errors.weekDays?.[index]?.appointmentLength?.message}
           />
-          <IconButton
-            colorScheme="red"
-            aria-label="Remove"
-            icon={<CloseIcon />}
-            onClick={() => remove(index)}
-          />
+          <Stack direction="row" alignItems="center" pt={5}>
+            <Tooltip label="Delete availability" fontSize="md">
+              <IconButton
+                colorScheme="orange"
+                aria-label="Remove"
+                icon={<CloseIcon />}
+                onClick={() => handleDeleteAvailability(index, Number(item?.availabilityId))}
+              />
+            </Tooltip>
+            {item.availabilityId && (
+              <Tooltip label="Delete availability and existing appointments" fontSize="md">
+                <IconButton
+                  colorScheme="red"
+                  aria-label="Remove"
+                  icon={<DeleteIcon />}
+                  onClick={() => handleDeleteAvailabilityAppointments(Number(item?.availabilityId))}
+                />
+              </Tooltip>
+            )}
+          </Stack>
         </Stack>
       ))}
       {Boolean(fields.length) && (

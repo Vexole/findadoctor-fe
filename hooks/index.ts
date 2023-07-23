@@ -19,6 +19,8 @@ export * from './useBookAppointmentMutation';
 export * from './useDoctorAvailabilityMutation';
 export * from './useDoctorAvailabilityQuery';
 export * from './useUpdateDoctorAvailabilityMutation';
+export * from './useDeleteDoctorAvailabilityMutation';
+export * from './useDeleteDoctorAvailabilityAppointmentsMutation';
 export * from './useAppointmentsQuery';
 export * from './useBookAppointmentMutation';
 export * from './useCancelAppointmentQuery';
