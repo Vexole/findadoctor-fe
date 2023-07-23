@@ -7,6 +7,6 @@ type CancelAppointmentParams = {
 };
 
 export async function cancelAppointment(params: CancelAppointmentParams) {
-  const { data } = await axiosInstance.delete('/PatientAppointment/cancel-appointment', { params });
+  const { data } = await axiosInstance.delete('/PatientAppointment/cancel-appointment', {data: params});
   return data.data;
 }

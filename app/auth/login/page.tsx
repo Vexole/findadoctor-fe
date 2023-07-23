@@ -1,6 +1,6 @@
 'use client';
 import { FormInput, FormWrapper } from '@/components';
-import { useLoginMutation } from '@/hooks';
+import { useLoginMutation, usePatientProfileQuery, useSharedPatientProfileQuery } from '@/hooks';
 import { Button, Stack, Text } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -8,6 +8,7 @@ import * as yup from 'yup';
 import { useRouter } from 'next/navigation';
 import NextLink from 'next/link';
 import { useAuthenticatedUserContext } from '@/context';
+import { getPatientProfile } from '@/api';
 
 const schema = yup
   .object({
@@ -38,10 +39,14 @@ export default function Login() {
 
   const onSubmit: SubmitHandler<FormTypes> = (formValues: yup.InferType<typeof schema>) =>
     login.mutate(formValues, {
-      onSuccess: (e) => {
-        if (e.isPasswordChangeRequired) {
+      onSuccess: async (data) => {
+        if (data.isPasswordChangeRequired) {
           return router.push(`/auth/change-password`);
         } else {
+          if (data.role === 'Patient' && data.isProfileComplete) {
+            const patientProfile = await getPatientProfile();
+            localStorage.patient = JSON.stringify(patientProfile);
+          }
           return router.push('/');
         }
       }
