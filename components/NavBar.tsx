@@ -6,11 +6,6 @@ import {
   Stack,
   Link,
   IconButton,
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  DrawerBody,
   useDisclosure,
   StackDivider,
   Collapse,
@@ -40,6 +35,12 @@ const links = [
     href: '/doctors-profile',
     title: 'Profile',
     role: 'doctorunderreview',
+    accessLevel: 'authenticated',
+  },
+  {
+    href: '/doctors-profile',
+    title: 'Profile',
+    role: 'doctorrejected',
     accessLevel: 'authenticated',
   },
   {
@@ -103,7 +104,7 @@ export function NavBar() {
   const userRole = authenticatedUser?.role ?? getUser()?.role ?? '';
   const accessLevel = authenticatedUser ? 'authenticated' : 'unauthenticated';
   let allowedLinks = links
-    .filter(link => link.role === '' || link.role === userRole.toLowerCase())
+    .filter(link => link.role === '' || link.role.toLowerCase() === userRole.toLowerCase())
     .filter(link => link.accessLevel === '' || link.accessLevel === accessLevel)
     .filter(link => {
       if (link.restrictRole) {
