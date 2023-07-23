@@ -8,6 +8,7 @@ import { getCities, getLanguages, getPendingDoctorDetailById, getSpecializations
 import { useForm, useFieldArray } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { Button, Stack, Grid, Box, Image, Select, Input, Text, VStack, HStack, useToast, Checkbox } from "@chakra-ui/react";
+import CommentModal from '@/components/CommentModal';
 
 type PropTypes = {
     params: { id: string },
@@ -23,6 +24,12 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
     cityOptions, specializationOptions, languageOptions, genderOptions }: PropTypes) => {
     const [userId, setUserId] = useState(params.id);
     const [profileImageUrl, setProfileImageUrl] = useState("");
+    const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
+    const closeRejectModal = () => setIsRejectModalOpen(false);
+
+    const handleReject = () => {
+        setIsRejectModalOpen(true);
+    }
 
     const saveDoctorProfileApi = useSaveDoctorProfileMutation();
     const approveDoctorApi = useApproveDoctorMutation();
@@ -35,8 +42,8 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
         });
     }
 
-    const rejectByAdmin = async () => {
-        await rejectDoctorApi.mutateAsync(userId, {
+    const rejectByAdmin = async (reason: string) => {
+        await rejectDoctorApi.mutateAsync([userId, reason], {
             onSuccess: res => router.push("/admin/pending-doctors")
         });
     }
@@ -112,7 +119,7 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
             {/* {saveDoctorProfileMutation.isError && <p>Error occurred while saving doctor profile: {saveDoctorProfileMutation?.error?.message}</p>} <br></br> */}
             {/* {saveDoctorProfileMutation.isLoading && "Loading..."} */}
             <form onSubmit={handleSubmit(submitProfile)} noValidate className="pending-doctor-profile">
-                <Grid templateColumns={{ sm: "1fr", md: "2fr 3fr 2fr" }} gap={6} maxW="1024px" mx="auto">
+                <Grid templateColumns={{ sm: "1fr", lg: "2fr 3fr 2fr" }} gap={6} maxW="1024px" mx="auto">
                     <Box>
                         <Box w="200px" h="200px" rounded="full" overflow="hidden" boxShadow="md" mx="auto">
                             <Image src={profileImageUrl} alt="Profile Picture" objectFit="cover" w="100%" h="100%" />
@@ -411,12 +418,18 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
                             <HStack justifyContent="flex-end" spacing={4}>
                                 <Link href="/admin/pending-doctors"><Button colorScheme="yellow">Back</Button></Link>
                                 <Button colorScheme="blue" onClick={approveByAdmin}>Approve</Button>
-                                <Button colorScheme="red" onClick={rejectByAdmin}>Reject</Button>
+                                <Button colorScheme="red" onClick={handleReject}>Reject</Button>
                             </HStack>
                         )}
                     </VStack>
                 </Grid>
             </form>
+
+            <CommentModal
+                isOpen={isRejectModalOpen}
+                onClose={closeRejectModal}
+                onSubmit={(reason) => rejectByAdmin(reason)}
+            />
             {/* <DevTool control={control} /> */}
         </>
     );

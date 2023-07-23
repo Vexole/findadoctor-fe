@@ -4,6 +4,7 @@ import DoctorsProfileForm from "@/app/doctors-profile/DoctorsProfileForm";
 import { useCitiesQuery, useGendersQuery, useLanguagesQuery, useSpecializationsQuery } from "@/hooks";
 import { useAuthenticatedUserContext } from "@/context";
 import { useRouter } from "next/navigation";
+import CommentModal from "@/components/CommentModal";
 
 const DoctorDetails = ({ params }: { params: { id: string } }) => {
   const authenticatedUser = useAuthenticatedUserContext();

@@ -33,8 +33,8 @@ const DoctorsList = () => {
 
   const rejectDoctorByAdmin = async (doctorId: string, reason: string) => {
     try {
-      const result = await rejectDoctorMutation.mutateAsync(doctorId, {
-        onSuccess: () => router.push('/admin/pending-doctors'),
+      const result = await rejectDoctorMutation.mutateAsync([doctorId, reason], {
+        onSuccess: () => router.refresh(),
       });
     } catch (e) {
       console.log(e);
