@@ -13,6 +13,6 @@ export const requestDoctor = async ({
       patientId,
     });
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 };

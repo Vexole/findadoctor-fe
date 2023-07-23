@@ -106,13 +106,15 @@ export default function DoctorsSearch() {
         isClosable: true,
       });
     },
-    onError: () => {
+    onError: e => {
       toast({
-        title: 'Staff profile not created',
+        title:
+          e?.response?.data?.errors?.error[0] ?? 'Somethign went wrong. Cannot Follow Doctors.',
         status: 'error',
         duration: 3000,
         isClosable: true,
       });
+      return;
     },
   });
 
