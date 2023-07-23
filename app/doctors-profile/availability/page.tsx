@@ -42,20 +42,12 @@ export default function DoctorAvailability() {
     formState: { errors },
     getValues,
   } = useForm<FormTypes>();
-  const { fields, append, remove, update } = useFieldArray({ control, name: 'weekDays' });
+  const { fields, append, remove } = useFieldArray({ control, name: 'weekDays' });
 
   useEffect(() => {
     if (!doctorAvailability) return;
-    const doctorAvailabilityIds = doctorAvailability.map(item => item.availabilityId);
-    if (fields.length > doctorAvailability.length)
-      remove(
-        fields.findIndex(item => !doctorAvailabilityIds.includes(Number(item.availabilityId)))
-      );
-    doctorAvailability.forEach(item => {
-      const fieldIndex = fields.findIndex(field => field.availabilityId === item.availabilityId);
-      if (fieldIndex < 0) return append(item);
-      return update(fieldIndex, item);
-    });
+    fields.forEach(() => remove(0));
+    doctorAvailability.forEach(doctorAvailability => append(doctorAvailability));
   }, [doctorAvailability]);
 
   const onSubmit: SubmitHandler<FormTypes> = (formValues: FormTypes) => {
