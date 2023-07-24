@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 
 export const useRejectDoctorMutation = () => {
     const toast = useToast();
-    return useMutation((params: Parameters<typeof rejectDoctor>[0]) => rejectDoctor(params), {
+    return useMutation((params: Parameters<typeof rejectDoctor>) => rejectDoctor(params[0], params[1]), {
         onSuccess: data => {
             toast({
                 title: 'Doctor Rejected!',

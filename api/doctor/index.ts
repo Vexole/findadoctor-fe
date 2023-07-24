@@ -12,3 +12,4 @@ export * from './updateDoctorAvailability';
 export * from './deleteDoctorAvailability';
 export * from './deleteDoctorAvailabilityAppointments';
 export * from './getTimeslotAvailability';
+export * from './getStaffDoctorAvailability';

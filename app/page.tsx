@@ -378,12 +378,7 @@ export default function Home() {
                 We offer a wide range <br /> of specialists for your health
               </h6>
               <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(2,1fr)',
-                  gridTemplateRows: 'repeat(2,1fr)',
-                  gap: '0.5rem',
-                }}
+                className='speciality'
               >
                 <div
                   style={{

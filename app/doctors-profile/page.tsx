@@ -170,6 +170,7 @@ const DoctorsProfile = () => {
 
     const updateProfile = async (data: FormValues) => {
         try {
+            data.profilePicture = profilePictureUrl;
             await updateDoctorProfileMutation.mutateAsync(data);
             setIsDisabled(true);
             setIsEditMode(false);

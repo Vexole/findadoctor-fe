@@ -6,34 +6,32 @@ import {
   useDoctorAvailabilityQuery,
   useUpdateDoctorAvailabilityMutation,
 } from '@/hooks';
-import { Button, FormLabel, IconButton, Stack, Text, Tooltip } from '@chakra-ui/react';
+import { Button, IconButton, Stack, Text, Tooltip } from '@chakra-ui/react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { useWeekDaysQuery } from '@/hooks/useWeekDaysQuery';
 import { CloseIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useEffect } from 'react';
 import { useDeleteDoctorAvailabilityMutation } from '@/hooks/useDeleteDoctorAvailabilityMutation';
+import { DoctorAvailability } from "@/api";
 
 type FormTypes = {
-  weekDays: {
-    availabilityId?: number;
-    dayOfWeek: string;
-    fromTime: string;
-    toTime: string;
-    appointmentLength: string;
-    doctorId: string;
-    isActive?: boolean;
-  }[];
+  weekDays: DoctorAvailability[];
 };
 
 export default function DoctorAvailability() {
-  const weekDaysQuery = useWeekDaysQuery();
-  const { data: doctorAvailability } = useDoctorAvailabilityQuery();
+  const authenticatedUser = localStorage.user ? JSON.parse(localStorage.user) : {};
+  const isStaff = authenticatedUser?.role === 'AdministrativeAssistant';
+  const doctorId = !isStaff ? authenticatedUser?.userId : '';
+  const staffId = isStaff ? authenticatedUser?.userId : '';
+  const { data: doctorAvailability } = useDoctorAvailabilityQuery(
+    isStaff ? staffId : doctorId,
+    isStaff
+  );
   const addAvailabilityApi = useDoctorAvailabilityMutation();
   const updateAvailabilityApi = useUpdateDoctorAvailabilityMutation();
   const deleteAvailabilityApi = useDeleteDoctorAvailabilityMutation();
   const deleteAvailabilityAppointmentsApi = useDeleteDoctorAvailabilityAppointmentsMutation();
-  const authenticatedUser = localStorage.user ? JSON.parse(localStorage.user) : {};
-  const doctorId = authenticatedUser?.userId;
+  const weekDaysQuery = useWeekDaysQuery();
 
   const {
     control,
@@ -132,7 +130,14 @@ export default function DoctorAvailability() {
         <Button
           colorScheme="teal"
           onClick={() =>
-            append({ dayOfWeek: '', fromTime: '', toTime: '', appointmentLength: '', doctorId })
+            append({
+              dayOfWeek: '',
+              fromTime: '',
+              toTime: '',
+              appointmentLength: '',
+              doctorId,
+              staffId,
+            })
           }
           w="max-content"
         >
@@ -187,7 +192,7 @@ export default function DoctorAvailability() {
                 onClick={() => handleDeleteAvailability(index, Number(item?.availabilityId))}
               />
             </Tooltip>
-            {item.availabilityId && (
+            {!isStaff && item.availabilityId && (
               <Tooltip label="Delete availability and existing appointments" fontSize="md">
                 <IconButton
                   colorScheme="red"
