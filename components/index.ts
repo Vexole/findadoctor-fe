@@ -3,3 +3,4 @@ export * from './FormInput';
 export * from './FormWrapper';
 export * from './NavBar';
 export * from './FormSelectNoLoop'
+export * from './SuccessPage'
