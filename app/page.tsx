@@ -1,6 +1,7 @@
 'use client';
 
-import { Button, Container, Heading, Stack } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { Button, Container, Heading, Stack, useDisclosure } from '@chakra-ui/react';
 import { useLogoutMutation } from '@/hooks';
 import { useRouter } from 'next/navigation';
 import { useAuthenticatedUserContext } from '@/context';
@@ -16,20 +17,39 @@ export default function Home() {
     return router.push('/auth/login');
   };
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <div>
-      <div id='home_container'
+      <div
+        id="home_container"
         style={{
           display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: 'center',
+          padding: isMobile ? '1rem' : '2rem',
         }}
       >
-        <div>
+        <div style={{ flex: 1 }}>
           <h3
             style={{
-              fontSize: '3rem',
+              fontSize: isMobile ? '2rem' : '3rem',
               fontWeight: 700,
               lineHeight: '1.2',
               color: '#2d3748',
+              textAlign: isMobile ? 'center' : 'left', // Center the heading for mobile view
+              marginBottom: isMobile ? '1rem' : 0, // Add margin at the bottom for better spacing on mobile
             }}
           >
             Find Highly Rated <br /> Family Doctors <br />
@@ -37,8 +57,8 @@ export default function Home() {
           </h3>
           <p
             style={{
-              marginLeft: '4rem',
-              textAlign: 'center',
+              textAlign: isMobile ? 'center' : 'left',
+              marginLeft: isMobile ? '0' : '4rem',
             }}
           >
             Select your doctor and preferred slot to book your appointment
@@ -48,9 +68,10 @@ export default function Home() {
               backgroundColor: 'white',
               borderRadius: '8px',
               display: 'flex',
+              flexDirection: 'column',
+              alignItems: isMobile ? 'center' : 'stretch',
               padding: '1rem',
               gap: '1rem',
-              flexDirection: 'column',
               marginTop: '2rem',
             }}
           >
@@ -58,6 +79,7 @@ export default function Home() {
               style={{
                 fontWeight: 700,
                 fontSize: '1.25rem',
+                textAlign: isMobile ? 'center' : 'left',
               }}
             >
               Book Your Appointment
@@ -65,18 +87,15 @@ export default function Home() {
             <form
               style={{
                 display: 'flex',
+                flexDirection: isMobile ? 'column' : 'row',
                 gap: '2rem',
                 alignItems: 'center',
                 flexWrap: 'wrap',
-                justifyContent: 'center'
+                justifyContent: 'center',
               }}
             >
               <section>
-                <select
-                  name="speciality"
-                  id="speciality"
-                  placeholder="Speciality"
-                >
+                <select name="speciality" id="speciality" placeholder="Speciality">
                   <option value="speciality">Speciality</option>
                 </select>
               </section>
@@ -105,13 +124,21 @@ export default function Home() {
             </form>
           </div>
         </div>
-        <div>
+
+        <div
+          style={{
+            textAlign: 'center',
+            height: isMobile ? '400px' : '630px',
+            marginTop: isMobile ? '2rem' : 0,
+          }}
+        >
           <img
             src="https://thumbs.dreamstime.com/z/funny-clown-doctor-isolated-white-background-89615687.jpg"
             alt="Clown"
             height={800}
             width={500}
             style={{
+              display: 'block',
               marginLeft: 'auto',
               marginRight: 'auto',
               borderRadius: '75%',
@@ -190,7 +217,9 @@ export default function Home() {
                 </svg>
               </div>
               <h6>Find Your Doctor</h6>
-              <small>Choose from a variety of medical specialties.</small>
+              <small style={{ textAlign: isMobile ? 'center' : 'left' }}>
+                Choose from a variety of medical specialties.
+              </small>
             </div>
             <div
               style={{
@@ -233,7 +262,9 @@ export default function Home() {
                 </svg>
               </div>
               <h6>Book an Appointment</h6>
-              <small>Schedule a convenient appointment time.</small>
+              <small style={{ textAlign: isMobile ? 'center' : 'left' }}>
+                Schedule a convenient appointment time.
+              </small>
             </div>
             <div
               style={{
@@ -271,20 +302,22 @@ export default function Home() {
                 </svg>
               </div>
               <h6>Receive Medical Care</h6>
-              <small>Get personalized care from top professionals.</small>
+              <small style={{ textAlign: isMobile ? 'center' : 'left' }}>
+                Get personalized care from top professionals.
+              </small>
             </div>
           </div>
         </div>
 
         <div
           style={{
-            backgroundColor: 'rgba(66, 153, 225, 0.3)',
+            backgroundColor: isMobile ? 'rgba(255,255,255)' : 'rgba(66, 153, 225, 0.3)',
             borderRadius: '8px',
             display: 'flex',
             padding: '4rem',
             justifyContent: 'space-around',
           }}
-          className='booking_made_easy'
+          className="booking_made_easy"
         >
           <div>
             <Image
@@ -325,7 +358,7 @@ export default function Home() {
                 flexDirection: 'column',
                 gap: '1rem',
                 alignItems: 'center',
-                textAlign: 'center'
+                textAlign: 'center',
               }}
             >
               <li>Find Your Specialist</li>
@@ -349,15 +382,16 @@ export default function Home() {
         </div>
 
         <div>
-          <div className='offers_container'
+          <div
+            className="offers_container"
             style={{
-              backgroundColor: 'rgba(66,153,225,0.3)',
+              backgroundColor: isMobile ? 'rgba(255,255,255,255)' : 'rgba(66,153,225,0.3)',
               borderRadius: '8px',
               display: 'flex',
-              gap: '16px',
-              padding: '4rem',
+              gap: isMobile ? '8px' : '16px',
+              padding: isMobile ? '0rem' : '4rem',
               justifyContent: 'space-around',
-              flexDirection: 'row'
+              flexDirection: isMobile ? 'column' : 'row',
             }}
           >
             <div
@@ -372,14 +406,12 @@ export default function Home() {
                 style={{
                   textAlign: 'center',
                   fontWeight: 'bold',
-                  fontSize: '1.5rem',
+                  fontSize: isMobile ? '1.rem' : '1.5rem',
                 }}
               >
                 We offer a wide range <br /> of specialists for your health
               </h6>
-              <div
-                className='speciality'
-              >
+              <div className="speciality">
                 <div
                   style={{
                     backgroundColor: 'white',
@@ -387,7 +419,7 @@ export default function Home() {
                     borderRadius: '4px',
                     display: 'flex',
                     gap: '1rem',
-                    alignItems: 'center',
+                    alignItems: isMobile ? 'center' : 'center',
                   }}
                 >
                   <div
@@ -557,7 +589,7 @@ export default function Home() {
                   marginLeft: 'auto',
                   marginRight: 'auto',
                   borderRadius: '75%',
-                  objectFit: 'cover'
+                  objectFit: 'cover',
                 }}
               />
             </div>
@@ -567,6 +599,7 @@ export default function Home() {
         <footer
           style={{
             display: 'flex',
+            flexDirection: isMobile ? 'column' : 'row',
             justifyContent: 'space-between',
             padding: '1rem',
           }}
@@ -604,12 +637,12 @@ export default function Home() {
               </svg>
               <span>Find a Family Doctor</span>
             </div>
-            <div className='follow_us'>
+            <div className="follow_us">
               <p
                 style={{
                   fontWeight: 'bold',
                   fontSize: '0.75rem',
-                  alignSelf: 'start'
+                  alignSelf: 'start',
                 }}
               >
                 Follow Us

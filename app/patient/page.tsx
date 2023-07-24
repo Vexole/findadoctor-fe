@@ -13,7 +13,7 @@ import { FormInput, FormWrapper, FormSelect } from '@/components';
 import { Button, Stack } from '@chakra-ui/react';
 import Link from 'next/link';
 
-const patientProfileSchema = z.object({
+export const patientProfileSchema = z.object({
   firstName: z.string().nonempty({ message: 'First name is required' }),
   middleName: z.string().optional(),
   lastName: z.string().nonempty({ message: 'Last name is required' }),
@@ -37,7 +37,7 @@ const patientProfileSchema = z.object({
   profilePicture: z.string().optional(),
 });
 
-type PatientProfileType = z.infer<typeof patientProfileSchema>;
+export type PatientProfileType = z.infer<typeof patientProfileSchema>;
 
 const PatientProfile: NextPage = () => {
   const cities = useCitiesQuery();
