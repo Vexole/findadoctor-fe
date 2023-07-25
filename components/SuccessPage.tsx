@@ -3,21 +3,27 @@ import React from 'react';
 export const SuccessPage = ({
   successTitle,
   successMessage,
-  button1,
-  button2,
+  button1Text,
+  button2Text,
+  handleButton1Click,
+  handleButton2Click
 }: {
-  successTitle?: string;
-  successMessage?: string;
-  button1?: any;
-  button2?: any;
+  successTitle: string;
+  successMessage: string;
+  button1Text?: any;
+  button2Text?: any;
+  handleButton1Click?: any,
+  handleButton2Click?: any
 }) => {
   return (
     <div>
       <h2>{successTitle}</h2>
       <p>{successMessage}</p>
       <div>
-        <button onClick={button1.onClick}>{button1.label}</button>
-        <button onClick={button2.onClick}>{button2.label}</button>
+        {handleButton1Click != null &&
+          <button onClick={handleButton1Click}>{button1Text}</button>}
+        {handleButton2Click != null &&
+          <button onClick={handleButton2Click}>{button2Text}</button>}
       </div>
     </div>
   );
