@@ -9,6 +9,7 @@ import {
   useSpecializationsQuery,
   useStatesQuery,
 } from '@/hooks';
+import { ErrorResponse } from '@/models/ErrorResponse';
 import {
   Box,
   Button,
@@ -35,16 +36,6 @@ export type FormTypes = {
   specialties: string[];
   languages: string[];
 };
-
-interface ErrorResponse {
-  response: {
-    data: {
-      errors: {
-        error: string[];
-      };
-    };
-  };
-}
 
 const initialFormValues: FormTypes = {
   states: 0,

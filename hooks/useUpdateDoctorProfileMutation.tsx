@@ -1,4 +1,5 @@
 import { updateDoctorProfile } from '@/api';
+import { ErrorResponse } from '@/models/ErrorResponse';
 import { useToast } from '@chakra-ui/react';
 import { useMutation } from '@tanstack/react-query';
 
@@ -12,7 +13,7 @@ export const useUpdateDoctorProfileMutation = () => {
                 isClosable: true,
             });
         },
-        onError: (error) => {
+        onError: (error: ErrorResponse) => {
             toast({
                 title: error.response.data.errors.error[0],
                 status: 'error',
