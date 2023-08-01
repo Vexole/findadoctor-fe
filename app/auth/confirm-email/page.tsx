@@ -1,6 +1,7 @@
 'use client';
 import { useConfirmEmailMutation } from '@/hooks';
 import { Button, Heading, Spinner, Stack } from '@chakra-ui/react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -46,4 +47,6 @@ const ConfirmEmail = () => {
   );
 };
 
-export default ConfirmEmail;
+export default dynamic(() => Promise.resolve(ConfirmEmail), {
+  ssr: false,
+});

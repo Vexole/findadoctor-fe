@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 
 const schema = yup
   .object({
@@ -27,7 +28,7 @@ const schema = yup
 
 type FormTypes = yup.InferType<typeof schema>;
 
-export default function Register() {
+function ResetPassword() {
   const { resetPassword, confirmToken } = useResetPasswordMutation();
   const [isValid, setIsValid] = useState(false);
   const router = useRouter();
@@ -92,3 +93,7 @@ export default function Register() {
     </Stack>
   );
 }
+
+export default dynamic(() => Promise.resolve(ResetPassword), {
+  ssr: false,
+})

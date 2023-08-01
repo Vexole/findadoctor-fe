@@ -2,7 +2,7 @@ import React from "react";
 import { FormWrapper } from "../../components/FormWrapper";
 import { FormInput, FormSelectNoLoop } from "@/components";
 
-export function AddressForm(props) {
+export function AddressForm(props: any) {
     const { register, errors } = props;
     const { cityOptions, isDisabled } = props;
 

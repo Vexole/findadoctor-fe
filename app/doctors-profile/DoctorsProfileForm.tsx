@@ -256,9 +256,9 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
                                                         required: "Please select end date",
                                                         validate: {
                                                             endDateGreaterThanStartDate: (value) => {
-                                                                const startDate: string = document.getElementById(
+                                                                const startDate: string = (document.getElementById(
                                                                     `doctorEducationBackgrounds.${index}.startDate`
-                                                                )?.value;
+                                                                ) as HTMLInputElement)?.value;
                                                                 if (!startDate || startDate === '') {
                                                                     return true;
                                                                 }
@@ -325,9 +325,9 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
                                                             required: "Please select end date",
                                                             validate: {
                                                                 endDateGreaterThanStartDate: (value) => {
-                                                                    const startDate: string = document.getElementById(
-                                                                        `experiences.${index}.startDate`
-                                                                    )?.value;
+                                                                    const startDate: string = (document.getElementById(
+                                                                        `experiences.${index}.startDate` 
+                                                                    ) as HTMLInputElement)?.value;
                                                                     if (!startDate || startDate === '') {
                                                                         return true;
                                                                     }

@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import NextLink from 'next/link';
 import { useAuthenticatedUserContext } from '@/context';
 import { getPatientProfile } from '@/api';
+import dynamic from 'next/dynamic';
 
 const schema = yup
   .object({
@@ -19,7 +20,7 @@ const schema = yup
 
 type FormTypes = yup.InferType<typeof schema>;
 
-export default function Login() {
+function Login() {
   const authenticatedUser = useAuthenticatedUserContext();
   const login = useLoginMutation();
   const router = useRouter();
@@ -113,3 +114,7 @@ export default function Login() {
     </FormWrapper>
   );
 }
+
+export default dynamic(() => Promise.resolve(Login), {
+  ssr: false,
+})

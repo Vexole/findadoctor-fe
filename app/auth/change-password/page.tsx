@@ -8,6 +8,7 @@ import * as yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { getUserId } from '@/utils/userUtils';
+import dynamic from 'next/dynamic';
 
 const schema = yup
     .object({
@@ -29,7 +30,7 @@ const schema = yup
 
 type FormTypes = yup.InferType<typeof schema>;
 
-export default function Register() {
+function ChangePassword() {
     const { changePassword } = useChangePasswordMutation();
     const router = useRouter();
 
@@ -100,3 +101,7 @@ export default function Register() {
         </FormWrapper>
     );
 }
+
+export default dynamic(() => Promise.resolve(ChangePassword), {
+    ssr: false,
+  });

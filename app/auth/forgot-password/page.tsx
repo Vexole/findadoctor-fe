@@ -7,6 +7,7 @@ import * as yup from 'yup';
 import { useRouter } from 'next/navigation';
 import { useForgotPasswordMutation } from '@/hooks';
 import NextLink from 'next/link';
+import dynamic from 'next/dynamic';
 
 const schema = yup
   .object({
@@ -16,7 +17,7 @@ const schema = yup
 
 type FormTypes = yup.InferType<typeof schema>;
 
-export default function ForgotPassword() {
+function ForgotPassword() {
   const forgotPassword = useForgotPasswordMutation();
   const router = useRouter();
 
@@ -70,3 +71,7 @@ export default function ForgotPassword() {
     </FormWrapper>
   );
 }
+
+export default dynamic(() => Promise.resolve(ForgotPassword), {
+  ssr: false,
+})

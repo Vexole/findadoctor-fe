@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, Container, Heading, Stack, useDisclosure } from '@chakra-ui/react';
 import { useLogoutMutation } from '@/hooks';
 import { useRouter } from 'next/navigation';
 import { useAuthenticatedUserContext } from '@/context';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 
-export default function Home() {
+function Home() {
   const logout = useLogoutMutation();
   const router = useRouter();
   const user = useAuthenticatedUserContext();
@@ -781,3 +781,7 @@ export default function Home() {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(Home), {
+  ssr: false,
+})

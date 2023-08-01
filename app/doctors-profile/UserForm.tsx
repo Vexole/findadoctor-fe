@@ -4,7 +4,7 @@ import { FormInput, FormSelect } from "@/components";
 import { FormSelectNoLoop } from "@/components/FormSelectNoLoop";
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Input, Select } from "@chakra-ui/react";
 
-export function UserForm(props) {
+export function UserForm(props: any) {
     const { register, control, errors } = props;
     const { languageOptions, genderOptions, isDisabled, isEditMode, profilePictureUrl, handleProfilePictureChange } = props;
 
