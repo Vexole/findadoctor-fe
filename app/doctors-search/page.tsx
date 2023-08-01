@@ -36,6 +36,16 @@ export type FormTypes = {
   languages: string[];
 };
 
+interface ErrorResponse {
+  response: {
+    data: {
+      errors: {
+        error: string[];
+      };
+    };
+  };
+}
+
 const initialFormValues: FormTypes = {
   states: 0,
   cities: 0,
@@ -115,7 +125,7 @@ export default function DoctorsSearch() {
         isClosable: true,
       });
     },
-    onError: e => {
+    onError: (e: ErrorResponse) => {
       toast({
         title:
           e?.response?.data?.errors?.error[0] ?? 'Somethign went wrong. Cannot Follow Doctors.',

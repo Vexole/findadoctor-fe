@@ -9,7 +9,7 @@ import { useState } from "react";
 import { ScheduleMeeting, timeSlotDifference } from "react-schedule-meeting";
 
 export default function Timeslot({ params }: { params: { id?: string } }) {
-    const [selectedTimeslot, setSelectedTimeslot] = useState(
+    const [selectedTimeslot, setSelectedTimeslot] = useState<Date>(
         // new Date(new Date(new Date().setDate(new Date().getDate()+1)).setHours(9, 0, 0, 0))
     );
     const [eventDurationInMinutes, setEventDurationInMinutes] = useState(60);
@@ -62,23 +62,25 @@ export default function Timeslot({ params }: { params: { id?: string } }) {
     const availableTimeSlotsLessUnavailableTimeSlots = timeSlotDifference(availableTimeSlots, unavailableTimeSlots);
 
     const handleBookAppointment = () => {
-        const localOffset = selectedTimeslot.getTimezoneOffset() * 60000;
-        const localTime = new Date(selectedTimeslot.getTime() - localOffset);
-        const fromTime = localTime.toISOString().split('T')[1].split('.')[0];
-        let endTimeSlot = new Date(localTime);
-        const toTime = new Date((endTimeSlot.setMinutes(endTimeSlot.getMinutes() + eventDurationInMinutes)))
-            .toISOString().split('T')[1].split('.')[0];
-        bookAppointment.mutate({
-            patientUserId: authenticatedUser?.userId ?? "",
-            appointmentDate: localTime.toISOString(),
-            doctorUserId: '5ae22881-2d1e-499c-a631-058db425370d',
-            fromTime,
-            toTime
-        }, {
-            onSuccess: (data) => {
-                router.push('/patient/appointments');
-            }
-        });
+        if (selectedTimeslot != null) {
+            const localOffset = selectedTimeslot.getTimezoneOffset() * 60000;
+            const localTime = new Date(selectedTimeslot.getTime() - localOffset);
+            const fromTime = localTime.toISOString().split('T')[1].split('.')[0];
+            let endTimeSlot = new Date(localTime);
+            const toTime = new Date((endTimeSlot.setMinutes(endTimeSlot.getMinutes() + eventDurationInMinutes)))
+                .toISOString().split('T')[1].split('.')[0];
+            bookAppointment.mutate({
+                patientUserId: authenticatedUser?.userId ?? "",
+                appointmentDate: localTime.toISOString(),
+                doctorUserId: '5ae22881-2d1e-499c-a631-058db425370d',
+                fromTime,
+                toTime
+            }, {
+                onSuccess: (data) => {
+                    router.push('/patient/appointments');
+                }
+            });
+        }
     }
 
     return (
