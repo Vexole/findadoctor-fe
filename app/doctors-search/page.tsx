@@ -25,8 +25,10 @@ import {
   Spinner,
   Collapse,
   useToast,
+  Tag,
 } from '@chakra-ui/react';
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 import { ChangeEvent, PropsWithChildren, useState } from 'react';
 
 export type FormTypes = {
@@ -66,6 +68,7 @@ export default function DoctorsSearch() {
   const { data: citiesByStateList } = useCitiesByStateQuery(formValues.states);
 
   const [showHiddenLanguages, setShowHiddenLanguages] = useState(false);
+  const router = useRouter();
 
   const getDoctorPicture = (profilePicture: string | undefined, gender: string) => {
     if (!profilePicture) {
@@ -136,12 +139,16 @@ export default function DoctorsSearch() {
       });
     } else {
       toast({
-        title: 'Pleae complete your profile first',
+        title: 'Please complete your profile first.',
         status: 'error',
         duration: 1500,
         isClosable: true,
       });
     }
+  };
+
+  const handleDoctorDetails = (doctor: string) => {
+    router.push(`/doctors-search/doctor-details?doctor=${doctor}`);
   };
 
   return (
@@ -284,7 +291,14 @@ export default function DoctorsSearch() {
             >
               {doctorsList?.map((doctor, index) => (
                 <GridItem w="100%" key={`doctor-${index}`}>
-                  <Box bg="white" w="100%" height="100%" p={4} color="white" borderRadius="lg">
+                  <Box
+                    bg="white"
+                    w="100%"
+                    height="100%"
+                    p={4}
+                    color="white"
+                    borderRadius="lg"
+                  >
                     <Image
                       borderRadius="full"
                       boxSize="120px"
@@ -308,31 +322,37 @@ export default function DoctorsSearch() {
                     >
                       {`${doctor.title} ${doctor.name}`}
                     </Heading>
-                    {doctor.doctorSpecialties.map(({ specialtyId, specialtyName }) => (
-                      <Text
-                        key={`specialtyByDoctor-${specialtyId}`}
-                        mt="1"
-                        fontWeight="400"
-                        as="h6"
-                        size="sm"
-                        lineHeight="tight"
-                        noOfLines={1}
-                        color="gray.500"
-                        textAlign="center"
-                      >
-                        {specialtyName}
-                      </Text>
-                    ))}
+                    <Grid mt={3} templateColumns="repeat(2, auto)" gap={2} justifyContent="center">
+                      {doctor.doctorSpecialties.map(({ specialtyId, specialtyName }) => (
+                        <GridItem justifyContent="flex-end">
+                          <Tag
+                            key={`specialtyByDoctor-${specialtyId}`}
+                            color="gray.500"
+                            textAlign="center"
+                          >
+                            {specialtyName}
+                          </Tag>
+                        </GridItem>
+                      ))}
+                    </Grid>
                     {isPatient && (
-                      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '8px' }}>
+                      <Stack justifyContent="center" direction="row" mt={6}>
                         <Button
                           type="submit"
                           colorScheme="facebook"
                           onClick={() => handleFollowClick(doctor.userId)}
                         >
-                          Follow
+                          Follow Doctor
                         </Button>
-                      </div>
+                        <Button
+                          type="submit"
+                          colorScheme="facebook"
+                          onClick={() => handleDoctorDetails(doctor.userId)}
+                          ml={4}
+                        >
+                          See Details
+                        </Button>
+                      </Stack>
                     )}
                   </Box>
                 </GridItem>
