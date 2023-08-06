@@ -4,7 +4,7 @@ import { FormWrapper } from "../../components/FormWrapper";
 import { FormLabel } from "@chakra-ui/react";
 import { FormInput } from "@/components";
 
-export function EducationForm(props) {
+export function EducationForm(props: any) {
     const { register, control, errors, isDisabled } = props;
     const { fields: qualificationFields, append: qualificationAppend, remove: qualificationRemove } = useFieldArray({
         name: 'doctorEducationBackgrounds',
@@ -89,7 +89,7 @@ export function EducationForm(props) {
                                         required: "Please select end date",
                                         validate: {
                                             endDateGreaterThanStartDate: (value: string) => {
-                                                const startDate: string = document.getElementById(`doctorEducationBackgrounds.${index}.startDate`)?.value;
+                                                const startDate: string = (document.getElementById(`doctorEducationBackgrounds.${index}.startDate`) as HTMLInputElement)?.value;
                                                 if (!startDate || startDate === '') {
                                                     return true;
                                                 }

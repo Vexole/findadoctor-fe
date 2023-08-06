@@ -13,7 +13,7 @@ import { FormInput, FormWrapper, FormSelect } from '@/components';
 import { Button, Stack } from '@chakra-ui/react';
 import Link from 'next/link';
 
-export const patientProfileSchema = z.object({
+const patientProfileSchema = z.object({
   firstName: z.string().nonempty({ message: 'First name is required' }),
   middleName: z.string().optional(),
   lastName: z.string().nonempty({ message: 'Last name is required' }),

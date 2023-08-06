@@ -9,6 +9,7 @@ import {
   useSpecializationsQuery,
   useStatesQuery,
 } from '@/hooks';
+import { ErrorResponse } from '@/models/ErrorResponse';
 import {
   Box,
   Button,
@@ -115,10 +116,10 @@ export default function DoctorsSearch() {
         isClosable: true,
       });
     },
-    onError: e => {
+    onError: (e: ErrorResponse) => {
       toast({
         title:
-          e?.response?.data?.errors?.error[0] ?? 'Somethign went wrong. Cannot Follow Doctors.',
+          e?.response?.data?.errors?.error[0] ?? 'Something went wrong. Cannot Follow Doctor.',
         status: 'error',
         duration: 3000,
         isClosable: true,

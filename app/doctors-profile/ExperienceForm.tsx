@@ -3,7 +3,7 @@ import { FormWrapper } from "../../components/FormWrapper";
 import { useFieldArray } from "react-hook-form";
 import { FormLabel } from "@chakra-ui/react";
 
-const ExperienceForm = (props) => {
+const ExperienceForm = (props: any) => {
     const { register, control, errors, isDisabled } = props;
     const { fields: experienceFields, append: experienceAppend, remove: experienceRemove } = useFieldArray({
         name: 'experiences',
@@ -75,7 +75,7 @@ const ExperienceForm = (props) => {
                                         required: "Please select end date",
                                         validate: {
                                             endDateGreaterThanStartDate: (value: string) => {
-                                                let startDate: string = document.getElementById(`experiences.${index}.startDate`)?.value;
+                                                let startDate: string = (document.getElementById(`experiences.${index}.startDate`) as HTMLInputElement)?.value;
                                                 if (!startDate || startDate === '') {
                                                     return true;
                                                 }

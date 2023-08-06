@@ -4,7 +4,7 @@ import { useFieldArray } from "react-hook-form";
 import { FormControl, FormErrorMessage, FormHelperText, FormLabel, Select } from "@chakra-ui/react";
 
 
-const MiscellaneousInformationForm = (props) => {
+const MiscellaneousInformationForm = (props: any) => {
     const { register, control, errors } = props;
     const { specializationOptions, isDisabled } = props;
 

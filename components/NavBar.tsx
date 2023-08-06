@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import NextLink from 'next/link';
+import dynamic from 'next/dynamic';
 
 const links = [
   { href: '/', title: 'Home', role: '', accessLevel: '' },
@@ -102,7 +103,7 @@ const links = [
   { href: '/auth/logout', title: 'Logout', role: '', accessLevel: 'authenticated' },
 ];
 
-export function NavBar() {
+function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
   const [isSmallScreen, setIsSmallScreen] = useState(false);
 
@@ -228,3 +229,7 @@ export function NavBar() {
     </Stack>
   );
 }
+
+export default dynamic(() => Promise.resolve(NavBar), {
+  ssr: false,
+})

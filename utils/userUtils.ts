@@ -1,5 +1,8 @@
 export const getUser = () => {
-  return localStorage.user ? JSON.parse(localStorage.user) : undefined;
+  if (typeof window !== 'undefined') {
+    return localStorage.user ? JSON.parse(localStorage.user) : undefined;
+  }
+  return undefined;
 };
 
 export const getUserId = () => {
@@ -8,5 +11,7 @@ export const getUserId = () => {
 };
 
 export const logOut = () => {
-  localStorage.clear();
+  if (typeof window !== 'undefined') {
+    localStorage.clear();
+  }
 };

@@ -2,6 +2,7 @@
 const moment = require('moment');
 import { getTimeslotAvailability } from "@/api";
 import { useBookAppointmentMutation, useUpdateAppointmentMutation } from "@/hooks";
+import { Appointment } from "@/models/Appointment";
 import { getUser } from "@/utils/userUtils";
 import { Button, Flex } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
@@ -9,13 +10,13 @@ import { useState, useEffect } from "react";
 import { ScheduleMeeting, timeSlotDifference } from "react-schedule-meeting";
 
 export default function BookAppointment() {
-    const [selectedTimeslot, setSelectedTimeslot] = useState(
+    const [selectedTimeslot, setSelectedTimeslot] = useState<Date>(
         // new Date(new Date(new Date().setDate(new Date().getDate()+1)).setHours(9, 0, 0, 0))
     );
     const [eventDurationInMinutes, setEventDurationInMinutes] = useState(60);
     const [isEditMode, setIsEditMode] = useState(false);
-    const [appointment, setAppointment] = useState();
-    const [openTimeslots, setOpenTimeslots] = useState([]);
+    const [appointment, setAppointment] = useState<Appointment>();
+    const [openTimeslots, setOpenTimeslots] = useState<any[]>([]);
 
     const router = useRouter();
     const bookAppointment = useBookAppointmentMutation();
@@ -63,25 +64,27 @@ export default function BookAppointment() {
     }, []);
 
     const handleUpdateAppointment = () => {
-        const localOffset = selectedTimeslot.getTimezoneOffset() * 60000;
-        const localTime = new Date(selectedTimeslot.getTime() - localOffset);
-        const fromTime = localTime.toISOString().split('T')[1].split('.')[0];
-        let endTimeSlot = new Date(localTime);
-        const toTime = new Date((endTimeSlot.setMinutes(endTimeSlot.getMinutes() + eventDurationInMinutes)))
-            .toISOString().split('T')[1].split('.')[0];
-        updateAppointment.mutate({
-            id: appointment.id,
-            patientUserId: appointment?.patientUserId,
-            appointmentDate: localTime.toISOString(),
-            doctorUserId: appointment?.doctorUserId,
-            fromTime,
-            toTime
-        }, {
-            onSuccess: (data) => {
-                localStorage.removeItem('appointment');
-                router.push('/patient/appointments');
-            }
-        });
+        if (selectedTimeslot && appointment) {
+            const localOffset = selectedTimeslot.getTimezoneOffset() * 60000;
+            const localTime = new Date(selectedTimeslot.getTime() - localOffset);
+            const fromTime = localTime.toISOString().split('T')[1].split('.')[0];
+            let endTimeSlot = new Date(localTime);
+            const toTime = new Date((endTimeSlot.setMinutes(endTimeSlot.getMinutes() + eventDurationInMinutes)))
+                .toISOString().split('T')[1].split('.')[0];
+            updateAppointment.mutate({
+                id: appointment.id,
+                patientUserId: appointment?.patientUserId,
+                appointmentDate: localTime.toISOString(),
+                doctorUserId: appointment?.doctorUserId,
+                fromTime,
+                toTime
+            }, {
+                onSuccess: (data) => {
+                    localStorage.removeItem('appointment');
+                    router.push('/patient/appointments');
+                }
+            });
+        }
     }
 
     const handleCancelUpdateAppointment = () => {
@@ -131,23 +134,25 @@ export default function BookAppointment() {
     const availableTimeSlotsLessUnavailableTimeSlots = timeSlotDifference(availableTimeSlots, unavailableTimeSlots);
 
     const handleBookAppointment = () => {
-        const localOffset = selectedTimeslot.getTimezoneOffset() * 60000;
-        const localTime = new Date(selectedTimeslot.getTime() - localOffset);
-        const fromTime = localTime.toISOString().split('T')[1].split('.')[0];
-        let endTimeSlot = new Date(localTime);
-        const toTime = new Date((endTimeSlot.setMinutes(endTimeSlot.getMinutes() + eventDurationInMinutes)))
-            .toISOString().split('T')[1].split('.')[0];
-        bookAppointment.mutate({
-            patientUserId: authenticatedUser?.userId ?? "",
-            appointmentDate: localTime.toISOString(),
-            doctorUserId: '5ae22881-2d1e-499c-a631-058db425370d',
-            fromTime,
-            toTime
-        }, {
-            onSuccess: (data) => {
-                router.push('/patient/appointments');
-            }
-        });
+        if (selectedTimeslot) {
+            const localOffset = selectedTimeslot.getTimezoneOffset() * 60000;
+            const localTime = new Date(selectedTimeslot.getTime() - localOffset);
+            const fromTime = localTime.toISOString().split('T')[1].split('.')[0];
+            let endTimeSlot = new Date(localTime);
+            const toTime = new Date((endTimeSlot.setMinutes(endTimeSlot.getMinutes() + eventDurationInMinutes)))
+                .toISOString().split('T')[1].split('.')[0];
+            bookAppointment.mutate({
+                patientUserId: authenticatedUser?.userId ?? "",
+                appointmentDate: localTime.toISOString(),
+                doctorUserId: '5ae22881-2d1e-499c-a631-058db425370d',
+                fromTime,
+                toTime
+            }, {
+                onSuccess: (data) => {
+                    router.push('/patient/appointments');
+                }
+            });
+        }
     }
 
     return (
