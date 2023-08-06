@@ -119,7 +119,7 @@ export default function DoctorsSearch() {
     onError: (e: ErrorResponse) => {
       toast({
         title:
-          e?.response?.data?.errors?.error[0] ?? 'Somethign went wrong. Cannot Follow Doctors.',
+          e?.response?.data?.errors?.error[0] ?? 'Something went wrong. Cannot Follow Doctor.',
         status: 'error',
         duration: 3000,
         isClosable: true,

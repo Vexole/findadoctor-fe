@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, Container, Heading, Stack, useDisclosure } from '@chakra-ui/react';
 import { useLogoutMutation } from '@/hooks';
 import { useRouter } from 'next/navigation';
 import { useAuthenticatedUserContext } from '@/context';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 
-export default function Home() {
+function Home() {
   const logout = useLogoutMutation();
   const router = useRouter();
   const user = useAuthenticatedUserContext();
@@ -654,42 +654,49 @@ export default function Home() {
                   alignItems: 'center',
                 }}
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  style={{
-                    width: '2rem',
-                    height: '2rem',
-                  }}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                <a href="https://www.facebook.com/your-page-link" target="_blank" rel="noopener noreferrer">
+                  <img
+                    src="./../images/facebook.png"
+                    alt="Facebook Logo"
+                    style={{
+                      width: '2rem',
+                      height: '2rem',
+                    }}
                   />
-                </svg>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  style={{
-                    width: '2rem',
-                    height: '2rem',
-                  }}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                </a>
+                <a href="https://www.instagram.com/your-page-link" target="_blank" rel="noopener noreferrer">
+                  <img
+                    src="./../images/instagram.png"
+                    alt="Instagram Logo"
+                    style={{
+                      width: '2rem',
+                      height: '2rem',
+                    }}
                   />
-                </svg>
+                </a>
+                <a href="https://www.twitter.com/your-page-link" target="_blank" rel="noopener noreferrer">
+                  <img
+                    src="./../images/twitter.png"
+                    alt="Twitter Logo"
+                    style={{
+                      width: '2rem',
+                      height: '2rem',
+                    }}
+                  />
+                </a>
+                <a href="https://www.twitter.com/your-page-link" target="_blank" rel="noopener noreferrer">
+                  <img
+                    src="./../images/linkedin.png"
+                    alt="Linkedin Logo"
+                    style={{
+                      width: '2rem',
+                      height: '2rem',
+                    }}
+                  />
+                </a>
               </div>
             </div>
+
           </div>
           <div
             style={{
@@ -781,3 +788,7 @@ export default function Home() {
     </div>
   );
 }
+
+export default dynamic(() => Promise.resolve(Home), {
+  ssr: false,
+})

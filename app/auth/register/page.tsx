@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useAuthenticatedUserContext } from '@/context';
 import { useRouter } from 'next/navigation';
+import dynamic from 'next/dynamic';
 
 const schema = yup
   .object({
@@ -29,7 +30,7 @@ const schema = yup
 
 type FormTypes = yup.InferType<typeof schema>;
 
-export default function Register() {
+function Register() {
   const rolesQuery = useRolesQuery();
   const registerApi = useRegisterMutation();
   const authenticatedUser = useAuthenticatedUserContext();
@@ -120,3 +121,7 @@ export default function Register() {
     </FormWrapper>
   );
 }
+
+export default dynamic(() => Promise.resolve(Register), {
+  ssr: false,
+})
