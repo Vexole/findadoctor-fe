@@ -13,12 +13,10 @@ type PropTypes = {
 
 export function DoctorAppointmentRow(props: PropTypes) {
     const {
-        id,
         appointmentDate,
         fromTime,
         toTime,
         patientUserId,
-        doctorUserId,
         status,
     } = props.appointment;
 

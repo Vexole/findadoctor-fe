@@ -1,4 +1,4 @@
-import { PatientProfileType } from '@/app/patient/page';
+import { PatientProfileType } from '@/app/patient/types';
 import axiosInstance from '@/http/axiosInstance';
 
 type Patient = {

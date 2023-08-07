@@ -1,6 +1,6 @@
 'use client';
 import { FormInput, FormWrapper } from '@/components';
-import { useLoginMutation, usePatientProfileQuery, useSharedPatientProfileQuery } from '@/hooks';
+import { useLoginMutation } from '@/hooks';
 import { Button, Stack, Text } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import NextLink from 'next/link';
 import { useAuthenticatedUserContext } from '@/context';
 import { getPatientProfile } from '@/api';
-import dynamic from 'next/dynamic';
+import { getLocalStorage } from '@/utils/userUtils';
 
 const schema = yup
   .object({
@@ -45,8 +45,8 @@ function Login() {
           return router.push(`/auth/change-password`);
         } else {
           if (data.role === 'Patient' && data.isProfileComplete) {
-            const patientProfile = await getPatientProfile();
-            localStorage.patient = JSON.stringify(patientProfile);
+            const patientProfile = await getPatientProfile();            
+            getLocalStorage().patient = JSON.stringify(patientProfile);
           }
           return router.push('/');
         }
@@ -115,6 +115,4 @@ function Login() {
   );
 }
 
-export default dynamic(() => Promise.resolve(Login), {
-  ssr: false,
-})
+export default Login;

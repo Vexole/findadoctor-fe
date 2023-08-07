@@ -41,8 +41,10 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@hookform/devtools": "^4.3.1",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
     "eslint": "8.41.0",
-    "eslint-config-next": "13.4.4",
-    "@hookform/devtools": "^4.3.1"
+    "eslint-config-next": "^13.4.13",
+    "eslint-config-prettier": "^9.0.0"
   }
 }

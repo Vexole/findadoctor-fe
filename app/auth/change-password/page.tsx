@@ -44,6 +44,7 @@ function ChangePassword() {
 
     useEffect(() => {
         const loggedInUserId = getUserId();
+        console.log(loggedInUserId);
         if (!loggedInUserId) router.push('/auth/login');
         setUserId(loggedInUserId);
     }, []);

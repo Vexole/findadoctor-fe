@@ -75,7 +75,7 @@ const ExperienceForm = (props: any) => {
                                         required: "Please select end date",
                                         validate: {
                                             endDateGreaterThanStartDate: (value: string) => {
-                                                let startDate: string = (document.getElementById(`experiences.${index}.startDate`) as HTMLInputElement)?.value;
+                                                const startDate: string = (document.getElementById(`experiences.${index}.startDate`) as HTMLInputElement)?.value;
                                                 if (!startDate || startDate === '') {
                                                     return true;
                                                 }

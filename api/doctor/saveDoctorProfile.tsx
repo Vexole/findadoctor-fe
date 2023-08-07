@@ -1,9 +1,10 @@
 import axiosInstance from "@/http/axiosInstance";
 import { DoctorProfile } from "@/models/DoctorProfile";
+import { getUser } from "@/utils/userUtils";
 
 export function saveDoctorProfile(doctor: DoctorProfile) {
     doctor.contactInformation = doctor.phone;
-    const authenticatedUser = localStorage.user ? JSON.parse(localStorage.user) : {};
+    const authenticatedUser = getUser();
     const userId = authenticatedUser?.userId;
     doctor.userId = userId;
     return axiosInstance

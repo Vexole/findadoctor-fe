@@ -3,7 +3,7 @@ const moment = require('moment');
 import { getTimeslotAvailability } from "@/api";
 import { useBookAppointmentMutation, useUpdateAppointmentMutation } from "@/hooks";
 import { Appointment } from "@/models/Appointment";
-import { getUser } from "@/utils/userUtils";
+import { getLocalStorage, getLocalStorageItem, getUser } from "@/utils/userUtils";
 import { Button, Flex } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -48,8 +48,9 @@ export default function BookAppointment() {
     }
 
     useEffect(() => {
-        if (localStorage.appointment) {
-            const appointment = JSON.parse(localStorage.appointment);
+
+      const appointment = getLocalStorageItem('appointment');
+        if (appointment) {
             setSelectedTimeslot(new Date(appointment.appointmentDate));
             setAppointment(appointment);
             setIsEditMode(true);
@@ -80,7 +81,7 @@ export default function BookAppointment() {
                 toTime
             }, {
                 onSuccess: (data) => {
-                    localStorage.removeItem('appointment');
+                    getLocalStorage().removeItem('appointment');
                     router.push('/patient/appointments');
                 }
             });
@@ -88,7 +89,7 @@ export default function BookAppointment() {
     }
 
     const handleCancelUpdateAppointment = () => {
-        localStorage.removeItem('appointment');
+        getLocalStorage().removeItem('appointment');
         return router.push('/patient/appointments');
     }
 
@@ -119,7 +120,7 @@ export default function BookAppointment() {
     const startDate = moment('2023-01-01');
     const endDate = moment('2023-12-31');
 
-    const patientProfile = JSON.parse(localStorage.patient);
+    const patientProfile = getLocalStorageItem('patient');
 
     const unavailableTimeSlots = getSaturdaysAndSundays(startDate, endDate);
 

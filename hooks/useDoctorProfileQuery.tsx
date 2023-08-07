@@ -1,8 +1,8 @@
 import { getDoctorProfile } from "@/api";
+import { getUserId } from "@/utils/userUtils";
 import { useQuery } from "@tanstack/react-query";
 
 export const useDoctorProfileQuery = () => {
-    const authenticatedUser = localStorage.user ? JSON.parse(localStorage.user) : {};
-    const userId = authenticatedUser?.userId;
+    const userId = getUserId();
     return useQuery(["doctor", userId], () => getDoctorProfile(userId));
 };

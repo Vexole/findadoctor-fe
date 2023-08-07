@@ -1,17 +1,13 @@
-export const getUser = () => {
-  if (typeof window !== 'undefined') {
-    return localStorage.user ? JSON.parse(localStorage.user) : undefined;
-  }
-  return undefined;
-};
+export const getLocalStorage = () =>
+  typeof window === 'undefined' ? ({} as Storage) : localStorage;
 
-export const getUserId = () => {
-  const authenticatedUser = getUser();
-  return authenticatedUser ? authenticatedUser.userId : '';
-};
+export const getLocalStorageItem = (type: string) =>
+  typeof window === 'undefined' ? undefined : JSON.parse(getLocalStorage()[type]);
+
+export const getUser = () => getLocalStorageItem('user');
+
+export const getUserId = () => getUser()?.userId || '';
 
 export const logOut = () => {
-  if (typeof window !== 'undefined') {
-    localStorage.clear();
-  }
+  getLocalStorage().clear();
 };
