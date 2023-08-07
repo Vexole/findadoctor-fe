@@ -1,3 +1,4 @@
+import { getLocalStorage, getUser } from '@/utils/userUtils';
 import axios from 'axios';
 
 const axiosInstance = axios.create({
@@ -9,7 +10,7 @@ let refreshSubscribers: ((token: string) => void)[] = [];
 
 axiosInstance.interceptors.request.use(
   config => {
-    const authenticatedUser = localStorage.user ? JSON.parse(localStorage.user) : {};
+    const authenticatedUser = getUser();
     const token = authenticatedUser?.token;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -28,7 +29,7 @@ axiosInstance.interceptors.response.use(
   },
   error => {
     const originalRequest = error.config;
-    const authenticatedUser = localStorage.user ? JSON.parse(localStorage.user) : {};
+    const authenticatedUser = getUser();
     const expiredJwtToken = authenticatedUser?.token;
     const refreshToken = authenticatedUser?.userRefreshToken;
     const userId = authenticatedUser?.userId;
@@ -49,7 +50,7 @@ axiosInstance.interceptors.response.use(
             .post('/account/refreshJwtToken', { refreshToken, expiredJwtToken, userId })
             .then(response => {
               const newToken = response.data;
-              localStorage.setItem(
+              getLocalStorage().setItem(
                 'user',
                 JSON.stringify({ ...authenticatedUser, token: newToken.data })
               );

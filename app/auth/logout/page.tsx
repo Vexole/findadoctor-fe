@@ -1,7 +1,7 @@
 "use client";
 import { useAuthenticatedUserContext } from '@/context';
 import { useLogoutMutation } from '@/hooks';
-import dynamic from 'next/dynamic';
+import { getLocalStorage } from '@/utils/userUtils';
 import { useRouter } from 'next/navigation';
 
 import { useEffect } from "react";
@@ -13,7 +13,7 @@ const LogOut = () => {
 
     useEffect(() => {
         const handleLogout = async () => {
-            localStorage.removeItem('patient');
+            getLocalStorage().removeItem('patient');
             if (user) {
                 await logout.mutateAsync();
             }
@@ -26,6 +26,4 @@ const LogOut = () => {
     return null;
 }
 
-export default dynamic(() => Promise.resolve(LogOut), {
-    ssr: false,
-})
+export default LogOut;

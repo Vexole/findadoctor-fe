@@ -13,13 +13,14 @@ import { CloseIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useEffect } from 'react';
 import { useDeleteDoctorAvailabilityMutation } from '@/hooks/useDeleteDoctorAvailabilityMutation';
 import { DoctorAvailability } from "@/api";
+import { getUser } from '@/utils/userUtils';
 
 type FormTypes = {
   weekDays: DoctorAvailability[];
 };
 
 export default function DoctorAvailability() {
-  const authenticatedUser = localStorage.user ? JSON.parse(localStorage.user) : {};
+  const authenticatedUser = getUser();
   const isStaff = authenticatedUser?.role === 'AdministrativeAssistant';
   const doctorId = !isStaff ? authenticatedUser?.userId : '';
   const staffId = isStaff ? authenticatedUser?.userId : '';

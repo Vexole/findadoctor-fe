@@ -10,6 +10,7 @@ import { Button, useToast, Stack } from '@chakra-ui/react';
 import { createDoctorStaff } from '@/api/doctor/addDoctorStaff';
 import { useEffect, useState } from 'react';
 import { FormInput, FormWrapper, FormSelect } from '@/components';
+import { getUser } from '@/utils/userUtils';
 
 const doctorStaffProfileSchema = z.object({
   firstName: z.string().nonempty({
@@ -65,9 +66,10 @@ export default function AddDoctorStaffProfile() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const authenticatedUser = getUser();
     if (
-      !localStorage.getItem('user') ||
-      JSON.parse(localStorage.getItem('user') as string).role !== 'Doctor'
+      !authenticatedUser ||
+      authenticatedUser?.role !== 'Doctor'
     ) {
       replace('/');
     } else {
@@ -107,7 +109,7 @@ export default function AddDoctorStaffProfile() {
   } = useForm<DoctorStaffProfileType>({
     resolver: zodResolver(doctorStaffProfileSchema),
     defaultValues: {
-      doctorUserId: JSON.parse(localStorage.getItem('user') as string)?.userId || '',
+      doctorUserId: getUser()?.userId || '',
     },
   });
 

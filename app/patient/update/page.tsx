@@ -13,32 +13,26 @@ import { getPatientProfile } from '@/api/patient/getPatientProfile';
 import { updatePatientProfile } from '@/api/patient/updatePatientProfile';
 import { useRouter } from 'next/navigation';
 import { FormInput, FormWrapper, FormSelect } from '@/components';
+import { PatientProfileType, patientProfileSchema } from '@/app/patient/types';
 
-const patientProfileSchema = z.object({
-  firstName: z.string().nonempty({ message: 'First name is required' }),
-  middleName: z.string().optional(),
-  lastName: z.string().nonempty({ message: 'Last name is required' }),
-  phone: z.string().nonempty({ message: 'Phone is required' }),
-  contactInformation: z.string().nonempty({ message: 'Contact information is required' }),
-  gender: z.string().nonempty({ message: 'Gender is required' }),
-  dateOfBirth: z.date({
-    required_error: 'Date of birth is required',
-    invalid_type_error: 'Date of birth is required',
-  }),
-  cityId: z.number({
-    required_error: 'City is required',
-    invalid_type_error: 'City is required',
-  }),
-  street: z.string().nonempty({ message: 'Street is required' }),
-  postalCode: z.string().nonempty({ message: 'Postal code is required' }),
-  userId: z.string().nonempty({ message: 'User ID is required' }),
-  emergencyContact: z.string().nonempty({ message: 'Emergency contact is required' }),
-  maritalStatus: z.string().nonempty({ message: 'Marital status is required' }),
-  occupation: z.string().nonempty({ message: 'Occupation is required' }),
-  profilePicture: z.string().optional(),
-});
+// {
+//   "firstName": "string",
+//   "middleName": "string",
+//   "lastName": "string",
+//   "phone": "string",
+//   "contactInformation": "string",
+//   "gender": "string",
+//   "dateOfBirth": "2023-07-02T15:32:37.695Z",
+//   "cityId": 0,
+//   "street": "string",
+//   "postalCode": "string",
+//   "userId": "string",
+//   "emergencyContact": "string",
+//   "maritalStatus": "string",
+//   "occupation": "string",
+//   "profilePicture": "string"
+// }
 
-type PatientProfileType = z.infer<typeof patientProfileSchema>;
 
 const PatientProfileUpdate: NextPage = () => {
   const { replace } = useRouter();

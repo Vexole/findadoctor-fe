@@ -1,5 +1,6 @@
 import { logout } from '@/api';
 import { useAuthenticatedUserContext } from '@/context';
+import { getLocalStorage } from '@/utils/userUtils';
 import { useToast } from '@chakra-ui/react';
 import { useMutation } from '@tanstack/react-query';
 
@@ -9,7 +10,7 @@ export const useLogoutMutation = () => {
 
   return useMutation(() => logout({ userId: user?.userId || '' }), {
     onSuccess: () => {
-      localStorage.removeItem('user');
+      getLocalStorage().removeItem('user');
       window.dispatchEvent(new Event('storage'));
       toast({
         title: 'Logout Successfully.',

@@ -1,4 +1,5 @@
-import { PatientProfileType } from '@/app/patient/create/page';
+
+import { PatientProfileType } from '@/app/patient/types';
 import axiosInstance from '@/http/axiosInstance';
 
 export const createPatientProfile = async (data: PatientProfileType) => {
