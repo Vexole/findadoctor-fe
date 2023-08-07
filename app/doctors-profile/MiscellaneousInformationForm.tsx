@@ -44,7 +44,7 @@ const MiscellaneousInformationForm = (props: any) => {
                                     <button type="button" onClick={() => specializationRemove(index)}>Remove</button>
                                 </div>
                             }
-                            {Boolean(errors.doctorSpecialties) ? (
+                            {errors.doctorSpecialties ? (
                                 <FormErrorMessage>{errors.doctorSpecialties ? String(errors.doctorSpecialties?.message) : ''}</FormErrorMessage>
                             ) : (
                                 <FormHelperText>{errors.doctorSpecialties ? String(errors.doctorSpecialties?.message) : ''}</FormHelperText>

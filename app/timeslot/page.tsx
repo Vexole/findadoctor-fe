@@ -1,22 +1,23 @@
 'use client';
 const moment = require('moment');
-import { useAuthenticatedUserContext } from "@/context";
 import { useBookAppointmentMutation } from "@/hooks";
 import { getUser } from "@/utils/userUtils";
 import { Button, Flex, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ScheduleMeeting, timeSlotDifference } from "react-schedule-meeting";
 
-export default function Timeslot({ params }: { params: { id?: string } }) {
+export default function Timeslot() {
     const [selectedTimeslot, setSelectedTimeslot] = useState<Date>(
         // new Date(new Date(new Date().setDate(new Date().getDate()+1)).setHours(9, 0, 0, 0))
     );
     const [eventDurationInMinutes, setEventDurationInMinutes] = useState(60);
 
-    const router = useRouter();
-    const toast = useToast();
+    useEffect(() => {
+        setEventDurationInMinutes(60);
+    }, []);
 
+    const router = useRouter();
     const bookAppointment = useBookAppointmentMutation();
     const authenticatedUser = getUser();
 
@@ -66,7 +67,7 @@ export default function Timeslot({ params }: { params: { id?: string } }) {
             const localOffset = selectedTimeslot.getTimezoneOffset() * 60000;
             const localTime = new Date(selectedTimeslot.getTime() - localOffset);
             const fromTime = localTime.toISOString().split('T')[1].split('.')[0];
-            let endTimeSlot = new Date(localTime);
+            const endTimeSlot = new Date(localTime);
             const toTime = new Date((endTimeSlot.setMinutes(endTimeSlot.getMinutes() + eventDurationInMinutes)))
                 .toISOString().split('T')[1].split('.')[0];
             bookAppointment.mutate({

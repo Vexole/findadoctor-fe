@@ -22,7 +22,7 @@ export default function DoctorAppointments() {
 
     const cancelAppointment = async (appointmentId: string, doctorUserId: string, patientUserId: string) => {
         try {
-            const result = await cancelAppointmentMutation.mutateAsync({
+            await cancelAppointmentMutation.mutateAsync({
                 appointmentId,
                 doctorUserId,
                 patientUserId
@@ -55,9 +55,9 @@ export default function DoctorAppointments() {
     })
 
     return (<>
-        {doctorAppointmentsQuery.data.length <= 0 ?
+        {appointmentList.data.length <= 0 ?
             (<h2>No Appointments Yet!</h2>) :
-            (<DoctorAppointmentList appointmentList={doctorAppointmentsQuery.data}
+            (<DoctorAppointmentList appointmentList={appointmentList.data}
                 cancelAppointment={cancelAppointment}
                 viewPatient={viewPatient} />)}
     </>

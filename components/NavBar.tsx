@@ -13,7 +13,6 @@ import {
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import NextLink from 'next/link';
-import dynamic from 'next/dynamic';
 
 const links = [
   { href: '/', title: 'Home', role: '', accessLevel: '' },
@@ -135,10 +134,6 @@ function NavBar() {
     );
   }
 
-  const toggleMenu = () => {
-    setIsSmallScreen(!isSmallScreen);
-  };
-
   return (
     <Stack
       direction={{ base: 'column', md: 'row' }}
@@ -230,6 +225,4 @@ function NavBar() {
   );
 }
 
-export default dynamic(() => Promise.resolve(NavBar), {
-  ssr: false,
-})
+export default NavBar;
