@@ -44,7 +44,7 @@ function Register() {
 
   const onSubmit: SubmitHandler<FormTypes> = (formValues: yup.InferType<typeof schema>) => {
     registerApi.mutate(formValues, {
-      onSuccess: res => router.push('/auth/login'),
+      onSuccess: () => router.push('/auth/login'),
     });
   };
 

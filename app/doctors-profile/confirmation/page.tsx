@@ -2,11 +2,9 @@
 import { getUser } from "@/utils/userUtils";
 import { useEffect } from "react";
 import { useRouter } from 'next/navigation';
-import { useLogoutMutation } from "@/hooks";
 
 const Confirmation = () => {
     const router = useRouter();
-    const logout = useLogoutMutation();
     const authenticatedUser = getUser();
 
     useEffect(() => {

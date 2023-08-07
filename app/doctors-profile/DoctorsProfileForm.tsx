@@ -1,21 +1,20 @@
 "use client";
-import { DevTool } from '@hookform/devtools';
 import { Education, Experience, DoctorProfile as FormValues } from "@/models/DoctorProfile";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useApproveDoctorMutation, useRejectDoctorMutation, useSaveDoctorProfileMutation } from "@/hooks";
-import { getCities, getLanguages, getPendingDoctorDetailById, getSpecializations } from "@/api";
+import { getPendingDoctorDetailById } from "@/api";
 import { useForm, useFieldArray } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { Button, Stack, Grid, Box, Image, Select, Input, Text, VStack, HStack, useToast, Checkbox } from "@chakra-ui/react";
+import { Button, Grid, Box, Image, Select, Input, Text, VStack, HStack } from "@chakra-ui/react";
 import CommentModal from '@/components/CommentModal';
 
 type PropTypes = {
     params: { id: string },
     isAdmin: boolean,
     isDisabled: boolean,
-    cityOptions: JSX.Element[]
-    specializationOptions: JSX.Element[]
+    cityOptions: JSX.Element[],
+    specializationOptions: JSX.Element[],
     languageOptions: JSX.Element[],
     genderOptions: JSX.Element[]
 }
@@ -38,13 +37,13 @@ const DoctorsProfileForm = ({ params, isAdmin, isDisabled,
 
     const approveByAdmin = async () => {
         await approveDoctorApi.mutateAsync(userId, {
-            onSuccess: res => router.push("/admin/pending-doctors")
+            onSuccess: () => router.push("/admin/pending-doctors")
         });
     }
 
     const rejectByAdmin = async (reason: string) => {
         await rejectDoctorApi.mutateAsync([userId, reason], {
-            onSuccess: res => router.push("/admin/pending-doctors")
+            onSuccess: () => router.push("/admin/pending-doctors")
         });
     }
 

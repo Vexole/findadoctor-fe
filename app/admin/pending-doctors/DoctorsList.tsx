@@ -62,7 +62,7 @@ const DoctorsList = () => {
             <Tr className="doctors-list-row">
               <Th>S.N.</Th>
               <Th>Title</Th>
-              <Th>Doctor's Name</Th>
+              <Th>Doctor Name</Th>
               <Th>Phone</Th>
               <Th>Street Address</Th>
               <Th>City</Th>

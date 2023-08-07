@@ -1,6 +1,6 @@
 'use client';
 import { FormInput, FormWrapper } from '@/components';
-import { useLoginMutation, usePatientProfileQuery, useSharedPatientProfileQuery } from '@/hooks';
+import { useLoginMutation } from '@/hooks';
 import { Button, Stack, Text } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
