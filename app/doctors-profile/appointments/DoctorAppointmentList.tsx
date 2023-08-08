@@ -1,6 +1,6 @@
 'use client';
 import { DoctorAppointmentRow } from './DoctorAppointmentRow';
-import { Center, Stack, Tab, TabList, TabPanel, TabPanels, Table, TableContainer, Tabs, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import { Center, Heading, Stack, Tab, TabList, TabPanel, TabPanels, Table, TableContainer, Tabs, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 
 const DoctorAppointmentList = (props: any) => {
   const { appointmentList, cancelAppointment, viewPatient } = props;
@@ -30,8 +30,10 @@ const DoctorAppointmentList = (props: any) => {
   ));
 
   return (
-    <Stack>
-      <h2>Appointments List</h2>
+    <Stack spacing={6}>
+      <Heading as="h2" size="xl">
+        Appointments List
+      </Heading>
 
       <div>
         <Tabs>
