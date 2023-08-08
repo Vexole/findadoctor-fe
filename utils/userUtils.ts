@@ -2,7 +2,11 @@ export const getLocalStorage = () =>
   typeof window === 'undefined' ? ({} as Storage) : localStorage;
 
 export const getLocalStorageItem = (type: string) =>
-  typeof window === 'undefined' ? undefined : JSON.parse(getLocalStorage()[type]);
+  typeof window === 'undefined'
+    ? undefined
+    : getLocalStorage()[type] === undefined
+    ? undefined
+    : JSON.parse(getLocalStorage()[type]);
 
 export const getUser = () => getLocalStorageItem('user');
 
