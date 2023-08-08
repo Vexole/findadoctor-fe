@@ -34,11 +34,11 @@ export function DoctorAppointmentRow(props: PropTypes) {
                     View Patient
                 </Button>}
             </Td>
-            {/* <Td colSpan={2} >
+            <Td colSpan={2} >
                 {status !== 'Cancelled' && <Button colorScheme="red" onClick={() => props.handleCancelAppointment(id, doctorUserId, patientUserId)}>
                     Cancel
                 </Button>}
-            </Td> */}
+            </Td>
         </Tr>
     );
 }
