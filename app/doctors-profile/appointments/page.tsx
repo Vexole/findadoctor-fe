@@ -55,9 +55,9 @@ export default function DoctorAppointments() {
     })
 
     return (<>
-        {doctorAppointmentsQuery.data.length <= 0 ?
+        {appointmentList.length <= 0 ?
             (<h2>No Appointments Yet!</h2>) :
-            (<DoctorAppointmentList appointmentList={doctorAppointmentsQuery.data}
+            (<DoctorAppointmentList appointmentList={appointmentList}
                 cancelAppointment={cancelAppointment}
                 viewPatient={viewPatient} />)}
     </>
