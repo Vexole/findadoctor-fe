@@ -35,3 +35,4 @@ export * from './usePatientProfileQuery';
 export * from './useDoctorsQuery';
 export * from './useStatesQuery';
 export * from './useCitiesByStateQuery';
+export * from './useCompleteAppointmentMutation';
