@@ -1,6 +1,6 @@
 'use client';
 import { PatientAppointmentRow } from './PatientAppointmentRow';
-import { Center, Spinner, Stack, Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import { Center, Heading, Spinner, Stack, Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 
 const PatientAppointmentList = (props: any) => {
   const { appointmentList, cancelAppointment, editAppointment } = props;
@@ -16,8 +16,10 @@ const PatientAppointmentList = (props: any) => {
   ));
 
   return (
-    <Stack>
-      <h2>Appointments List</h2>
+    <Stack spacing={6}>
+      <Heading as="h2" size="xl">
+        Appointments List
+      </Heading>
       <TableContainer>
         <Table variant='striped' colorScheme='gray' size='sm'>
           <Thead>

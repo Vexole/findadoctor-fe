@@ -180,8 +180,8 @@ const PatientProfile: NextPage = () => {
           register={register('postalCode')}
         />
         <Stack direction="row" p="2">
-          <Button colorScheme="facebook" flex={1} as={Link} href="/patient/update">
-            Update Profile
+          <Button colorScheme="facebook" flex={1} as={Link} _hover={{ color: 'white' }} href="/patient/update">
+            Edit Profile
           </Button>
         </Stack>
       </FormWrapper>

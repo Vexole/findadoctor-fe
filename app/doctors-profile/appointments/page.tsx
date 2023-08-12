@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import DoctorAppointmentList from "./DoctorAppointmentList";
 import { useAuthenticatedUserContext } from "@/context";
-import { useCancelAppointmentMutation, useDoctorAppointmentsQuery } from "@/hooks";
+import { useCancelAppointmentMutation, useCompleteAppointmentMutation, useDoctorAppointmentsQuery } from "@/hooks";
 import { Spinner } from "@chakra-ui/react";
 import { Appointment } from "@/models/Appointment";
 
@@ -12,6 +12,7 @@ export default function DoctorAppointments() {
     const router = useRouter();
     const doctorAppointmentsQuery = useDoctorAppointmentsQuery();
     const cancelAppointmentMutation = useCancelAppointmentMutation();
+    const completeAppointmentMutation = useCompleteAppointmentMutation();
 
     if (!authenticatedUser) {
         router.push("/auth/login");
@@ -22,13 +23,34 @@ export default function DoctorAppointments() {
 
     const cancelAppointment = async (appointmentId: string, doctorUserId: string, patientUserId: string) => {
         try {
-            const result = await cancelAppointmentMutation.mutateAsync({
+            await cancelAppointmentMutation.mutateAsync({
                 appointmentId,
                 doctorUserId,
                 patientUserId
             }, {
                 onSuccess: () => router.push('/doctors-profile/appointments'),
             });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    const completeAppointment = async (appointmentId: string, doctorUserId: string, notes: string, treatment: string, condition: string) => {
+        try {
+            await completeAppointmentMutation.mutateAsync(
+                {
+                    appointmentId,
+                    doctorUserId,
+                    medicalHistory: {
+                        notes,
+                        treatment,
+                        condition,
+                        dateOfTreatment: new Date().toISOString()
+                    }
+                }
+                , {
+                    onSuccess: () => router.push('/doctors-profile/appointments'),
+                });
         } catch (e) {
             console.log(e);
         }
@@ -55,10 +77,12 @@ export default function DoctorAppointments() {
     })
 
     return (<>
-        {doctorAppointmentsQuery.data.length <= 0 ?
+        {appointmentList.length <= 0 ?
             (<h2>No Appointments Yet!</h2>) :
-            (<DoctorAppointmentList appointmentList={doctorAppointmentsQuery.data}
+            (<DoctorAppointmentList
+                appointmentList={appointmentList}
                 cancelAppointment={cancelAppointment}
+                completeAppointment={completeAppointment}
                 viewPatient={viewPatient} />)}
     </>
     );

@@ -33,6 +33,7 @@ import {
   Tr,
   useToast,
   Input,
+  Heading,
 } from '@chakra-ui/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
@@ -138,8 +139,10 @@ export default function DoctorPatientProfile() {
   });
 
   return (
-    <div>
-      <h2>Patient List</h2>
+    <Stack spacing={6}>
+      <Heading as="h2" size="xl">
+        Patients List
+      </Heading>
       <Tabs>
         <TabList>
           <Tab>Pending Patients</Tab>
@@ -261,6 +264,6 @@ export default function DoctorPatientProfile() {
           </TabPanel>
         </TabPanels>
       </Tabs>
-    </div>
+    </Stack>
   );
 }
