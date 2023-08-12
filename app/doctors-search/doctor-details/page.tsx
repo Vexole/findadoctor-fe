@@ -17,7 +17,7 @@ export default function DoctorSearchDetails() {
       : '/images/doctor-avatar-male.png';
   };
 
-  function formatDate(date) {
+  function formatDate(date: string) {
     const inputDate = new Date(date);
     const year = inputDate.getFullYear();
     const month = String(inputDate.getMonth() + 1).padStart(2, '0');
