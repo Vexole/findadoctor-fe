@@ -285,7 +285,7 @@ export default function DoctorsSearch() {
           {isLoading && <Spinner />}
           {!isLoading && (
             <Grid
-              templateColumns={{ base: '1, 1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
+              templateColumns={{ base: '1, 1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(2, 1fr)' }}
               templateRows={{ base: '1, 1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
               gap={6}
             >
