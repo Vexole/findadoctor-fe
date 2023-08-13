@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { useState } from 'react';
 import { useAuthenticatedUserContext } from '@/context';
 import { getUser } from '@/utils/userUtils';
@@ -9,7 +9,7 @@ import {
   useDisclosure,
   StackDivider,
   Collapse,
-  Box
+  Box,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import NextLink from 'next/link';
@@ -99,6 +99,13 @@ const links = [
     role: 'patient',
     accessLevel: 'authenticated',
     isProfileCompleteRequired: true,
+  },
+  {
+    href: '/patient/appointments/medical-history',
+    title: 'Medical History',
+    role: 'patient',
+    accessLevel: 'authenticated',
+    isProfileCompleteRequired: false,
   },
   { href: '/auth/logout', title: 'Logout', role: '', accessLevel: 'authenticated' },
 ];
@@ -232,4 +239,4 @@ function NavBar() {
 
 export default dynamic(() => Promise.resolve(NavBar), {
   ssr: false,
-})
+});
