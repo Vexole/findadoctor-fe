@@ -36,3 +36,4 @@ export * from './useDoctorsQuery';
 export * from './useStatesQuery';
 export * from './useCitiesByStateQuery';
 export * from './useCompleteAppointmentMutation';
+export * from './useCompleteAppointmentMutation';
