@@ -1,5 +1,5 @@
 export type Experience = {
-  doctorExperienceId: number;
+  doctorExperienceId?: number;
   companyName: string;
   description: string;
   startDate: string;
@@ -7,7 +7,7 @@ export type Experience = {
 }
 
 export type Education = {
-  doctorEducationBackgroundId: number;
+  doctorEducationBackgroundId?: number;
   degree: string;
   institutionName: string;
   fieldOfStudy: string;
@@ -34,15 +34,15 @@ export type DoctorProfile = {
   waitingTime: string;
   street: string;
   cityId: string;
-  cityName: string;
-  state: string;
+  cityName?: string;
+  state?: string;
   postalCode: string;
   doctorSpecialties: {
     specialtyId: string;
-    specialtyName: string;
+    specialtyName?: string;
   }[];
   doctorLanguages: {
     languageId: string;
-    languageName: string;
+    languageName?: string;
   }[];
 };
