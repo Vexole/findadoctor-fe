@@ -33,12 +33,12 @@ export function PatientAppointmentRow(props: PropTypes) {
             <Td>{fromTime.substring(0, 5)} - {toTime.substring(0, 5)}</Td>
             <Td>{status}</Td>
             <Td colSpan={2} >
-                {status !== 'Cancelled' && <Button colorScheme="blue" style={{
+                {status !== 'Cancelled' && status !== 'Completed' && <Button colorScheme="blue" style={{
                     marginRight: '4px'
                 }} onClick={() => props.handleEditAppointment(props.appointment)}>
                     Edit
                 </Button>}
-                {status !== 'Cancelled' && <Button colorScheme="red" onClick={() => props.handleCancelAppointment(id, doctorUserId, patientUserId)}>
+                {status !== 'Cancelled' && status !== 'Completed' && <Button colorScheme="red" onClick={() => props.handleCancelAppointment(id, doctorUserId, patientUserId)}>
                     Cancel
                 </Button>}
             </Td>
