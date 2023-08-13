@@ -3,7 +3,7 @@ const moment = require('moment');
 import { getTimeslotAvailability } from '@/api';
 import { useBookAppointmentMutation, useUpdateAppointmentMutation } from '@/hooks';
 import { Appointment } from '@/models/Appointment';
-import { getUser } from '@/utils/userUtils';
+import { getPaitent, getUser } from '@/utils/userUtils';
 import { Button, Flex } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
@@ -21,6 +21,7 @@ export default function BookAppointment() {
   const bookAppointment = useBookAppointmentMutation();
   const updateAppointment = useUpdateAppointmentMutation();
   const authenticatedUser = getUser();
+  const patient = getPaitent();
 
   if (authenticatedUser?.role != 'Patient') router.push('/auth/logout');
 
@@ -36,12 +37,16 @@ export default function BookAppointment() {
         timeslots.forEach((timeslot: any) => {
           const fromTime = timeslot.fromTime.split(':');
           const toTime = timeslot.toTime.split(':');
+          const startTime = new Date(
+            new Date(timeslot.date).setHours(fromTime[0], fromTime[1], fromTime[2], 0)
+          );
+          const endTime = new Date(
+            new Date(timeslot.date).setHours(toTime[0], toTime[1], toTime[2], 0)
+          );
           openTimeslots.push({
             id,
-            startTime: new Date(
-              new Date(timeslot.date).setHours(fromTime[0], fromTime[1], fromTime[2], 0)
-            ),
-            endTime: new Date(new Date(timeslot.date).setHours(toTime[0], toTime[1], toTime[2], 0)),
+            startTime,
+            endTime,
           });
         });
       }
@@ -62,6 +67,11 @@ export default function BookAppointment() {
     async function fetchOpenTimeslots() {
       const timeslots = await getTimeSlots();
       setOpenTimeslots(timeslots);
+      if (timeslots.length > 0) {
+        const timeDifferenceInMillis = timeslots[0].endTime - timeslots[0].startTime;
+        const diffInMinutes = Math.floor(timeDifferenceInMillis / (1000 * 60));
+        setEventDurationInMinutes(diffInMinutes);
+      }
     }
 
     fetchOpenTimeslots();
@@ -91,7 +101,7 @@ export default function BookAppointment() {
         {
           onSuccess: data => {
             localStorage.removeItem('appointment');
-            router.push('/patient/appointments/book-appointment/success?updated=true');
+            router.push('/patient/appointments/book-appointment/success');
           },
         }
       );
@@ -103,57 +113,7 @@ export default function BookAppointment() {
     return router.push('/patient/appointments');
   };
 
-  function getSaturdaysAndSundays(startDate: any, endDate: any) {
-    const result = [];
-
-    const currentDate = moment(startDate).startOf('day');
-    const lastDate = moment(endDate).startOf('day');
-
-    while (currentDate.isSameOrBefore(lastDate)) {
-      if (currentDate.isoWeekday() === 6 || currentDate.isoWeekday() === 7) {
-        const id = currentDate.diff(moment().startOf('day'), 'days');
-
-        const startTime = new Date(
-          new Date(new Date().setDate(new Date().getDate() + id)).setHours(9, 0, 0, 0)
-        );
-        const endTime = new Date(
-          new Date(new Date().setDate(new Date().getDate() + id)).setHours(17, 0, 0, 0)
-        );
-
-        result.push({
-          startTime,
-          endTime,
-        });
-      }
-      currentDate.add(1, 'day');
-    }
-
-    return result;
-  }
-
-  const startDate = moment('2023-01-01');
-  const endDate = moment('2023-12-31');
-
   const patientProfile = JSON.parse(localStorage.patient);
-
-  const unavailableTimeSlots = getSaturdaysAndSundays(startDate, endDate);
-
-  const availableTimeSlots = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(id => {
-    return {
-      id,
-      startTime: new Date(
-        new Date(new Date().setDate(new Date().getDate() + id)).setHours(9, 0, 0, 0)
-      ),
-      endTime: new Date(
-        new Date(new Date().setDate(new Date().getDate() + id)).setHours(17, 0, 0, 0)
-      ),
-    };
-  });
-
-  const availableTimeSlotsLessUnavailableTimeSlots = timeSlotDifference(
-    availableTimeSlots,
-    unavailableTimeSlots
-  );
 
   const handleBookAppointment = () => {
     if (selectedTimeslot) {
@@ -171,7 +131,7 @@ export default function BookAppointment() {
         {
           patientUserId: authenticatedUser?.userId ?? '',
           appointmentDate: localTime.toISOString(),
-          doctorUserId: '5ae22881-2d1e-499c-a631-058db425370d',
+          doctorUserId: patient?.associatedDoctor?.doctorUserId ?? '',
           fromTime,
           toTime,
         },
@@ -189,7 +149,7 @@ export default function BookAppointment() {
       <ScheduleMeeting
         borderRadius={10}
         primaryColor="#3f5b85"
-        eventDurationInMinutes={60}
+        eventDurationInMinutes={eventDurationInMinutes}
         selectedStartTime={selectedTimeslot}
         defaultDate={selectedTimeslot}
         availableTimeslots={openTimeslots}
