@@ -144,7 +144,7 @@ export default function BookAppointment() {
             bookAppointment.mutate({
                 patientUserId: authenticatedUser?.userId ?? "",
                 appointmentDate: localTime.toISOString(),
-                doctorUserId: '5ae22881-2d1e-499c-a631-058db425370d',
+                doctorUserId: authenticatedUser?.associatedDoctor?.doctorUserId ?? "",
                 fromTime,
                 toTime
             }, {
