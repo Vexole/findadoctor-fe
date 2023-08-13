@@ -1,14 +1,15 @@
-"use client";
-import { usePatientMedicalHistoryQuery } from "@/hooks/usePatientMedicalHistory";
-import { Button, Spinner } from "@chakra-ui/react";
-import { getUserId } from '@/utils/userUtils';
+'use client';
+import { Stack, Heading } from '@chakra-ui/react';
+import { MedicalHistoryList } from './MedicalHistoryList';
 
 export default function MedicalHistory() {
-    const patientId = getUserId();
-    const { data: medicalHistory} = usePatientMedicalHistoryQuery(patientId);
-    console.log(medicalHistory);
 
-    return (
-      <div>Helloo</div>
-    );
+  return (
+    <Stack direction="column" justifyContent="center" spacing={4} p={4}>
+      <Heading as="h2" size="lg" textAlign="center" mt={2} color="#3a57a6">
+        Medical History Details
+      </Heading>
+      <MedicalHistoryList/>
+    </Stack>
+  );
 }
