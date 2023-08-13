@@ -5,13 +5,14 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCitiesQuery } from '@/hooks';
-import { Button, Stack, useToast } from '@chakra-ui/react';
+import { Button, FormControl, FormLabel, Input, Stack, useToast } from '@chakra-ui/react';
 import { createPatientProfile } from '@/api/patient/createPatientProfile';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { maritalStatus } from '@/api/shared/maritalStatus';
 import { getGender } from '@/api/shared/gender';
 import { useRouter } from 'next/navigation';
 import { FormInput, FormWrapper, FormSelect } from '@/components';
+import { uploadImage } from '@/utils/cloudinary';
 
 const patientProfileSchema = z.object({
   firstName: z.string().nonempty({ message: 'First name is required' }),
@@ -67,17 +68,29 @@ const PatientProfileCreate: NextPage = () => {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<PatientProfileType>({
     resolver: zodResolver(patientProfileSchema),
     defaultValues: {
       userId: JSON.parse(localStorage.getItem('user') as string).userId || null,
+      profilePicture:
+        'https://res.cloudinary.com/dbmmtklps/image/upload/v1688519237/q8v58luexpmgoxacidj9.jpg',
     },
   });
 
   const onSubmit = (data: PatientProfileType) => {
     createPatientProfileMutation.mutateAsync(data);
     console.log(data);
+  };
+
+  const handleProfilePictureChange = (data: any) => {
+    // console.log(data.target.files);
+    uploadImage(data.target.files).then(res => {
+      console.log(res);
+      setValue('profilePicture', res.data.url);
+    });
   };
 
   return (
@@ -96,6 +109,11 @@ const PatientProfileCreate: NextPage = () => {
           borderColor: '#1A365D',
         }}
       >
+        <FormControl>
+          <img className="profile-image" src={watch('profilePicture')} alt="Profile Picture" />
+          <FormLabel htmlFor="profilePicture">Profile Picture</FormLabel>
+          <Input type="file" accept="image/*" onChange={e => handleProfilePictureChange(e)} />
+        </FormControl>
         <FormInput
           label="First Name"
           placeholder="Enter your first name"
