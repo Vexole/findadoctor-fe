@@ -101,7 +101,7 @@ export default function BookAppointment() {
         {
           onSuccess: data => {
             localStorage.removeItem('appointment');
-            router.push('/patient/appointments/book-appointment/success');
+            router.push('/patient/appointments/book-appointment/success?updated=true');
           },
         }
       );

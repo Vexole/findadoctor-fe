@@ -20,7 +20,7 @@ export default function AppointmentSuccessPage() {
         successTitle={title}
         successMessage={message}
         button1Text="View Appointments"
-        button2Text="Got to Homepage"
+        button2Text="Go to Homepage"
         handleButton1Click={() => router.push('/patient/appointments')}
         handleButton2Click={() => router.push('/')}
       />
