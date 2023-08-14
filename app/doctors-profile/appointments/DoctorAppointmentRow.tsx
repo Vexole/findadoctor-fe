@@ -46,7 +46,7 @@ export function DoctorAppointmentRow(props: PropTypes) {
                         View Patient
                     </Button>}
                 </Td>
-                {status === 'Scheduled' && <Td colSpan={2} ><Button colorScheme="blue" onClick={() => completeAppointment()}>
+                {(status === 'Scheduled' || status === 'Rescheduled') && <Td colSpan={2} ><Button colorScheme="blue" onClick={() => completeAppointment()}>
                     Complete
                 </Button></Td>}
             </Tr>
