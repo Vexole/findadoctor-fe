@@ -10,7 +10,7 @@ import { maritalStatus } from '@/api/shared/maritalStatus';
 import { getGender } from '@/api/shared/gender';
 import { getPatientProfile } from '@/api/patient/getPatientProfile';
 import { FormInput, FormWrapper, FormSelect } from '@/components';
-import { Button, Stack } from '@chakra-ui/react';
+import { Button, FormControl, FormLabel, Input, Stack } from '@chakra-ui/react';
 import Link from 'next/link';
 
 const patientProfileSchema = z.object({
@@ -44,7 +44,7 @@ const PatientProfile: NextPage = () => {
   const maritalStatusRes = useQuery(['maritalStatus'], maritalStatus);
   const genders = useQuery(['genders'], getGender);
 
-  const { register } = useForm<PatientProfileType>({
+  const { register, watch } = useForm<PatientProfileType>({
     resolver: zodResolver(patientProfileSchema),
     defaultValues: async () => {
       const patientProfile = await getPatientProfile();
@@ -72,6 +72,10 @@ const PatientProfile: NextPage = () => {
           borderColor: '#1A365D',
         }}
       >
+        <FormControl>
+          <img className="profile-image" src={watch('profilePicture')} alt="Profile Picture" />
+          <FormLabel htmlFor="profilePicture">Profile Picture</FormLabel>
+        </FormControl>
         <FormInput
           isDisabled
           label="First Name"
@@ -180,7 +184,13 @@ const PatientProfile: NextPage = () => {
           register={register('postalCode')}
         />
         <Stack direction="row" p="2">
-          <Button colorScheme="facebook" flex={1} as={Link} _hover={{ color: 'white' }} href="/patient/update">
+          <Button
+            colorScheme="facebook"
+            flex={1}
+            as={Link}
+            _hover={{ color: 'white' }}
+            href="/patient/update"
+          >
             Edit Profile
           </Button>
         </Stack>

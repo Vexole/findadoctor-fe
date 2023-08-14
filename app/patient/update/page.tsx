@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCitiesQuery } from '@/hooks';
-import { Button, useToast, Stack } from '@chakra-ui/react';
+import { Button, useToast, Stack, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { maritalStatus } from '@/api/shared/maritalStatus';
 import { getGender } from '@/api/shared/gender';
@@ -13,6 +13,7 @@ import { getPatientProfile } from '@/api/patient/getPatientProfile';
 import { updatePatientProfile } from '@/api/patient/updatePatientProfile';
 import { useRouter } from 'next/navigation';
 import { FormInput, FormWrapper, FormSelect } from '@/components';
+import { uploadImage } from '@/utils/cloudinary';
 
 const patientProfileSchema = z.object({
   firstName: z.string().nonempty({ message: 'First name is required' }),
@@ -70,6 +71,8 @@ const PatientProfileUpdate: NextPage = () => {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<PatientProfileType>({
     resolver: zodResolver(patientProfileSchema),
@@ -89,6 +92,12 @@ const PatientProfileUpdate: NextPage = () => {
     updatePatientMutation.mutateAsync(data);
   };
 
+  const handleProfilePictureChange = (data: any) => {
+    uploadImage(data.target.files).then(res => {
+      setValue('profilePicture', res.data.url);
+    });
+  };
+
   return (
     <>
       <FormWrapper
@@ -105,6 +114,11 @@ const PatientProfileUpdate: NextPage = () => {
           borderColor: '#1A365D',
         }}
       >
+        <FormControl>
+          <img className="profile-image" src={watch('profilePicture')} alt="Profile Picture" />
+          <FormLabel htmlFor="profilePicture">Profile Picture</FormLabel>
+          <Input type="file" accept="image/*" onChange={e => handleProfilePictureChange(e)} />
+        </FormControl>
         <FormInput
           label="First Name"
           placeholder="Enter your first name"
