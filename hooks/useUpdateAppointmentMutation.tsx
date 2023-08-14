@@ -3,20 +3,16 @@ import { useToast } from '@chakra-ui/react';
 import { useMutation } from '@tanstack/react-query';
 
 export const useUpdateAppointmentMutation = () => {
-    const toast = useToast();
-    return useMutation((params: Parameters<typeof updateAppointment>[0]) => updateAppointment(params), {
-        onSuccess: data => {
-            toast({
-                title: 'Appointment Updateed!',
-                status: 'success',
-                isClosable: true,
-            });
-        },
-        onError: () =>
-            toast({
-                title: 'Something went wrong. Try Again Later.',
-                status: 'error',
-                isClosable: true,
-            }),
-    });
+  const toast = useToast();
+  return useMutation(
+    (params: Parameters<typeof updateAppointment>[0]) => updateAppointment(params),
+    {
+      onError: () =>
+        toast({
+          title: 'Something went wrong. Try Again Later.',
+          status: 'error',
+          isClosable: true,
+        }),
+    }
+  );
 };
