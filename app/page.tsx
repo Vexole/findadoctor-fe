@@ -133,15 +133,15 @@ function Home() {
           }}
         >
           <img
-            src="https://thumbs.dreamstime.com/z/funny-clown-doctor-isolated-white-background-89615687.jpg"
+            src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80"
             alt="Clown"
-            height={800}
-            width={500}
+            height={900}
+            width={600}
             style={{
               display: 'block',
               marginLeft: 'auto',
               marginRight: 'auto',
-              borderRadius: '75%',
+              borderRadius: '55%',
             }}
           />
         </div>
@@ -321,7 +321,7 @@ function Home() {
         >
           <div>
             <Image
-              src="https://thumbs.dreamstime.com/z/funny-clown-businessman-white-background-172900433.jpg"
+              src="/images/doctor6.jpg"
               alt="Clown"
               height={800}
               width={500}
@@ -580,7 +580,7 @@ function Home() {
               }}
             >
               <Image
-                src="https://thumbs.dreamstime.com/z/scary-clown-doctor-playing-performance-children-isolated-red-background-colourful-make-up-face-white-medical-coat-209212241.jpg"
+                src="/images/doctor5.jpg"
                 alt="Clown"
                 height={800}
                 width={500}
@@ -654,7 +654,11 @@ function Home() {
                   alignItems: 'center',
                 }}
               >
-                <a href="https://www.facebook.com/your-page-link" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://www.facebook.com/your-page-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <img
                     src="./../images/facebook.png"
                     alt="Facebook Logo"
@@ -664,7 +668,11 @@ function Home() {
                     }}
                   />
                 </a>
-                <a href="https://www.instagram.com/your-page-link" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://www.instagram.com/your-page-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <img
                     src="./../images/instagram.png"
                     alt="Instagram Logo"
@@ -674,7 +682,11 @@ function Home() {
                     }}
                   />
                 </a>
-                <a href="https://www.twitter.com/your-page-link" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://www.twitter.com/your-page-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <img
                     src="./../images/twitter.png"
                     alt="Twitter Logo"
@@ -684,7 +696,11 @@ function Home() {
                     }}
                   />
                 </a>
-                <a href="https://www.twitter.com/your-page-link" target="_blank" rel="noopener noreferrer">
+                <a
+                  href="https://www.twitter.com/your-page-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <img
                     src="./../images/linkedin.png"
                     alt="Linkedin Logo"
@@ -696,7 +712,6 @@ function Home() {
                 </a>
               </div>
             </div>
-
           </div>
           <div
             style={{
@@ -791,4 +806,4 @@ function Home() {
 
 export default dynamic(() => Promise.resolve(Home), {
   ssr: false,
-})
+});
