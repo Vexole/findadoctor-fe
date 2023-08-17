@@ -12,12 +12,6 @@ import { useAuthenticatedUserContext } from '@/context';
 import {
   Button,
   Center,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Stack,
   Tab,
   TabList,
@@ -32,20 +26,19 @@ import {
   Thead,
   Tr,
   useToast,
-  Input,
   Heading,
 } from '@chakra-ui/react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function DoctorPatientProfile() {
   const [comment, setComment] = useState('');
+  const router = useRouter();
 
-  // const [deleteModalPatientId, setDeleteModalPatientId] = useState<string | null>(null);
 
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
-  // const openRejectModal = () => setIsRejectModalOpen(true);
   const closeRejectModal = () => setIsRejectModalOpen(false);
 
   const handleReject = () => {
@@ -138,6 +131,8 @@ export default function DoctorPatientProfile() {
     },
   });
 
+  const viewPatient = async (patientId: string) => router.push(`/doctors-profile/view-pending-patient/${patientId}`);
+
   return (
     <Stack spacing={6}>
       <Heading as="h2" size="xl">
@@ -175,11 +170,9 @@ export default function DoctorPatientProfile() {
                         <Td>{patient.occupation}</Td>
                         <Td>{patient.maritalStatus}</Td>
                         <Td>
-                          <Link
-                            href={`/doctors-profile/view-pending-patient?doctorId=${userId}&patientId=${patient.patientId}`}
-                          >
-                            <span>View Details</span>
-                          </Link>
+                          {<Button colorScheme="green" onClick={() => viewPatient(patient.patientId)}>
+                            View Patient
+                          </Button>}
                         </Td>
                         <Td>
                           <Button

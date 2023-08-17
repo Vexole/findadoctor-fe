@@ -12,6 +12,9 @@ const queryClient = new QueryClient();
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <title>Find a Family Doctor</title>
+      </head>
       <body
         className={inter.className}
         style={{

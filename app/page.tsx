@@ -95,16 +95,19 @@ function Home() {
               }}
             >
               <section>
+                <label htmlFor="speciality"></label>
                 <select name="speciality" id="speciality" placeholder="Speciality">
                   <option value="speciality">Speciality</option>
                 </select>
               </section>
               <section>
+                <label htmlFor="location"></label>
                 <select name="location" id="location" placeholder="Location">
                   <option value="location">Location</option>
                 </select>
               </section>
               <section>
+                <label htmlFor="date"></label>
                 <input type="date" name="date" id="date" />
               </section>
               <div>
@@ -112,7 +115,7 @@ function Home() {
                   type="button"
                   style={{
                     padding: '0.5rem',
-                    backgroundColor: 'rgba(66,153,225,0.9)',
+                    backgroundColor: '#16588D',
                     borderRadius: '8px',
                     color: 'white',
                     fontWeight: 'bold',
@@ -216,7 +219,7 @@ function Home() {
                   />
                 </svg>
               </div>
-              <h6>Find Your Doctor</h6>
+              <p>Find Your Doctor</p>
               <small style={{ textAlign: isMobile ? 'center' : 'left' }}>
                 Choose from a variety of medical specialties.
               </small>
@@ -261,7 +264,7 @@ function Home() {
                   />
                 </svg>
               </div>
-              <h6>Book an Appointment</h6>
+              <p>Book an Appointment</p>
               <small style={{ textAlign: isMobile ? 'center' : 'left' }}>
                 Schedule a convenient appointment time.
               </small>
@@ -301,7 +304,7 @@ function Home() {
                   />
                 </svg>
               </div>
-              <h6>Receive Medical Care</h6>
+              <p>Receive Medical Care</p>
               <small style={{ textAlign: isMobile ? 'center' : 'left' }}>
                 Get personalized care from top professionals.
               </small>
@@ -342,7 +345,7 @@ function Home() {
               justifyContent: 'center',
             }}
           >
-            <h6
+            <p
               style={{
                 textAlign: 'center',
                 fontWeight: 'bold',
@@ -350,7 +353,7 @@ function Home() {
               }}
             >
               Booking made easy
-            </h6>
+            </p>
             <ul
               style={{
                 listStyle: 'none',
@@ -368,7 +371,7 @@ function Home() {
               <button
                 style={{
                   padding: '1rem',
-                  backgroundColor: 'rgba(66, 153, 225, 0.9)',
+                  backgroundColor: '#16588D',
                   borderRadius: '8px',
                   color: 'white',
                   fontWeight: 'bold',
@@ -402,7 +405,7 @@ function Home() {
                 justifyContent: 'center',
               }}
             >
-              <h6
+              <p
                 style={{
                   textAlign: 'center',
                   fontWeight: 'bold',
@@ -410,7 +413,7 @@ function Home() {
                 }}
               >
                 We offer a wide range <br /> of specialists for your health
-              </h6>
+              </p>
               <div className="speciality">
                 <div
                   style={{
